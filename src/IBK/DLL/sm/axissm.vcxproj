@@ -110,7 +110,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>..\..\..\exe\axissm.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\exe\axissm.dll</OutputFile>
       <ImportLibrary>.\Debug\axissm.lib</ImportLibrary>
       <AdditionalDependencies>Imm32.lib;../axiscm/Debug/axiscm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\axissm.def</ModuleDefinitionFile>

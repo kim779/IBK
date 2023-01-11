@@ -108,7 +108,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>..\..\..\exe\axiscm.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\exe\axiscm.dll</OutputFile>
       <ImportLibrary>.\Debug\axiscm.lib</ImportLibrary>
       <ModuleDefinitionFile>.\axiscm.def</ModuleDefinitionFile>
     </Link>

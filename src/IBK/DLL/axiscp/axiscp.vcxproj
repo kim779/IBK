@@ -110,7 +110,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <OutputFile>../../../exe\axiscp.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\exe\axiscp.dll</OutputFile>
       <ImportLibrary>.\Debug\axiscp.lib</ImportLibrary>
       <AdditionalDependencies>Imm32.lib;../sm/Debug/axissm.lib;../axiscm/Debug/axiscm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\axiscp.def</ModuleDefinitionFile>
