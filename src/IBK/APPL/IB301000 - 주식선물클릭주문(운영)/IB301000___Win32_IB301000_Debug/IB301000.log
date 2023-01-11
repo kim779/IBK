@@ -1,0 +1,4 @@
+﻿cl : 명령줄 warning D9035: 'Gm' 옵션은 더 이상 사용되지 않으므로 이후 릴리스에서 제거될 예정입니다.
+  StdAfx.cpp
+  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+D:\IBKS_TEST\src\APPL\IB301000 - 주식선물클릭주문(운영)\stdafx.h(52,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'AxStd.hpp': No such file or directory
