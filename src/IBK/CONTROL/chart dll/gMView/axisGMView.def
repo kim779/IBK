@@ -1,0 +1,7 @@
+; axisGMView.def : Declares the module parameters for the DLL.
+
+LIBRARY      "axisGMView"
+DESCRIPTION  'axisGMView Windows Dynamic Link Library'
+
+EXPORTS
+    axCreate

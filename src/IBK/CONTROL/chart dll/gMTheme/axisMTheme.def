@@ -1,0 +1,8 @@
+; axisMTheme.def : Declares the module parameters for the DLL.
+
+LIBRARY      "axisMTheme"
+DESCRIPTION  'axisMTheme Windows Dynamic Link Library'
+
+EXPORTS
+    ; Explicit exports can go here
+	axCreate
