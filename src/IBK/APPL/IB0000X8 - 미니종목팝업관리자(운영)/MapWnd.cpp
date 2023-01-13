@@ -12,6 +12,10 @@ using namespace std;
 #include "../../h/interSt.h"
 #include "sys/stat.h"
 
+#include "ioformat.h"
+
+#define TRKEY_GROUPARR 99
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -140,6 +144,43 @@ LRESULT CMapWnd::OnUser( WPARAM wParam, LPARAM lParam )
 		break;
 		
 	case DLL_OUB:
+		if (key == TRKEY_GROUPARR)
+		{
+			CString stmp, seq, sgname;
+			char* pdata = (char*)lParam;
+			int cnt = atoi(CString(pdata, 4));
+			if (cnt > 0)
+			{
+				int parseL = 4;
+				struct _grSearch
+				{
+					char ngrs[2];
+					char grseq[2];
+					char gname[30];
+				};
+
+				struct _grSearch* stgr{};
+				for (int ii = 0; ii < cnt; ii++)
+				{
+					stgr = (struct _grSearch*)&pdata[parseL];
+					seq.Format("%.2s", stgr->grseq);
+					sgname.Format("%.30s", stgr->gname);
+					sgname.TrimRight();
+					seq.TrimRight();
+					if (seq.GetLength() == 0)
+						break;
+
+					m_gpno.Add(seq);
+					m_gpnm.Add(sgname);
+
+					sgname.Empty();
+					seq.Empty();
+					parseL += sizeof(struct _grSearch);
+				}
+			}
+			return 0;
+		}
+
 		if (key>=TR_STARTKEY)
 		{
 			ParseSise(dat, len);
@@ -2073,9 +2114,43 @@ void CMapWnd::OnClose()
 	CWnd::OnClose();
 }
 
+void CMapWnd::sendTR(CString trCode, char* datB, int datL, int key)
+{
+	auto sendB = std::make_unique<char[]>(L_userTH + datL + 1);
+
+	struct	_userTH* uTH;
+	uTH = (struct _userTH*)sendB.get();
+
+	strcpy(uTH->trc, trCode);
+	uTH->key = key;
+	uTH->stat = US_PASS;
+
+	CopyMemory(&sendB[L_userTH], datB, datL);
+	int iret =  m_pParent->SendMessage(WM_USER, MAKEWPARAM(invokeTRx, datL), (LPARAM)sendB.get());
+}
+
 void CMapWnd::LoadInterest()
 {
 	m_gpno.RemoveAll();
+	m_gpnm.RemoveAll();
+
+	int	sendL = 0;
+	char	sendB[16 * 1024] = { 0, };
+	int isz_updn = sz_uinfo;
+	struct _updn* updn = (struct _updn*)&sendB[sendL];
+	sendL += isz_updn;
+
+	FillMemory((char*)updn, isz_updn, ' ');
+
+	CopyMemory(updn->uinfo.gubn, "MY", sizeof(updn->uinfo.gubn));
+	updn->uinfo.dirt[0] = 'U';
+	updn->uinfo.cont[0] = 'g';
+	CopyMemory(updn->uinfo.nblc, "00001", sizeof(updn->uinfo.nblc));
+	updn->uinfo.retc[0] = 'U';
+
+	sendTR("PIDOMYST", sendB, sendL, TRKEY_GROUPARR);
+
+	/*m_gpno.RemoveAll();
 	m_gpnm.RemoveAll();
 
 	char buff[1024];
@@ -2112,11 +2187,7 @@ void CMapWnd::LoadInterest()
 		if (dwSize==0) continue;
 
 		m_gpnm.Add(buff);
-
-// 		CString s;
-// 		s.Format("INPUT INTER : %s	%s\n",keys,buff);
-// 		OutputDebugString(s);
-	}
+	}*/
 }
 
 void CMapWnd::OnInterAdd()

@@ -100,7 +100,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/fx_misc.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/fx_misc.dll</OutputFile>
       <ImportLibrary>.\Debug\fx_misc.lib</ImportLibrary>
       <AdditionalDependencies>imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\fx_misc.def</ModuleDefinitionFile>

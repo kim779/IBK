@@ -198,6 +198,7 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	//}}AFX_MSG
 	afx_msg	LONG OnXMSG(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnMsgFromMain(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 
 	// cej

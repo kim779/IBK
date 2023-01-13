@@ -97,7 +97,7 @@ protected:
 	void AdjustHangul(CString &text);
 	//void TestSetting();
 	void LoadInterest();
-
+	void sendTR(CString trCode, char* datB, int datL, int key);
 public:
 	void ChangeTransparent(int val);
 	void AddCode(LPCSTR code, LPRECT pRC = NULL);

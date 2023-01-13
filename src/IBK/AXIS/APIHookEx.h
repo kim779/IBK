@@ -180,6 +180,7 @@ public:
 	void StopHook();
 	void SetInfo(LPCSTR lpHome, LPCSTR lpName);
 	CString Convert(LPCSTR path);
+	UINT AFXAPI HashDataAXIS(LPCSTR key);
 public:
 	HookObject<FPGetPrivateProfileIntA         > GetPrivateProfileIntA         ;
 	HookObject<FPGetPrivateProfileStringA      > GetPrivateProfileStringA      ;

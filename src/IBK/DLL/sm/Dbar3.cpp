@@ -13,6 +13,9 @@
 #include "../../h/stopmsg.h"
 #include "../../axis/axMsg.hxx"
 
+#include "../../h/interMSG.h"
+#include "ioformat.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -234,6 +237,7 @@ BEGIN_MESSAGE_MAP(CDbar3, CDialogBar)
 	ON_MESSAGE(WM_MOUSELEAVE, OnMouseLeave)
 	ON_MESSAGE(WM_TIPLINK, OnTipLink)
 	ON_MESSAGE(WM_XMSG, OnXMSG)
+	ON_MESSAGE(WM_MSG_MAINTOMAP, OnMsgFromMain)
 END_MESSAGE_MAP()
 
 
@@ -457,18 +461,10 @@ void CDbar3::OnMouseMove(UINT nFlags, CPoint point)
 		}
 		
 		button = m_arButton.GetAt(ii);
-// 		if (xRc.PtInRect(point))
-// 		{
-// 			m_ToolTip->SetToolRect(this, ID_TOOLTIP, bRc);
-// 	 		SetToolTipText("종목 삭제");
-// 		}
-		
-		//OutputDebugString("SM DBAR3 MOVE\n");
 
 		if (!bRc.PtInRect(lpoint))	continue;
 
 		CClientDC	dc(this);
-		//OutputDebugString("SM DBAR3 MOVE RUN\n");
 
 		if(m_currButton != ii)
 		{
@@ -527,95 +523,12 @@ void CDbar3::OnRButtonDown(UINT nFlags, CPoint point)
 		m_deleteBtn = m_arButton.GetAt(ii);
 		break;
 	}
-// 
-	CString		str, tmps;
-	CMenuXP		menu;
-	menu.CreatePopupMenu();
- 	int	index = 0;
-// 	
-	if (m_deleteBtn)
-	{
-		tmps = "종목 삭제";
-		menu.AppendMenuX(MF_STRING, RBUTTONBASE, tmps);
-		tmps = "관심 등록";
-		menu.AppendMenuX(MF_STRING, RBUTTONBASE_INTERGROUP, tmps);
-		menu.AppendMenuX(MF_SEPARATOR);
-		
-		CString file;
-		CString	string, gno, gname, stmp;
-		int readL = 0; char readB[2048];
-		file.Format("%s\\%s\\%s\\%s", Axis::home, USRDIR, Axis::user, "portfolio.ini");
-		
-		readL = GetPrivateProfileString("GROUPORDER", "00", "", readB, sizeof(readB), file);
-		string = CString(readB, readL);
-		
-		
-		while (!string.IsEmpty())
-		{
-			gno = parseX(string, ";");
-			readL = GetPrivateProfileString(_T("GROUPNAME"), gno, "", readB, sizeof(readB), file);
-			gname = CString(readB, readL);
-			
-			stmp.Format("[sm] [%s]\n", gname);
-		//	OutputDebugString(stmp);
-			if (!gname.IsEmpty())
-			{
-				menu.AppendMenuX(MF_STRING, RBUTTONBASE_INTER + index, gname);
-			}
-			index++;
-		}
-	}
-
-// 	menu.AppendMenuX(MF_STRING, RBUTTONBASE2, "모든창 닫기");
-// 	menu.AppendMenuX(MF_STRING, RBUTTONBASE2_1, "모든창 최소화");
-// 	/*
-// 	if (m_pClock || m_pStopPane)
-// 		menu.AppendMenuX(MF_SEPARATOR);
-// 	*/
-// 	if (m_pClock)
-// 	{
-// 		if (m_pClock->IsWindowVisible())
-// 			menu.AppendMenuX(MF_STRING, RBUTTONBASE3, "시계 감추기");
-// 		else
-// 			menu.AppendMenuX(MF_STRING, RBUTTONBASE3, "시계 보이기");
-// 	}
-// 	
-// 	/*if (m_pStopPane)
-// 	{
-// 		if (m_pStopPane->IsWindowVisible())
-// 			menu.AppendMenuX(MF_STRING, RBUTTONBASE3_1, "스탑로스 감추기");
-// 		else
-// 			menu.AppendMenuX(MF_STRING, RBUTTONBASE3_1, "스탑로스 보이기");
-// 	}*/
-// 
-// 	menu.AppendMenuX(MF_SEPARATOR);
-// 	if (GetBarStyle() & CBRS_ALIGN_BOTTOM)
-// 		menu.AppendMenuX(MF_STRING, RBUTTONBASE3_2, "상단으로 이동");
-// 	else
-// 		menu.AppendMenuX(MF_STRING, RBUTTONBASE3_2, "하단으로 이동");
-// 
-	CPoint	curPt;
-	GetCursorPos(&curPt);
-	const int nRet = menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_RETURNCMD , curPt.x, curPt.y, this);
-	
-	CString slog;
-	slog.Format("[code] nRet = %d", nRet);
-	//OutputDebugString(slog);
-	
-	if(nRet == RBUTTONBASE)
-	{
-		if (m_deleteBtn)
-			(*m_axiscall)(AXI_DELHISTORY, (long)(const char*)m_deleteBtn->code, 0);
-	}
-	else if(nRet == RBUTTONBASE_INTERGROUP)
-	{
-		(*m_axiscall)(AXI_ADDINTERHISTORY, -1, 0);
-	}
-	else if(nRet >= RBUTTONBASE_INTER && nRet <= RBUTTONBASE_INTER + index)
-	{
-		if (m_deleteBtn)
-			(*m_axiscall)(AXI_ADDINTERHISTORY, nRet - 4000, (long)(const char*)m_deleteBtn->code);
-	}
+ 
+	HWND m_hMain = AfxGetMainWnd()->m_hWnd;
+	CString stemp;
+	CString strHwnd;
+	strHwnd.Format("%d", this->m_hWnd);
+	::SendMessage(m_hMain, WM_INTERMSG, MAKEWPARAM(MMSG_SEARCH_INTERGROUP, 0), (LPARAM)strHwnd.operator LPCSTR());
 
 	CDialogBar::OnRButtonDown(nFlags, point);
 }
@@ -2183,4 +2096,176 @@ CString CDbar3::parseX(CString &srcstr, CString substr)
 		return temp;
 	}
 	return "";
+}
+
+LRESULT CDbar3::OnMsgFromMain(WPARAM wParam, LPARAM lParam)
+{
+	
+	switch (LOWORD(wParam))
+	{
+/*	case MMSG_SEARCH_SISE:
+	{
+		char* pdata = (char*)lParam;
+
+		struct	_grid {
+			char	code[12];					   //종목코드			 
+			char    hnam[20];                // 종목명                       
+			char    curr[8];					  // 현재가                      
+			char    diff[6];					  // 전일대비      (9999V99)      
+			char    gvol[12];				  // 거래량                       
+		};
+
+		struct  _interMod {
+			char	keyf[2];		// ticker id
+			char	nrec[3];		// count jcode
+			struct	_grid	grid[1];	// data
+		};
+
+		CString		code, name, price, diff, gvol;
+		_interMod* interMod = (struct _interMod*)pdata;
+		int	cnt = atoi(CString(interMod->nrec, sizeof(interMod->nrec)));
+		for (int ii = 0; ii < cnt; ii++)
+		{
+			code = CString(interMod->grid[ii].code, sizeof(interMod->grid[ii].code));	code.TrimRight();
+			name = CString(interMod->grid[ii].hnam, sizeof(interMod->grid[ii].hnam));	name.TrimRight();
+			price = CString(interMod->grid[ii].curr, sizeof(interMod->grid[ii].curr));	price.TrimRight();
+			diff = CString(interMod->grid[ii].diff, sizeof(interMod->grid[ii].diff));	diff.TrimLeft();
+			gvol = CString(interMod->grid[ii].gvol, sizeof(interMod->grid[ii].gvol));	gvol.TrimLeft();
+			//SetInter((char*)&interMod->grid[ii]);
+		}
+	}
+	break;
+	case MMSG_SEARCH_GROUPCODE:
+	{
+		char* pdata = (char*)lParam;
+
+		CString stmp, sRet, code;
+		CString strseq = CString(pdata, 2);
+		CString strgname = CString(&pdata[2], 20);
+		int cnt = atoi(CString(&pdata[22], 4));
+		int parseL = 26;
+
+		struct _jinfo* jinfo{};
+		char* pCode;
+		pCode = new char[sizeof(jinfo->code) + 1];
+		sRet.Empty();
+
+		if (cnt <= 0)
+			return 0;
+
+		for (int ii = 0; ii < cnt; ii++)
+		{
+			jinfo = (struct _jinfo*)&pdata[parseL];
+
+			memset(pCode, 0x00, sizeof(jinfo->code) + 1);
+			memcpy(pCode, jinfo->code, sizeof(jinfo->code));  // 종목코드[12]
+
+			code.Format("%s", pCode);
+			code.TrimRight();
+
+
+			auto inter = std::make_unique<_inter>();
+			inter->Code = code;
+			m_arInter.Add(inter.get());
+			m_arInterByCode.SetAt(inter->Code, (CObject*)inter.get());
+
+			m_arSymData.SetAt(inter->Code, "x");
+			m_arSym.Add(inter->Code);
+
+			parseL += sizeof(struct _jinfo);
+		}
+		SendPiboSise();
+	}
+	break;
+	*/
+	case MMSG_SEARCH_INTERGROUP:
+	{
+		CStringArray m_arrInterGroup;
+		m_arrInterGroup.RemoveAll();
+
+		CString stmp, seq, sgname, keys;
+		char* pdata = (char*)lParam;
+		int cnt = atoi(CString(pdata, 4));
+		if (cnt == 0) return 0;
+
+		int parseL = 4;
+		struct _grSearch
+		{
+			char ngrs[2];
+			char grseq[2];
+			char gname[30];
+		};
+
+		struct _grSearch* stgr;
+		char* pSeq, * pgame;
+		pSeq = new char[sizeof(stgr->grseq) + 1];
+		pgame = new char[sizeof(stgr->gname) + 1];
+
+		for (int ii = 0; ii < cnt; ii++)
+		{
+			stgr = (struct _grSearch*)&pdata[parseL];
+			memset(pSeq, 0x00, sizeof(stgr->grseq) + 1);
+			memcpy(pSeq, stgr->grseq, sizeof(stgr->grseq));
+			seq.Format("%s", pSeq);
+
+			memset(pgame, 0x00, sizeof(stgr->gname) + 1);
+			memcpy(pgame, stgr->gname, sizeof(stgr->gname));
+			sgname.Format("%s", pgame);
+			sgname.TrimRight();
+
+			parseL += sizeof(struct _grSearch);
+
+		//	m_arrInterGroup.SetAt(ii, sgname);
+			m_arrInterGroup.Add(sgname);
+		}
+
+		delete[] pSeq; pSeq = nullptr;
+		delete[] pgame; pgame = nullptr;
+
+		CString		str, tmps;  
+		CMenuXP		menu;
+		menu.CreatePopupMenu();
+		int	index = 0;
+
+		if (m_deleteBtn)
+		{
+			tmps = "종목 삭제";
+			menu.AppendMenuX(MF_STRING, RBUTTONBASE, tmps);
+			tmps = "관심 등록";
+			menu.AppendMenuX(MF_STRING, RBUTTONBASE_INTERGROUP, tmps);
+			menu.AppendMenuX(MF_SEPARATOR);
+
+			for (int ii = 0; ii < m_arrInterGroup.GetSize(); ii++)
+			{
+				menu.AppendMenuX(MF_STRING, RBUTTONBASE_INTER + index, m_arrInterGroup.GetAt(ii));
+				index++;
+			}
+		}
+
+		CPoint	curPt;
+		GetCursorPos(&curPt);
+		const int nRet = menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_RETURNCMD, curPt.x, curPt.y, this);
+
+		CString slog;
+		slog.Format("[code] nRet = %d", nRet);
+
+		if (nRet == RBUTTONBASE)
+		{
+			if (m_deleteBtn)
+				(*m_axiscall)(AXI_DELHISTORY, (long)(const char*)m_deleteBtn->code, 0);
+		}
+		else if (nRet == RBUTTONBASE_INTERGROUP)
+		{
+			(*m_axiscall)(AXI_ADDINTERHISTORY, -1, 0);
+		}
+		else if (nRet >= RBUTTONBASE_INTER && nRet <= RBUTTONBASE_INTER + index)
+		{
+			if (m_deleteBtn)
+				(*m_axiscall)(AXI_ADDINTERHISTORY, nRet - 4000, (long)(const char*)m_deleteBtn->code);
+		}
+	}
+	break;
+	}
+	
+	return 0;
 }
