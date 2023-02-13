@@ -36,6 +36,7 @@ library Cx_test
 			[id(7)] void ExcuteFile(BSTR fullpath);
 			//}}AFX_ODL_METHOD
 
+			[id(8)] void OpenChrome(BSTR strUrl);
 	};
 
 	//  Class information for CMapWnd

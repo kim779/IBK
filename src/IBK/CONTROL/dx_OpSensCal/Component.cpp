@@ -285,7 +285,11 @@ OPTION CComponent::getStOption(bool theoryType)
 			dval = atof(val);
 			break;
 		case 2:
-			if ((!m_sCD.IsEmpty()) && m_sCD[0] == '2')
+			// 20230125 파생상품 코드 개편  '1', 'A' : 선물
+			//                              '2', 'B' : Call option
+			//			        '3', 'C' : Put option
+			//			        '4', 'D' : 스프레드
+			if ((!m_sCD.IsEmpty()) && (m_sCD[0] == '2' || m_sCD[0] == 'B'))
 				dval = atof(m_sUserCallIV);
 			else
 				dval = atof(m_sUserPutIV);

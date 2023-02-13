@@ -179,10 +179,16 @@ void CContractGrid::OnDestroy()
 
 void CContractGrid::OnPaint() 
 {
+#ifdef _DEBUG
+	CPaintDC dc(this); // device context for painting
+
+	DrawData(&dc);
+#else
 	CPaintDC dc(this); // device context for painting
 
 	xxx::CMemDC	mdc(&dc);
 	DrawData(&mdc);
+#endif
 }
 
 void CContractGrid::OnSize(UINT nType, int cx, int cy) 

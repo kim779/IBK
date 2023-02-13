@@ -3690,8 +3690,9 @@ void Cdepth::calculatePercent()
 		clos = str2double(m_items.GetAt(lowPrice)->m_data);
 	else if (m_percent == pcGijun)	//2014.06.09 KSJ 등락률은 기준가로 스프레드는 전일종가로.
 	{
-		if (m_code.GetAt(0) == '4')	clos = m_clos;
-		else						clos = str2double(m_items.GetAt(gijunPrice)->m_data);
+		if (m_code.GetAt(0) == '4' || m_code.GetAt(0) == 'D')	// 20230211 파생상품 코드 개편	'4', 'D' : 스프레드
+			clos = m_clos;
+		else	clos = str2double(m_items.GetAt(gijunPrice)->m_data);
 	}
 	else if (m_percent == pcUser)
 		clos = (double)m_nUDPercent;
@@ -3726,8 +3727,8 @@ void Cdepth::calculatePercent()
 				item->m_fRGB = m_clrDataFg;
 			}
 		}
-		else if (price < 0 && m_code.GetAt(0) == '4')		//2014.09.17 KSJ 스프레드는 -가 나올수 있음.
-		{
+		else if (price < 0 && (m_code.GetAt(0) == '4' || m_code.GetAt(0) == 'D'))	// 2014.09.17 KSJ 스프레드는 -가 나올수 있음.
+		{										// 20230125 파생상품 코드 개편	'4', 'D' : 스프레드
 			item = m_items.GetAt(askPercent1+ii);
 			if (price > clos)
 			{
@@ -3770,8 +3771,8 @@ void Cdepth::calculatePercent()
 				item->m_fRGB = m_clrDataFg;
 			}
 		}
-		else if (price < 0 && m_code.GetAt(0) == '4')		//2014.09.17 KSJ 스프레드는 -가 나올수 있음.
-		{
+		else if (price < 0 && (m_code.GetAt(0) == '4' || m_code.GetAt(0) == 'D'))	// 2014.09.17 KSJ 스프레드는 -가 나올수 있음.
+		{										// 20230125 파생상품 코드 개편	'4', 'D' : 스프레드
 			item = m_items.GetAt(bidPercent1+ii);
 			if (price > clos)
 			{
@@ -3819,9 +3820,9 @@ void Cdepth::popupMenu(CPoint point, CString Price)
 
 	int	index = popM.TrackPopupMenu(TPM_LEFTALIGN|TPM_RETURNCMD, pt.x, pt.y, this);
 
-	code = m_code;
+	/*code = m_code;
 	if (!code.IsEmpty() && (code.GetAt(0) == 'A' || code.GetAt(0) == 'J'))
-		code = code.Mid(1);
+		code = code.Mid(1);*/
 
 	index -= menuBase;
 	switch (m_type)
@@ -3836,7 +3837,7 @@ void Cdepth::popupMenu(CPoint point, CString Price)
 		case 3:	maps = _T("IB301400");	break;
 		default:return;
 		}
-		string.Format("%s/S/d%s\t%s\n%s\t%s\n", maps, symCODE, code, m_refsym, Price);
+		string.Format("%s/S/d%s\t%s\n%s\t%s\n", maps, symCODE, m_code, m_refsym, Price);
 		openView(typeVIEW, string);
 		break;
 	case ctKOFEX:
@@ -3971,7 +3972,7 @@ CString Cdepth::format(CString data, int index)
 	case atCoRgbSup:	// +- 에 따라 색깔을 표시, Sign 기호 제외
 		sign = getSign(data);
 		eliminateZero(data);
-		if (!atof(data) && !m_code.IsEmpty() && m_code.GetAt(0) != '4')
+		if (!atof(data) && !m_code.IsEmpty() && (m_code.GetAt(0) != '4' && m_code.GetAt(0) != 'D'))	// 20230125 파생상품 코드 개편	'4', 'D' : 스프레드
 		{
 			item->m_fRGB = m_clrDataFg;
 			return _T("");

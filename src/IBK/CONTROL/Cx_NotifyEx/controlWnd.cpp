@@ -993,22 +993,26 @@ bool CControlWnd::checkFuPosition(CString codeS, CString gubnS)
 	else
 		return false;
 
+	// 20230125 파생상품 코드 개편  '1', 'A' : 선물
+	//                              '2', 'B' : Call option
+	//			        '3', 'C' : Put option
+	//			        '4', 'D' : 스프레드
 	switch (m_nPosition)
 	{
 	case FPOS_BULL:	// 강세불리:강세포지션(선물매수,콜매수, 풋매도)
-		if (codeF == '1' && bMS)	// 선물매수
+		if ((codeF == '1' || codeF == 'A') && bMS)	// 선물매수
 			return true;
-		else if (codeF == '2' && bMS)	// 콜매수
+		else if ((codeF == '2' || codeF == 'B') && bMS)	// 콜매수
 			return true;
-		else if (codeF == '3' && bMD)	// 풋매도
+		else if ((codeF == '3' || codeF == 'C') && bMD)	// 풋매도
 			return true;
 		break;
 	case FPOS_BEAR:	// 약세불리:약세포지션(선물매도, 콜매도, 풋매수)
-		if (codeF == '1' && bMD)	// 선물매도
+		if ((codeF == '1' || codeF == 'A') && bMD)	// 선물매도
 			return true;
-		else if (codeF == '2' && bMD)	// 콜매도
+		else if ((codeF == '2' || codeF == 'B') && bMD)	// 콜매도
 			return true;
-		else if (codeF == '3' && bMS)	// 풋매수
+		else if ((codeF == '3' || codeF == 'C') && bMS)	// 풋매수
 			return true;
 		break;
 	}

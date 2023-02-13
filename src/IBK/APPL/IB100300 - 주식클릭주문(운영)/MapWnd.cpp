@@ -947,11 +947,15 @@ LRESULT CMapWnd::OnMessage(WPARAM wParam, LPARAM lParam)
 	int nLen = 0;
 	CString ecod;
 	CString strMsg;
-
+	CString stmp;
 	switch(LOBYTE(LOWORD(wParam)))
 	{
 	case DLL_OUB:
 		key = HIBYTE(LOWORD(wParam));
+
+		stmp.Format("[1003]  key =  %d \r\n", key);
+		OutputDebugString(stmp);
+
 		switch (key)
 		{
 		case 255:		// CX_Account
@@ -2061,7 +2065,7 @@ void CMapWnd::DrawSiseText(CDC* pDC, CString strData, CRect rect, UINT nFormat, 
 
 void CMapWnd::SendJumun(char cJflg, int iPirce, int iJuno, int iJqty, int bMaketPrice)
 {
-	
+	CString slog;
 	//본사직원 주문 안나가도록 예외 처리 [ Start ]
 	if (!(long)m_pwndParent->SendMessage(WM_USER, MAKEWPARAM(variantDLL, orderCC), 0L))
 	{
@@ -2071,7 +2075,8 @@ void CMapWnd::SendJumun(char cJflg, int iPirce, int iJuno, int iJqty, int bMaket
 			return;
 		}	
 	}
-	
+slog.Format("[1003] 1.   CMapWnd::SendJumun iPirce=[%d] \r\n", iPirce);
+OutputDebugString(slog);
 	if (m_pPass->IsWindowEnabled())
 	{
 		SetGuide("비밀번호를 확인 후 이용하시기 바랍니다. (비밀번호입력 -> [조회]클릭)");
@@ -2086,13 +2091,22 @@ void CMapWnd::SendJumun(char cJflg, int iPirce, int iJuno, int iJqty, int bMaket
 		return;
 	}
 
+slog.Format("[1003] 2.  CMapWnd::SendJumun \r\n");
+OutputDebugString(slog);
+
 	if (iJqty == 0 && (cJflg == '1' || cJflg == '2'))	// 주문수량이 0이고 매도나 매수인 경우
 	{	
 		iJqty = m_pCtrlWnd->GetJumunCount();
 	}
 
+slog.Format("[1003] 3.  CMapWnd::SendJumun \r\n");
+OutputDebugString(slog);
+
 	CString strLedger = m_ledger.LedgerTR(MAP_NO, m_strAcc.Left(3), "", "", GetEncPassword(m_strPswd));
 	
+slog.Format("[1003] 4.  CMapWnd::SendJumun   After Enc \r\n");
+OutputDebugString(slog);
+
 	m_iLenLedger = strLedger.GetLength();
 
 	CString strTemp;
@@ -2290,6 +2304,9 @@ void CMapWnd::SendJumun(char cJflg, int iPirce, int iJuno, int iJqty, int bMaket
 //slog.Format("[1003] prgb=[%c] gmo=[%.20s] code=[%.12s] acc=[%.11s] prc=[%.10s] cnt=[%.8s]", Mid.prgb, Mid.gmo, Mid.code, Mid.acno, Mid.jprc, Mid.jqty);
 //OutputDebugString(slog);
 
+	slog.Format("[1003] 5.  CMapWnd::SendJumun   \r\n");
+	OutputDebugString(slog);
+
 	m_pTool->SendTR(TN_JUMUN, strLedger, TK_JUMUN, US_ENC | US_CA);
 }
 
@@ -2424,9 +2441,9 @@ void CMapWnd::SendMaxJmcn(CString strJmdg, int iMmgb)
 		}
 
 		if(m_pCtrlWnd->GetCrdType() == "03")  //자기융자
-			strncpy((char*)&mid.zLoanPtnCode, "03", 2);
+			strncpy((char*)&mid.LoadDtlClssCode, "03", 2);
 		else if(m_pCtrlWnd->GetCrdType() == "01")  //유통융자
-			strncpy((char*)&mid.zLoanPtnCode, "01", 2);
+			strncpy((char*)&mid.LoadDtlClssCode, "01", 2);
 
 		strData += CString((char *)&mid, L_maxCrjmct_mid);
 

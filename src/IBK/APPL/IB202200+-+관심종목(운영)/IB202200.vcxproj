@@ -116,7 +116,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ForceSymbolReferences>__DllMainCRTStartup%4012;%(ForceSymbolReferences)</ForceSymbolReferences>
-      <OutputFile>../../../dev/IB202200.DLL</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/IB202200.DLL</OutputFile>
       <ImportLibrary>.\Debug\IB202200.lib</ImportLibrary>
       <AdditionalDependencies>../../control/fx_misc/debug/fx_misc.lib;imm32.lib;winmm.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\IB202200.def</ModuleDefinitionFile>

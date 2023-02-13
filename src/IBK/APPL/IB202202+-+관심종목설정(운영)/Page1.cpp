@@ -3927,7 +3927,7 @@ void CPage1::savingInterest(int gno)
 		
 			bInfo->bookmark[0] = pinter->bookmark[0] == '1' ? '1' : '0';//2015.04.03 KSJ 1이아니면 0으로 해준다.
 		}
-		
+		fileB.Write(bInfo, sz_bookmark);
 	}
 #else
 	CString	filePath, fileBook;
@@ -8648,16 +8648,23 @@ void CPage1::SendMsgToPage(int igubn, CString sdata)
 						CString temp = CString((pinter->code));
 						temp = temp.Left(12);
 						temp.TrimRight();
-						CString temp2 = CString(bInfo->code);
+					//	CString temp2 = CString(bInfo->code  //test 20230203
+						CString temp2 = CString(bInfo->code, 12).TrimRight();
 						temp2.TrimRight();
 
 						if (strcmp(temp, temp2) == 0)
 						{
 							if (pinter->code[0] == 'm')
 							{
-								CopyMemory(pinter->name, bInfo->name, sizeof(bInfo->name));
+								//temp.Format("%.32s", bInfo->name);
+								//temp.TrimRight();
+								char* ptmp = new char[sizeof(bInfo->name) + 1];
+								memset(ptmp, 0x00, sizeof(bInfo->name) + 1);
+								memcpy(ptmp, bInfo->name, sizeof(bInfo->name));
+								temp.Format("%s", ptmp);
+								temp.TrimRight();
+								CopyMemory(pinter->name, (LPSTR)(LPCTSTR)temp, temp.GetLength());
 							}
-
 							pinter->bookmark[0] = bInfo->bookmark[0] == '1' ? '1' : '0';//2015.04.03 KSJ 1이아니면 0으로 해준다.
 						}
 					}

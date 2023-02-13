@@ -760,7 +760,10 @@ LONG CMainWnd::OperDLLOUB(WPARAM wParam, LPARAM lParam)
 	
 	char* data = ex->data; 
 	const int len = ex->size;
-	
+
+	slog.Format("[cx_interest] OperDLLOUB key=[%d] len=[%d]", ex->key, len);
+	OutputDebugString(slog);
+
 	CString strRem = CString(data,len);
 	if (ex->key == TRKEY_INTER)
 	{
@@ -773,6 +776,7 @@ LONG CMainWnd::OperDLLOUB(WPARAM wParam, LPARAM lParam)
 		if (_groupKey < 0)
 			return ret;
 
+		m_pGroupWnd->m_iInterCnt = atoi(CString(data, len).Mid(22, 4));
 		m_pTreeWnd->receiveOub(CString(data, len), _groupKey);
 		return ret;
 	}
@@ -950,6 +954,7 @@ void CMainWnd::sendTR(CString name, CString data, BYTE type, int key, CString ke
 	trData += keyName;
 	trData += '\t';
 	trData += std::string((char *)&udat, L_userTH);
+	data.Replace("emptyrow", "        ");  //test 20230208
 	trData += data.GetString();
 	
 	const LRESULT result = m_pWnd->SendMessage(WM_USER, MAKEWPARAM(invokeTRx, trData.size() - L_userTH - m_param.name.GetLength() - 1), (LPARAM)trData.c_str());

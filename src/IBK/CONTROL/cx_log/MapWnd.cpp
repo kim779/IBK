@@ -56,6 +56,7 @@ BEGIN_DISPATCH_MAP(CMapWnd, CWnd)
 	DISP_FUNCTION(CMapWnd, "HTSEncode", HTSEncode, VT_BSTR, VTS_BSTR VTS_BSTR)
 	DISP_FUNCTION(CMapWnd, "ExcuteFile", ExcuteFile, VT_EMPTY, VTS_BSTR)
 	//}}AFX_DISPATCH_MAP
+	DISP_FUNCTION_ID(CMapWnd, "OpenChrome", dispidOpenChrome, OpenChrome, VT_EMPTY, VTS_BSTR)
 END_DISPATCH_MAP()
 
 // Note: we add support for IID_IMapWnd to support typesafe binding
@@ -243,4 +244,14 @@ BSTR CMapWnd::HTSEncode(LPCTSTR sID, LPCTSTR sKey)
 void CMapWnd::ExcuteFile(LPCTSTR fullpath) 
 {
 	::ShellExecute(NULL, "open", fullpath, NULL, NULL, SW_SHOWNORMAL); 
+}
+
+
+void CMapWnd::OpenChrome(BSTR strUrl)
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	CString sUrl;
+	sUrl.Format("%s", strUrl);
+	ShellExecute(NULL, "open", "chrome.exe", sUrl, NULL, SW_SHOWNORMAL);
+	// TODO: 여기에 디스패치 처리기 코드를 추가합니다.
 }

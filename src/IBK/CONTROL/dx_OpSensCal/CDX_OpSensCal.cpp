@@ -39,10 +39,17 @@ CDX_OpSensCal::~CDX_OpSensCal()
 
 int CDX_OpSensCal::CallPut(LPSTR code)
 {
+	// 20230125 파생상품 코드 개편  '1', 'A' : 선물
+	//                              '2', 'B' : Call option
+	//			        '3', 'C' : Put option
+	//			        '4', 'D' : 스프레드
 	switch (code[0])
 	{
-	case '2': return CALL;
-	case '3': return PUT;
+	case '2':
+	case 'B': return CALL;
+	case '3':
+	case 'C': return PUT;
+	default:  break;
 	}
 
 	return 0;

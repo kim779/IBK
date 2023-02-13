@@ -333,6 +333,12 @@
     <ClInclude Include="UsefulSetupDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="description.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\tree1.bmp">

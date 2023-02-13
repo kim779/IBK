@@ -208,8 +208,10 @@ long CControlWnd::OnMessage(WPARAM wParam, LPARAM lParam)
 // IBXXXX01 sheared 에서 보내주는 데이타 (잔고 데이타 및 에러메세지)
 long CControlWnd::OnRemainMessage(WPARAM wParam, LPARAM lParam)
 {
+	CString stmp;
 	CString sData = (char*)lParam;
-
+	stmp.Format("[IBXXXX00][cx_notify] OnRemainMessage [%s]", sData);
+	OutputDebugString(stmp);
 	if (Parser(sData, "\t") == "ERR")	// guide 메세지(오류 or 정상), guide + data
 	{
 		sData = "guide\t" + sData;
@@ -385,6 +387,9 @@ void CControlWnd::SetParam(_param *pParam)
 
 void CControlWnd::SendToMap(CString sData, bool bAll, CString sAccn/* = ""*/)
 {
+	CString stmp;
+	stmp.Format("[IBXXXX00][cx_notify] sData=[%s]", sData);
+	OutputDebugString(stmp);
 #ifdef	SC_TEST
 	m_cs.Lock();
 #endif
@@ -466,9 +471,15 @@ void CControlWnd::SendToMap(CString sData, bool bAll, CString sAccn/* = ""*/)
 		}
 		
 		m_flag = Parser(sData, "\t");
-		
+		stmp.Format("[IBXXXX00][cx_notify] not A m_flag=[%s] ", m_flag);
+		OutputDebugString(stmp);
+
 		while (!sData.IsEmpty())
 			sDataArr.Add(Parser(sData, "\t"));
+
+		stmp.Format("[IBXXXX00][cx_notify] not A while end");
+		OutputDebugString(stmp);
+
 		if (sDataArr.GetSize() <= 0)
 		{
 #ifdef	SC_TEST
@@ -538,7 +549,8 @@ void CControlWnd::SendToMap(CString sData, bool bAll, CString sAccn/* = ""*/)
 		if (m_bAllAccn)
 			m_dataList = sAccn + m_dataList;
 	}
-
+stmp.Format("[IBXXXX00][cx_notify] before sendmessage");
+OutputDebugString(stmp);
 	m_pParent->SendMessage(WM_USER, MAKEWPARAM(eventDLL, MAKEWORD(m_Param.key, evOnDblClk/*DblClick*/)),
 					(LPARAM)m_Param.name.GetString());
 #ifdef	SC_TEST

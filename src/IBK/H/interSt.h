@@ -74,6 +74,7 @@ struct _intersx
 		creditPrc  = ref.creditPrc;
 		maeipPrc   = ref.maeipPrc;
 	}
+//#define	sz_intersx	 sizeof(struct _intersx)
 
 	void empty()
 	{

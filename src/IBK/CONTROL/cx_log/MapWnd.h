@@ -56,6 +56,12 @@ protected:
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_INTERFACE_MAP()
+	void OpenChrome(BSTR strUrl);
+
+	enum
+	{
+		dispidOpenChrome = 8L
+	};
 };
 
 /////////////////////////////////////////////////////////////////////////////

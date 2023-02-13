@@ -192,6 +192,31 @@ int CCodeList::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CCodeList::OnPaint() 
 {
+#ifdef _DEBUG
+	CPaintDC dc(this); // device context for painting
+	CRect rc, rccell;
+	
+	GetClientRect(rc);
+	dc.Rectangle(&rc);
+	rccell.SetRect(rc.left + GAP, rc.top, rc.right, m_RowHeight);
+
+	for (int ii = m_iStart; ii < GetVisibleRow(); ii++)
+	{
+		DrawCell(&dc, rccell, ii);
+		rccell.OffsetRect(0, m_RowHeight);
+	}
+	// Do not call CWnd::OnPaint() for painting messages
+
+	if (m_bFocus)
+	{
+		if ((CWnd*)GetFocus() != this && (CWnd*)GetFocus() != m_pParent->m_pEdit.get())
+		{
+			SetFocus();
+
+			m_bFocus = FALSE;
+		}
+	}
+#else
 	CPaintDC dc(this); // device context for painting
 	CRect rc, rccell;
 	xxx::CMemDC memDC(&dc);
@@ -216,6 +241,7 @@ void CCodeList::OnPaint()
 			m_bFocus = FALSE;
 		}
 	}
+#endif
 }
 
 void CCodeList::DrawCell(CDC *pDC, CRect rc, int row)

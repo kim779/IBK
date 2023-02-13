@@ -47,6 +47,7 @@ public:
 	BOOL		m_bRemain{};
 	CString		m_sMapHandle;
 
+
 // Operations
 public:
 	BOOL GetRTSVisible() { return m_bRTS; };

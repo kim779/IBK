@@ -204,10 +204,16 @@ bool CControlWnd::Initialize(bool bDll)
 
 void CControlWnd::OnPaint() 
 {
+#ifdef _DEBUG
+	CPaintDC dc(this); // device context for painting
+	
+	Draw(&dc);
+#else
 	CPaintDC dc(this); // device context for painting
 	xxx::CMemDC	mdc(&dc);
 
 	Draw(&mdc);
+#endif
 }
 
 void CControlWnd::OnLButtonDown(UINT nFlags, CPoint point) 
@@ -798,16 +804,23 @@ void CControlWnd::DrawStretchByMask(CDC *pDC, CBitmap *pBitmap, CRect bRc, COLOR
 
 void CControlWnd::ChangeCode()
 {
-	if (m_strCurCode.GetAt(0) == '2')	//Call
+	// 20230125 파생상품 코드 개편  '1', 'A' : 선물
+	//                              '2', 'B' : Call option
+	//			        '3', 'C' : Put option
+	//			        '4', 'D' : 스프레드
+	char	ch = '\0';
+
+	switch (m_strCurCode.GetAt(0))
 	{
-		m_strCurCode.Delete(0);
-		m_strCurCode.Insert(0, "3");
+	case '2':	ch = '3';	break;	// Call
+	case 'B':	ch = 'C';	break;	// Call
+	case '3':	ch = '2';	break;	// Put
+	case 'C':	ch = 'B';	break;	// Put
+	default:	break;
 	}
-	else if (m_strCurCode.GetAt(0) == '3')	//Put
-	{
-		m_strCurCode.Delete(0);
-		m_strCurCode.Insert(0, "2");
-	}
+
+	if (ch != '\0')
+		m_strCurCode.SetAt(0, ch);
 }
 
 void CControlWnd::SendTrigger()
@@ -1171,14 +1184,18 @@ void CControlWnd::SetCurCode(LPCTSTR lpszNewValue)
 	m_strCurCode = lpszNewValue;
 	const	bool	bEnable = true;
 	
-	if (m_strCurCode.GetAt(0) == '2')			//Call
+	// 20230125 파생상품 코드 개편  '1', 'A' : 선물
+    //					'2', 'B' : Call option
+    //			        '3', 'C' : Put option
+    //			        '4', 'D' : 스프레드
+	if (m_strCurCode.GetAt(0) == '2' || m_strCurCode.GetAt(0) == 'B')	// Call
 	{
 		m_nIndex = OBJ_C;
 		m_nOFIndex = OF_F;
 		m_bPut = true;
 		m_bOption = true;
 	}
-	else if (m_strCurCode.GetAt(0) == '3')	//Put
+	else if (m_strCurCode.GetAt(0) == '3' || m_strCurCode.GetAt(0) == 'C')	// Put
 	{
 		m_nIndex = OBJ_P;
 		m_nOFIndex = OF_F;

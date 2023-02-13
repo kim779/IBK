@@ -691,8 +691,17 @@ void CMapDlg::GetObject(WPARAM wParam, LPARAM lParam )
 	job.key = HIBYTE(LOWORD(wParam));
 	job.msg = LOBYTE(LOWORD(wParam));
 
-	job.len = HIWORD(wParam);
-	if( lParam != NULL && job.len > 0 && job.msg != DLL_SETFCB )	//2015.10.26 KSJ DLL_SETFCB에서 오류나므로 
+	if (job.msg == DLL_OUBx)
+	{
+		struct _extTHx* extTH = (struct _extTHx*)lParam;
+		job.len = extTH->size;
+	}
+	else
+		job.len = HIWORD(wParam);
+	
+	//job.len = HIWORD(wParam);
+	//if( lParam != NULL && job.len > 0 && job.msg != DLL_SETFCB )	//2015.10.26 KSJ DLL_SETFCB에서 오류나므로 
+	if (lParam != NULL && job.len > 0 && job.msg != DLL_SETFCB && job.msg != DLL_OUBx)	//2015.10.26 KSJ DLL_SETFCB에서 오류나므로 
 		job.msgBuf = CString( (char*)lParam, job.len );
 	if( job.msg == DLL_TRIGGER || job.msg == DLL_DOMINO )
 		job.msgBuf = CString( (char*)lParam );
@@ -726,8 +735,8 @@ void CMapDlg::GetObject(WPARAM wParam, LPARAM lParam )
 			{
 				char* pBytes = (char*)lParam;
 				
-				struct _extTH* extTH = (struct _extTH*)pBytes;
-				pBytes += L_extTH;
+				struct _extTHx* extTH = (struct _extTHx*)pBytes;
+//				pBytes += L_extTHx;
 				
 // 				CString strTemp;
 // 				strTemp.Format("[KSJ] key[%c] size[%d]", extTH->key, extTH->size);
@@ -735,11 +744,12 @@ void CMapDlg::GetObject(WPARAM wParam, LPARAM lParam )
 				
 				job.key = extTH->key;
 				job.len = extTH->size;
-				job.msgBuf = CString( pBytes, job.len );
+				job.msgBuf = CString(extTH->data, job.len );
 			}
 		}
 		else
 		{
+			char* pdata = (char*)lParam;
 			job.len = HIWORD(wParam);
 			if( lParam != NULL && job.len > 0 )
 			{

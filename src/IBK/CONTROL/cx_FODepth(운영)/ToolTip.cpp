@@ -77,10 +77,16 @@ int CToolTip::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CToolTip::OnPaint() 
 {
+#ifdef _DEBUG
+	CPaintDC dc(this); // device context for painting
+
+	DrawTip(&dc);
+#else
 	CPaintDC dc(this); // device context for painting
 	
 	xxx::CMemDC	mdc(&dc);
 	DrawTip(&mdc);
+#endif
 }
 
 void CToolTip::DrawTip(CDC *pDC)

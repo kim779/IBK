@@ -95,7 +95,7 @@ STDAPI DllRegisterServer(void)
 	COleObjectFactory::UpdateRegistryAll();
 	return S_OK;
 }
-#include "Dlgtest.h"
+
 #include "../../h/axisfire.h"
 #include "MapWnd.h"
 __declspec(dllexport) CWnd* APIENTRY axCreate(CWnd *parent, void* pParam)

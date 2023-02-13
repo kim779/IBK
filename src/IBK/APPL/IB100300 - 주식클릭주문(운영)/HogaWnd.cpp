@@ -1179,7 +1179,7 @@ void CHogaWnd::ReceiveSise(char* pData, int len)
 
 	Invalidate();
 }
-
+//#define DF_VEC
 void CHogaWnd::ReceiveMiche(char* pcData, int iLen)
 {
 	struct _miche_mod *pMod = (struct _miche_mod *)pcData;
@@ -1191,14 +1191,14 @@ void CHogaWnd::ReceiveMiche(char* pcData, int iLen)
 		pWnd->SetGuide("잘못된 미체결 데이터 수신. 재조회 하시기 바랍니다");
 		return;
 	}
-	
+
+#ifdef DF_VEC
 	for (int ii = 0; ii < nrec; ii++)
 	{
-//		std::unique_ptr<COrder> order = std::make_unique<COrder>();
-		auto& order = _vOrder.emplace_back(std::make_unique<COrder>());
+		std::unique_ptr< COrder> order = std::make_unique< COrder>();
+		//auto& order = _vOrder.emplace_back(std::make_unique<COrder>());
 		class COrder* pOrder = order.get();
-//		class COrder* pOrder = new COrder;
-
+	
 		pOrder->code = GetCODX();
 		pOrder->juno = m_pTool->ToString(pMod->rec[ii].juno, sizeof(pMod->rec[ii].juno));
 		pOrder->mmgb = m_pTool->ToString(pMod->rec[ii].odgb, sizeof(pMod->rec[ii].odgb));
@@ -1210,7 +1210,31 @@ void CHogaWnd::ReceiveMiche(char* pcData, int iLen)
 		{
 			//order.reset();
 			//delete pOrder;
-			_vOrder.erase(_vOrder.end());
+			continue;
+		}
+		
+		pOrder->jprc = m_pTool->ToString(pMod->rec[ii].jprc, sizeof(pMod->rec[ii].jprc));
+		pOrder->jqty = m_pTool->ToString(pMod->rec[ii].jqty, sizeof(pMod->rec[ii].jqty));
+		pOrder->mcvl = m_pTool->ToString(pMod->rec[ii].wqty, sizeof(pMod->rec[ii].wqty));
+
+		const int juno = Str2int(pOrder->juno);
+		m_mapOrder.SetAt(juno, pOrder);
+	}
+#else 
+	for (int ii = 0; ii < nrec; ii++)
+	{
+		class COrder* pOrder = new COrder;
+
+		pOrder->code = GetCODX();
+		pOrder->juno = m_pTool->ToString(pMod->rec[ii].juno, sizeof(pMod->rec[ii].juno));
+		pOrder->mmgb = m_pTool->ToString(pMod->rec[ii].odgb, sizeof(pMod->rec[ii].odgb));
+		if (pOrder->mmgb.Find("매도") >= 0)
+			pOrder->mmgb = "1";
+		else if (pOrder->mmgb.Find("매수") >= 0)
+			pOrder->mmgb = "2";
+		else
+		{
+			delete pOrder;
 			continue;
 		}
 
@@ -1221,6 +1245,35 @@ void CHogaWnd::ReceiveMiche(char* pcData, int iLen)
 		const int juno = Str2int(pOrder->juno);
 		m_mapOrder.SetAt(juno, pOrder);
 	}
+#endif
+//	for (int ii = 0; ii < nrec; ii++)
+//	{
+//		auto& order = _vOrder.emplace_back(std::make_unique<COrder>());
+//		class COrder* pOrder = order.get();
+////		class COrder* pOrder = new COrder;
+//
+//		pOrder->code = GetCODX();
+//		pOrder->juno = m_pTool->ToString(pMod->rec[ii].juno, sizeof(pMod->rec[ii].juno));
+//		pOrder->mmgb = m_pTool->ToString(pMod->rec[ii].odgb, sizeof(pMod->rec[ii].odgb));
+//		if (pOrder->mmgb.Find("매도") >= 0)
+//			pOrder->mmgb = "1";
+//		else if (pOrder->mmgb.Find("매수") >= 0)
+//			pOrder->mmgb = "2";
+//		else
+//		{
+//			//order.reset();
+//			//delete pOrder;
+//			//_vOrder.erase(_vOrder.end());
+//			continue;
+//		}
+//
+//		pOrder->jprc = m_pTool->ToString(pMod->rec[ii].jprc, sizeof(pMod->rec[ii].jprc));
+//		pOrder->jqty = m_pTool->ToString(pMod->rec[ii].jqty, sizeof(pMod->rec[ii].jqty));
+//		pOrder->mcvl = m_pTool->ToString(pMod->rec[ii].wqty, sizeof(pMod->rec[ii].wqty));
+//
+//		const int juno = Str2int(pOrder->juno);
+//		m_mapOrder.SetAt(juno, pOrder);
+//	}
 
 	Invalidate();
 }
@@ -4379,6 +4432,9 @@ void CHogaWnd::Click_Order(CPoint point)
 					return;
 			}
 
+CString stmp;  //test 2023
+stmp.Format("[1003] Click_Order count=[%d]\r\n", count);
+OutputDebugString(stmp);
 			for (int jj = 0; jj < count; jj++)
 			{
 				SendJumun('2', hoga);

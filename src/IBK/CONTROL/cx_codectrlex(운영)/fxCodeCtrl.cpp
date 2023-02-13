@@ -891,7 +891,8 @@ void CCodeEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 		else if (m_Unit == GU_FUTURE || m_Unit == GU_OPTION || m_Unit == GU_FOCODE || m_Unit == GU_POPTION || m_Unit == GU_FCODE || m_Unit == GU_FOSTOCK)
 		{
-			if (m_Unit == GU_FUTURE && (len == 5 && tmpS.GetAt(0) == '1'))
+			//if (m_Unit == GU_FUTURE && (len == 5 && tmpS.GetAt(0) == '1'))
+			if (m_Unit == GU_FUTURE && len == 5 && (tmpS.GetAt(0) == '1' || tmpS.GetAt(0) == 'A'))	// 20230125 파생상품 코드 개편  '1', 'A' : 선물
 			{
 				tmpS += "000";
 				m_pParent->SetEditData(tmpS);
@@ -1020,8 +1021,6 @@ void CCodeEdit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 				((CControlWnd*)m_pParent->GetParent())->clean();
 				return;
 			}
-			//TRACE("KeyUp: %s\n", sTmp);
-			//if (!isHexNumeric(sTmp) && m_Unit == GU_CODE)
 			if (!isHexNumeric2(sTmp) && m_Unit == GU_CODE)
 			{
 				m_pParent->CodeListMode();
@@ -1052,8 +1051,8 @@ void CCodeEdit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 			break;
 		case GU_FUTURE: 
-			if (!isHexNumeric(sTmp))
-			{
+//			if (!isHexNumeric(sTmp))
+//			{
 //				m_pParent->CodeListMode();
 //				if (!m_pParent->GetDroppedState())
 //					m_pParent->ShowDropDown(TRUE);
@@ -1061,8 +1060,9 @@ void CCodeEdit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 //				m_pParent->SearchCode(sTmp);
 //				
 //				return;
-			}
-			if (len == 5 && sTmp.GetAt(0) == '1')
+//			}
+//			if (len == 5 && sTmp.GetAt(0) == '1')
+			if (len == 5 && (sTmp.GetAt(0) == '1' || sTmp.GetAt(0) == 'A'))	// 20230125 파생상품 코드 개편  '1', 'A' : 선물
 			{
 				sTmp += "000";
 				SetWindowText(sTmp);
@@ -1121,8 +1121,8 @@ void CCodeEdit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 			break;
 		case GU_FOCODE:
-			if (!isHexNumeric(sTmp))
-			{
+//			if (!isHexNumeric(sTmp))
+//			{
 // 				m_pParent->CodeListMode();
 // 				if (!m_pParent->GetDroppedState())
 // 					m_pParent->ShowDropDown(TRUE);
@@ -1130,7 +1130,7 @@ void CCodeEdit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 // 				m_pParent->SearchCode(sTmp);
 				
 //				return;
-			}
+//			}
 			if (len == sz_FOCODE)
 			{
 				GetParent()->SetWindowText(sTmp);
@@ -1254,18 +1254,39 @@ bool CCodeEdit::isNumeric(CString str)
 
 bool CCodeEdit::isHexNumeric(CString str)
 {
-	if (!str.IsEmpty() && (str.GetAt(0) < '0' || str.GetAt(0) > '9'))
+//	if (!str.IsEmpty())  //test 20230211 이상
+//		return true;
+
+	if (m_Unit == GU_FUTURE || m_Unit == GU_OPTION || m_Unit == GU_FOCODE || m_Unit == GU_POPTION || m_Unit == GU_FCODE || m_Unit == GU_FOSTOCK)
+	{
+		// 20230125 파생상품 코드 개편  '1', 'A' : 선물
+		//                              '2', 'B' : Call option
+		//			        '3', 'C' : Put option
+		//			        '4', 'D' : 스프레드
+		if ((str.GetAt(0) < '0' || str.GetAt(0) > '9') && (str.GetAt(0) < 'A' || str.GetAt(0) > 'G'))
+			return false;
+	}
+	else if (str.GetAt(0) < '0' || str.GetAt(0) > '9')
 		return false;
+
 	for (int ii = 1; ii < str.GetLength(); ii++)
 		if ((str.GetAt(ii) < '0' || str.GetAt(ii) > '9') &&
 			(str.GetAt(ii) < 'a' || (str.GetAt(ii) > 'z' && str.GetAt(ii) != 's')) &&
 			(str.GetAt(ii) < 'A' || (str.GetAt(ii) > 'Z' && str.GetAt(ii) != 'S')))
 			return false;
 	return true;
+	/*if (!str.IsEmpty() && (str.GetAt(0) < '0' || str.GetAt(0) > '9'))
+		return false;
+	for (int ii = 1; ii < str.GetLength(); ii++)
+		if ((str.GetAt(ii) < '0' || str.GetAt(ii) > '9') &&
+			(str.GetAt(ii) < 'a' || (str.GetAt(ii) > 'z' && str.GetAt(ii) != 's')) &&
+			(str.GetAt(ii) < 'A' || (str.GetAt(ii) > 'Z' && str.GetAt(ii) != 'S')))
+			return false;
+	return true;*/
 }
 
 bool CCodeEdit::isHexNumeric2(CString str)
-{
+{  
 	if (!str.IsEmpty() && (str.GetAt(0) < '0' || str.GetAt(0) > '9'))
 	{
 		return false;
@@ -1919,13 +1940,18 @@ void CfxCodeCtrl::SetEditData(CString sData, bool bflag)
 		{
 			const	char	ch = sData.GetAt(0);
 
-			if (ch == '1' || ch == '4')
+			// 20230125 파생상품 코드 개편  '1', 'A' : 선물
+			//                              '2', 'B' : Call option
+			//			        '3', 'C' : Put option
+			//			        '4', 'D' : 스프레드
+			if (ch == '1' || ch == '4' || ch == 'A' || ch == 'D')
 			{
 				str.Format("%s\t%s", "30301",sData);
 				((CControlWnd*)m_pParent)->Variant(triggerCC, str);
 				((CControlWnd*)m_pParent)->Variant(codeCC, str);
 			}
-			else if (ch == '2' || ch == '3')
+			//else if (ch == '2' || ch == '3')
+			else if (ch == '2' || ch == '3' || ch == 'B' || ch == 'C')
 			{
 				str.Format("%s\t%s", "40301", sData);
 				((CControlWnd*)m_pParent)->Variant(triggerCC, str);

@@ -1357,8 +1357,11 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 							CString tDept(readB, readL);
 							tDept.TrimLeft(); tDept.TrimRight();
 
-							if (m_dept == tDept)
-								ShowControlBar(m_TotalAcc, TRUE, FALSE);
+								//if (Axis::userID == "khs779")
+								{
+									ShowControlBar(m_TotalAcc, TRUE, FALSE);
+									m_TotalAcc->Refresh813(1);
+								}
 						}
 					}
 					
@@ -6143,6 +6146,7 @@ CString s;
 s.Format("ACCTEST Main endWorkstation 로그인부서=[%s] 파일부서=[%s] \n",m_dept, tDept);
 OutputDebugString(s);
 WriteLog(s);
+
 ///	if ( (m_dept != "813") && (m_dept != "828") && m_dept != "812" && m_dept != tDept)
 	if(m_dept != tDept)  
 	{

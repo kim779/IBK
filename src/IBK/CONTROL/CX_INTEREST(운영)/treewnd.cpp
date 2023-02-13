@@ -3817,7 +3817,8 @@ void CTreeWnd::receiveOub(CString& data, int key)
 		code = CString(item.code, codelen).Trim();
 		name = GetCodeName(CString(item.code, codelen).Trim());
 		if (code.IsEmpty())
-			code = "          ";
+			code = "emptyrow";
+	//		code = "          ";  //test 20230208
 
 		if (code[0] == 'm' && name.IsEmpty() && bookspan.size() > ii)
 		{

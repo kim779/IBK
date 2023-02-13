@@ -1428,6 +1428,10 @@ void CToolWnd::SendTree(int nIndex)
 	//pWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_SELGROUP, MO_SET), nIndex);
 
 	const int tp = m_cbViewType.GetCurSel();
+
+	CString stmp;
+	stmp.Format("[cx_interest] CToolWnd::SendTree tp =[%d] nIndex=[%d] ", tp, nIndex);
+
 	if(tp == 1)
 	{
 		pWnd->SendMessage(WM_MANAGE, MK_VIEWTYPE, (LPARAM)0);

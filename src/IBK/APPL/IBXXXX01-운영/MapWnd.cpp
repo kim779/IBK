@@ -976,6 +976,8 @@ void CMapWnd::sendNContTR(CString sLedger)
 	CopyMemory(&cmid.gubn, "2", sizeof(cmid.gubn));
 	CopyMemory(&cmid.sort, "1", sizeof(cmid.sort));
 	sData += CString((char*)&cmid, L_fcmid);
+
+	OutputDebugString("\r\n IBxxxx01 PIHOFCHG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n");
 	sendTR("PIHOFCHG", sData, KEY_NCONT, 0,cmid.accn);	
 }
 
@@ -1719,7 +1721,7 @@ BOOL CMapWnd::sendTR(CString sTR, CString sData, int nKey, int nStat, CString Ac
 	sTRData += sData;
 	
 // 	OutputDebugString("[KSJ] ledger+mid+userth[" + sData + "]");
-
+	variant(guideCC, "IBxxxx01 invokeTR");
 	return m_pParent->SendMessage(WM_USER, MAKEWPARAM(invokeTRx, sData.GetLength()), 
 		(LPARAM)(const char*)sTRData); 
 }

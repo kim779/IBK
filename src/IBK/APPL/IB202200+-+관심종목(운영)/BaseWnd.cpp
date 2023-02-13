@@ -69,11 +69,17 @@ void CBaseWnd::OnPaint()
 	CPaintDC dc(this); // device context for painting
 	if (m_bBitmap)
 	{
+#ifdef _DEBUG
+		CFont* oldfont = dc.SelectObject(m_pFont);
+		OperDraw(&dc);
+		dc.SelectObject(oldfont);
+#else
 		xxx::CMemDC	mdc(&dc);
 		CFont*	oldfont = mdc.SelectObject(m_pFont);
 		OperDraw(&mdc);
 		mdc.SelectObject(oldfont);
-
+#endif
+	//	OperDraw(&dc);
 		//mdc->DeleteDC();
 	}
 	else

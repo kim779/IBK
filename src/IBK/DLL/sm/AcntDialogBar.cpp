@@ -1384,7 +1384,7 @@ CString s;
 s.Format("ACCTEST CAcntDialogBar Refresh813 로그인부서=[%s] 파일부서=[%s] \n",dept, tDept);
 OutputDebugString(s);
 	//if (dept!="813" && dept!="828" && dept!="812" && dept != tDept)
-	if(dept != tDept)  
+	if(dept != tDept)   
 	{
 		return;
 	}

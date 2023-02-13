@@ -14,7 +14,7 @@ class CGroupWnd : public CBaseWnd
 // Construction
 public:
 	CGroupWnd(CWnd* pMainWnd);
-
+	CString m_slog;
 // Attributes
 public:
 	std::vector<std::shared_ptr<_intersx>> m_Inters;
@@ -42,6 +42,8 @@ public:
 	int		m_commIndex{};
 	double	m_xRate{};
 	double	m_yRate{};
+
+	int			m_iInterCnt{};
 // Operations
 public:
 // Overrides

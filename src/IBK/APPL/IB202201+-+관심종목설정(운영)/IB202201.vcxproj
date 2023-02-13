@@ -115,7 +115,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/IB202201.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/IB202201.dll</OutputFile>
       <ImportLibrary>.\Debug\IB202201.lib</ImportLibrary>
       <AdditionalDependencies>../../control/fx_grid/debug/fx_grid.lib;../../control/fx_misc/debug/fx_misc.lib;winmm.lib;Imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\IB202201.def</ModuleDefinitionFile>

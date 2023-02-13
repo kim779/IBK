@@ -573,6 +573,10 @@ CString CMapWnd::parsingRemainData(char* pData, int len, CString sErrmsg, int tr
 
 	pAccn->m_CodeMap.RemoveAll();
 
+	CString stmp;
+	stmp.Format("[IBXXXX00] parsingRemainData nrec=[%d] \r\n", nrec);
+	OutputDebugString(stmp);
+
 	for (int ii = 0; ii < nrec; ii++)
 	{
 		if (bFuture)
@@ -1577,7 +1581,7 @@ BOOL CMapWnd::sendTR(CString sTR, CString sData, int nKey, int nStat, CString Ac
 	
 	sTRData  = CString((char*)&user, sizeof(_userTH));
 	sTRData += sData;
-	
+	variant(guideCC, "IBxxxx02 invokeTR");
 	return m_pParent->SendMessage(WM_USER, MAKEWPARAM(invokeTRx, sData.GetLength()), 
 		(LPARAM)(const char*)sTRData); 
 }

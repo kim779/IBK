@@ -169,7 +169,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CTestDlg.cpp" />
     <ClCompile Include="cx_test.cpp" />
     <ClCompile Include="MapWnd.cpp" />
     <ClCompile Include="StdAfx.cpp">
@@ -196,7 +195,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CTestDlg.h" />
     <ClInclude Include="cx_test.h" />
     <ClInclude Include="MapWnd.h" />
     <ClInclude Include="Resource.h" />

@@ -8014,10 +8014,19 @@ void CGridWnd::RTS_parsingAlertx(struct _Ralert *palert)
 	}
 	m_grid->endDrawHolding();
 }
+bool bfind_k001 = false;
+void writelog(CString str)
+{
+	if (bfind_k001)
+	{
+		OutputDebugString("[2022] " + str + "\r\n");
+	}
+}
 
 // 2012.01.19 KSJ Alertx 추가
 void CGridWnd::parsingAlertx(LPARAM lParam)
 {
+	CString strlog;
 	if (m_bSending)
 	{
 		return;
@@ -8046,6 +8055,8 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 	else
 		strCode = code;
 
+	if (strCode.Find("001") >= 0)
+		bfind_k001 = true;
 
 	DWORD *data = (DWORD *)alertR->ptr[0];
 	if (data[0])
@@ -8067,6 +8078,9 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 		code.Delete(0);	     //첫 글자 'X'를 삭제한다.
 		code.Insert(0, 'K'); //첫 글자를 'K'로 바꿔준다.
 		strCode = code;
+		strTmp.Format("[202200] code=[%s]\r\n", code);
+		OutputDebugString(strTmp);
+
 	}
 
 	// 2013.08.26 KSJ END
@@ -8125,12 +8139,15 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 		{
 			saveData = (char *)data[111];
 			en2 = (char *)data[34]; // 체결시간...
+			strlog.Format("data[111]  있다 [%s][%s]", saveData, en2);
+			writelog(strlog);
 		}
 		else if (data[23]) // 체결가...
 		{
 			saveData = (char *)data[23];
 			en2 = (char *)data[34]; // 체결시간...
-
+			strlog.Format("data[23]  있다 [%s][%s]", saveData, en2);
+			writelog(strlog);
 			if (!en2.IsEmpty())
 			{
 //XMSG(why????);
@@ -8165,6 +8182,9 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 		const int nEndOPMarket = m_grid->GetItemData(xrow, colEXPECT);	  // 2013.09.17 KSJ 해당종목이 장종료 되었으면
 		if ((strGubn == "X" || data[111] || nEndOPMarket == 1) && !bLast) // 예상가 적용	2013.08.22 지수예상가는111심볼이 없고 구분값이X로 온다.
 		{
+			strlog.Format("예상가 적용 [%s][%s]", saveData, en2);
+			writelog(strlog);
+
 			if (data[111])
 				entry = (char *)data[111];
 			else if (nEndOPMarket == 1) // 2013.09.17 KSJ 해당종목이 장종료 되었을때
@@ -8173,6 +8193,8 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 			{
 				bZisu = TRUE;
 				entry = (char *)data[23]; // 2013.08.22 지수예상가는111심볼이 없고 구분값이X로 온다.
+				strlog.Format("지수예상가는111심볼이 없고 구분값이X로 온다 [%s]", entry);
+				writelog(strlog);
 			}
 
 			if (entry != "0" && entry != "-0" && entry != "0.00" && entry != "+0" && entry != " 0" && entry != " ")
@@ -8181,6 +8203,7 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 			}
 			else
 			{
+				writelog("예상시간인데 23,111 둘다 값이 없을때");
 				// 2012.05.09 KSJ 예상가가 0이 올때는 현재가를 뿌려준다.
 				m_mapCurValue.Lookup(strCode, strData);
 				m_grid->SetItemText(xrow, colEXPECT, "0"); //예상가 취소
@@ -8349,7 +8372,7 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 			{
 				gridHdr = m_gridHdrX.GetAt(jj);
 				symbol = CString(gridHdr.symbol, strlen(gridHdr.symbol));
-
+				writelog(symbol+"\r\n");
 				//외인소진율은 실시간이 아니다.
 				if (symbol == "2204")
 					continue;
@@ -8375,7 +8398,10 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 					strNewTemp = "";
 
 				strNewData += "\t" + strNewTemp;
+				strlog += "\t[" +   symbol + "]  " + strNewTemp;
 			}
+
+writelog("strlog =" + strlog);
 
 			if (m_mapCurValue.Lookup(strCode, strData))
 			{
@@ -8509,7 +8535,14 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 				continue;
 
 			if (!bForceDraw && IH::TOf(entry) == IH::TOf(m_grid->GetItemText(xrow, ii)))
+			{
+				if (entry.GetLength() > 0)
+				{
+					strlog.Format("같은값이라서 굳이 안그린다 [%d] [%s] \r\n", ii, entry);
+					writelog(strlog);
+				}
 				continue;
+			}
 
 			if (!(gridHdr.attr & GVAT_HIDDEN) && !entry.IsEmpty())
 			{

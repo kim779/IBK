@@ -112,7 +112,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/IB0000X2.DLL</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/IB0000X2.DLL</OutputFile>
       <ImportLibrary>.\Debug\IB0000X2.lib</ImportLibrary>
       <AdditionalDependencies>../../control/fx_misc/debug/fx_misc.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\IB0000X2.def</ModuleDefinitionFile>

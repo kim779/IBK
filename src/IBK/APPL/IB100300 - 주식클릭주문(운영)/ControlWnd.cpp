@@ -450,8 +450,8 @@ void CControlWnd::Init()
 	m_cbCrType.Create(WS_CHILD | WS_VISIBLE | WS_TABSTOP | CBS_DROPDOWNLIST, cbCrd, this, ID_COMBO_CRD);
 	m_cbCrType.SetFont(m_pfont);
 //	m_cbCrType.EnableWindow(FALSE);	
-	m_cbCrType.AddString("자기융자");
 	m_cbCrType.AddString("유통융자");
+	m_cbCrType.AddString("자기융자");
 //	m_cbCrType.AddString("유통대주");
 	m_cbCrType.SetCurSel(0);
 
@@ -2272,9 +2272,9 @@ void CControlWnd::SetPrgbRadio(int index, CString sgubn)
 	if(index == 1)  //신용인경우
 	{
 		if(sgubn == "03")  //자기융자 
-			m_cbCrType.SetCurSel(0);
-		else if(sgubn == "01")  //유통융자
 			m_cbCrType.SetCurSel(1);
+		else if(sgubn == "01")  //유통융자
+			m_cbCrType.SetCurSel(0);
 	}
 }
 
@@ -2293,10 +2293,10 @@ CString CControlWnd::GetCrdType()
 	CString sResult;
 	sResult = "";
 
-	if(m_cbCrType.GetCurSel() == 0)
-		sResult = "03";
-	else if(m_cbCrType.GetCurSel() == 1)
+	if(m_cbCrType.GetCurSel() == 0)  //유통융자
 		sResult = "01";
+	else if(m_cbCrType.GetCurSel() == 1)  //자기융자
+		sResult = "03";
 
 	return sResult;
 }

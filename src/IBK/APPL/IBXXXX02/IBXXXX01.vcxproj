@@ -92,7 +92,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/IBXXXX01.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/IBXXXX02.dll</OutputFile>
       <ImportLibrary>.\Debug\IBXXXX01.lib</ImportLibrary>
       <ModuleDefinitionFile>.\IBXXXX01.def</ModuleDefinitionFile>
     </Link>

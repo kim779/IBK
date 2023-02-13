@@ -709,7 +709,7 @@ BOOL CAccountCtrl::Initialize(BOOL bDLL)
 
 		BOOL bISETF_SAVE_ACC = FALSE;
 		if (nMapNo == 8401 || nMapNo == 1040 || nMapNo == 5000 || nMapNo == 2821 || nMapNo == 2831 || nMapNo == 2832 ||
-			nMapNo == 1105 || nMapNo == 1402 || nMapNo == 1401)
+			nMapNo == 1105 || nMapNo == 1402 || nMapNo == 1401 || nMapNo == 1304)
 			bISETF_SAVE_ACC = TRUE;
 
 		Path.Format("%s\\user\\%s\\%s", m_strRoot, Variant(nameCC), "userconf.ini");

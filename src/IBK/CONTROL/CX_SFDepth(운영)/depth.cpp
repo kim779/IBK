@@ -4487,9 +4487,9 @@ void Cdepth::popupMenu(CPoint point, CString Price)
 	//popM->AppendMenu(MF_STRING|MF_ENABLED, menuBase+3, _T("취소주문"));
 
 	int	index = popM.TrackPopupMenu(TPM_LEFTALIGN|TPM_RETURNCMD, pt.x, pt.y, this);
-	code = m_code;
-	if (!code.IsEmpty() && (code.GetAt(0) == 'A' || code.GetAt(0) == 'J'))
-		code = code.Mid(1);
+	//code = m_code;
+	//if (!code.IsEmpty() && (code.GetAt(0) == 'A' || code.GetAt(0) == 'J'))
+	//	code = code.Mid(1);
 
 	index -= menuBase;
 	switch (m_type)
@@ -4504,7 +4504,7 @@ void Cdepth::popupMenu(CPoint point, CString Price)
 		case 3:	maps = _T("IB301400");	break;
 		default:return;
 		}
-		string.Format("%s/S/d%s\t%s\n%s\t%s\n", maps, symCODE, code, m_refsym, Price);
+		string.Format("%s/S/d%s\t%s\n%s\t%s\n", maps, symCODE, m_code, m_refsym, Price);
 		openView(typeVIEW, string);
 		break;
 	case ctKOFEX:
@@ -4631,7 +4631,7 @@ CString Cdepth::format(CString data, int index)
 	case atCoRgbSup:	// +- 에 따라 색깔을 표시, Sign 기호 제외
 		sign = getSign(data);
 		eliminateZero(data);
-		if (!atof(data) && !m_code.IsEmpty() && m_code.GetAt(0) != '4')
+		if (!atof(data) && !m_code.IsEmpty() && (m_code.GetAt(0) != '4' || m_code.GetAt(0) != 'D'))	// 20230125 파생상품 코드 개편	'4', 'D' : 스프레드
 		{
 			item->m_fRGB = m_clrDataFg;
 			return _T("");

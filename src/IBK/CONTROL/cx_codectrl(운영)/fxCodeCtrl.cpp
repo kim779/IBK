@@ -925,7 +925,9 @@ void CCodeEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 		else if (m_Unit == GU_FUTURE || m_Unit == GU_OPTION || m_Unit == GU_FOCODE || m_Unit == GU_POPTION || m_Unit == GU_FCODE || m_Unit == GU_FOSTOCK)
 		{
-			if (m_Unit == GU_FUTURE && (len == 5 && tmpS.GetAt(0) == '1'))
+			//if (m_Unit == GU_FUTURE && (len == 5 && tmpS.GetAt(0) == '1'))
+			// 202300211 파생상품 코드 개편  '1', 'A' : 선물
+			if (m_Unit == GU_FUTURE && len == 5 && (tmpS.GetAt(0) == '1' || tmpS.GetAt(0) == 'A'))	
 			{
 				tmpS += "000";
 				m_pParent->SetEditData(tmpS);
@@ -1087,7 +1089,8 @@ void CCodeEdit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 //				
 //				return;
 			}
-			if (len == 5 && sTmp.GetAt(0) == '1')
+			//if (len == 5 && sTmp.GetAt(0) == '1')
+			if (len == 5 && (sTmp.GetAt(0) == '1' || sTmp.GetAt(0) == 'A'))	// 20230211 파생상품 코드 개편  '1', 'A' : 선물
 			{
 				sTmp += "000";
 				SetWindowText(sTmp);
@@ -1278,7 +1281,19 @@ bool CCodeEdit::isNumeric(CString str)
 
 bool CCodeEdit::isHexNumeric(CString str)
 {
-	if (!str.IsEmpty() && (str.GetAt(0) < '0' || str.GetAt(0) > '9'))
+	//if (!str.IsEmpty())  //test 20230211 왜 이런코드를
+	//	return true;
+
+	if (m_Unit == GU_FUTURE || m_Unit == GU_OPTION || m_Unit == GU_FOCODE || m_Unit == GU_POPTION || m_Unit == GU_FCODE || m_Unit == GU_FOSTOCK)
+	{
+		// 20230125 파생상품 코드 개편  '1', 'A' : 선물
+		//                              '2', 'B' : Call option
+		//			        '3', 'C' : Put option
+		//			        '4', 'D' : 스프레드
+		if ((str.GetAt(0) < '0' || str.GetAt(0) > '9') && (str.GetAt(0) < 'A' || str.GetAt(0) > 'G'))
+			return false;
+	}
+	else if (str.GetAt(0) < '0' || str.GetAt(0) > '9')
 		return false;
 
 	for (int ii = 1; ii < str.GetLength(); ii++)
@@ -1287,6 +1302,16 @@ bool CCodeEdit::isHexNumeric(CString str)
 			(str.GetAt(ii) < 'A' || (str.GetAt(ii) > 'Z' && str.GetAt(ii) != 'S')))
 			return false;
 	return true;
+
+	/*if (!str.IsEmpty() && (str.GetAt(0) < '0' || str.GetAt(0) > '9'))
+		return false;
+
+	for (int ii = 1; ii < str.GetLength(); ii++)
+		if ((str.GetAt(ii) < '0' || str.GetAt(ii) > '9') &&
+			(str.GetAt(ii) < 'a' || (str.GetAt(ii) > 'z' && str.GetAt(ii) != 's')) &&
+			(str.GetAt(ii) < 'A' || (str.GetAt(ii) > 'Z' && str.GetAt(ii) != 'S')))
+			return false;
+	return true;*/
 }
 
 bool CCodeEdit::isHexNumeric2(CString str)

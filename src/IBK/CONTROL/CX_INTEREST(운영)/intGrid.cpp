@@ -1293,11 +1293,18 @@ void CintGrid::OnPaint()
 
 	CPaintDC dc(this); // device context for painting
 	
+#ifdef _DEBUG
+	OnDraw(&dc);
+
+	if (m_memoAry.GetSize() > 0)
+		memoDraw(&dc);
+#else
 	xxx::CMemDC	MemDC(&dc);
 	OnDraw(&MemDC);
-	
+
 	if (m_memoAry.GetSize() > 0)
-		memoDraw(&MemDC);	
+		memoDraw(&MemDC);
+#endif
 }
 
 void CintGrid::SetPaintLock(BOOL bLock)
@@ -3727,7 +3734,7 @@ BOOL CintGrid::DrawCell(CDC* pDC, int nRow, int nCol, CRect rect, BOOL bEraseBk)
 
 	if (nRow > 0)
 	{
-		const auto& pInter = m_pParent->GetData(nRow - 1);
+		const auto& pInter = m_pParent->GetData(nRow - 1);   //test È®ÀÎ
 		if (pInter)
 		{
 			if (pInter->bookmark == '1')
@@ -6062,6 +6069,14 @@ BOOL CintGrid::SetColumnItems(int nCol, GVITEM* gvitem)
 
 BOOL CintGrid::SetItemText(int nRow, int nCol, LPCTSTR str)
 {
+	//CString str1;
+	//if (nRow == 2 &&  (nCol == 0 || nCol ==21))
+	//{	
+	//	str1.Format("[cx_interest] ------------ nRow=[%d] nCol=[%d] str=[%s]\r\n", nRow, nCol, str);
+	//	OutputDebugString(str1);
+	//}
+
+
 	const auto pCell = GetCell(nRow, nCol);
 	
 	if (!pCell) return FALSE;
@@ -6425,7 +6440,7 @@ int CintGrid::GetRowHeight(int nRow) const
 
 int CintGrid::GetColumnWidth(int nCol) const
 {
-	ASSERT(nCol >= 0 && nCol < m_nCols);
+//	ASSERT(nCol >= 0 && nCol < m_nCols);  //test 20230207
 	if (nCol < 0 || nCol >= m_nCols)
 		return -1;
 

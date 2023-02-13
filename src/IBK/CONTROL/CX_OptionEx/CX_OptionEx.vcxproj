@@ -114,7 +114,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/CX_OptionEx.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/CX_OptionEx.dll</OutputFile>
       <ImportLibrary>.\Debug\CX_OptionEx.lib</ImportLibrary>
       <ModuleDefinitionFile>.\CX_OptionEx.def</ModuleDefinitionFile>
     </Link>

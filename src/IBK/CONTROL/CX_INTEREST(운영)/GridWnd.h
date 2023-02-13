@@ -45,7 +45,9 @@ class CGridWnd : public CBaseWnd
 // Construction
 public:
 	CGridWnd(CWnd* pMainWnd, int nIndex);
-
+	CString m_slog;
+	int m_iIndex;
+	void show_m_inter();
 // Attributes
 public:
 
@@ -191,8 +193,14 @@ public:
 	void	toggleAction5000(bool toggle);
 	void	makeCodeExist();
 	void	OperAlarm(int kind, char* lParam);
-	std::shared_ptr<struct _intersx> GetData(int nIndex) { return m_inters.at(nIndex); }
-	void	SetData(int nIndex, std::shared_ptr<struct _intersx> pinters) { m_inters.at(nIndex) = pinters; }
+	//std::shared_ptr<struct _intersx> GetData(int nIndex) { return m_inters.at(nIndex); }    //test 확인
+	std::shared_ptr<struct _intersx> GetData(int nIndex) {
+		if (m_inters.size() > nIndex)
+			return m_inters.at(nIndex);
+		return nullptr;
+	//	return m_inters.at(nIndex);
+	}
+	void	SetData(int nIndex, std::shared_ptr<struct _intersx> pinters) { m_inters.at(nIndex) = pinters; }  //test 확인
 
 	CString CalcuPyungaSonik(struct _intersx* pinters, CString curr);
 	CString CalcuSuik(struct _intersx* pinters, CString curr);

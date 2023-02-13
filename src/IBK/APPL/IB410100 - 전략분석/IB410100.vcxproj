@@ -163,7 +163,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ForceSymbolReferences>__DllMainCRTStartup%4012;%(ForceSymbolReferences)</ForceSymbolReferences>
-      <OutputFile>../../../dev/IB410100.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/IB410100.dll</OutputFile>
       <ImportLibrary>.\Debug\IB410100.lib</ImportLibrary>
       <AdditionalDependencies>../../control/fx_grid/debug/fx_grid.lib;../../control/fx_misc/debug/fx_misc.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\IB410100.def</ModuleDefinitionFile>

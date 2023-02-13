@@ -396,9 +396,10 @@ void CControlWnd::DoQueryHoga()
 			return;
 
 		char	prefix = '\0';
-		if (m_itemCd[0] == '1')		// 선물
+		if (m_itemCd[0] == '1' || m_itemCd[0] == 'A' || m_itemCd[0] == 'D')		// 선물  //20230211  파상상품코드
 			prefix = '3';
-		else if (m_itemCd[1] == '0')	// 옵션
+		//else if (m_itemCd[1] == '0')	// 옵션
+		else if (m_itemCd[0] == '0' || m_itemCd[0] == 'B' || m_itemCd[0] == 'C')	// 옵션
 			prefix = '4';
 		else				// 주식옵션
 			prefix = '7';
@@ -952,7 +953,7 @@ void CControlWnd::_QueryQty()
 		case 2: // 선물옵션
 			if (atof(m_price) > 0)
 			{
-				if (!m_itemCd.IsEmpty() && m_itemCd[0] == '1')
+				if (!m_itemCd.IsEmpty() && (m_itemCd[0] == '1' || m_itemCd[0] == 'A'))  ////20230211 파생상품 코드 개편  '1', 'A' : 선물 이상하다 스프레드?
 				{
 					qty = (int)floor(atof(val) / (atof(m_price) * 500000 * 0.15));
 				}
@@ -1017,7 +1018,7 @@ BSTR CControlWnd::_MoveTick(LPCTSTR Prc, short Tick)
 			break;
 		}
 
-		if (m_itemCd[0] == '1')		// 선물
+		if (m_itemCd[0] == '1' || m_itemCd[0] == 'A')	// 20230125 파생상품 코드 개편  '1', 'A' : 선물
 		{
 			dDelta = 0.05;
 		}

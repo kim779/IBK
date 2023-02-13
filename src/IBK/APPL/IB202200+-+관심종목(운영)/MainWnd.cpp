@@ -1919,8 +1919,7 @@ void CMainWnd::RTS_RecvRTSx(LPARAM lParam)
 	code = alertR->code;
 	code.Trim();
 
-	if (!m_pGroupWnd->isCodeSymbol(code))
-		return;
+
 
 	COleDateTime oTime;
 	oTime = COleDateTime::GetCurrentTime();
@@ -1943,6 +1942,9 @@ void CMainWnd::RTS_RecvRTSx(LPARAM lParam)
 		return;
 	}
 
+	if (!m_pGroupWnd->isCodeSymbol(code))
+		return;
+
 	auto& rmap = m_pGroupWnd->getRSymbol();
 	constexpr int arr[9] = { 41, 51, 61, 71, 101, 104, 106, 107, 109 };
 
@@ -1957,14 +1959,13 @@ void CMainWnd::RTS_RecvRTSx(LPARAM lParam)
 	if (bHoga == false && sgubn.FindOneOf("DLy") != -1)
 		return;
 
-	_mRealtime.emplace(std::make_pair(code, 1));	
 	const auto mt = _mapRealData.emplace(code, std::make_unique<struct _Ralert>());
 
 	mt.first->second->size = alertR->size;
 	mt.first->second->stat = alertR->stat;
 	mt.first->second->code = code;
 
-//	mt.first->second->ptr[111].reset();
+	mt.first->second->ptr[111].reset();
 	for (auto item : rmap)
 	{
 		const int ii = item.first;
@@ -1972,7 +1973,6 @@ void CMainWnd::RTS_RecvRTSx(LPARAM lParam)
 
 		if (pdata == nullptr)
 		{
-			mt.first->second->ptr[ii].reset();
 			continue;
 		}
 		const int len = strlen(pdata) + 1;	
@@ -1980,6 +1980,8 @@ void CMainWnd::RTS_RecvRTSx(LPARAM lParam)
 		ZeroMemory(mt.first->second->ptr[ii].get(), len);
 		strncpy((char*)mt.first->second->ptr[ii].get(),(char*)pdata, len - 1);
 	}
+	_mRealtime.emplace(std::make_pair(code, 1));	
+
 }
 
 CString CMainWnd::GetDataTitle(int nKind)
