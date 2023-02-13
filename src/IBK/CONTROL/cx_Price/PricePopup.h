@@ -26,6 +26,7 @@ public:
 	int		m_nType;
 	CString		m_sCode;
 	bool		m_bNoMaxMin;
+	BOOL		m_bNewUnit;		// 2023 호가단위개선
 
 protected:
 	bool		m_fDone, m_bDrag, m_bLhGd;

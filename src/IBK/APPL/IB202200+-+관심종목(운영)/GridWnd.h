@@ -406,6 +406,7 @@ protected:
 	CMenu m_menuHeader;
 	CMenu m_menuSubHeader;
 
+	bool m_bNews{};
 	BOOL m_bSorting;
 	COLORREF m_clrMarkerBKG;
 	COLORREF m_clrMarkerTXT;

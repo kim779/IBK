@@ -522,11 +522,51 @@ double CPricePopup::CalculateUnit(double price, bool bInc)
 		spcd = m_sCode.Mid(1,2);
 	switch (m_nStatus)
 	{
+	case 10: //주식선물
+		if (!m_bNewUnit)	// asis
+		{
+			if (price < 5000)
+			{
+				unit = 2;
+				if (!bInc && price <= 5) unit = 0;
+			}
+			else if (price < 10000)
+			{
+				unit = 5;
+				if (!bInc && price == 5000) unit = 2;
+			}
+			else if (price < 50000)
+			{
+				unit = 25;
+				if (!bInc && price == 10000) unit = 5;
+			}
+			else if (price < 100000)
+			{
+				unit = 50;
+				if (!bInc && price == 50000) unit = 25;
+			}
+			else if (price < 500000)
+			{
+				unit = 250;
+				if (!bInc && price == 100000) unit = 50;
+			}
+			else if (price >= 500000)
+			{
+				unit = 500;
+				if (!bInc && price == 500000) unit = 250;
+			}
+			break;
+		}
+		else
+		{
+			// 2023 주식 호가가격단위 개선의 경우
+			// 주식과 동일한 호가가격단위 사용하므로 아래 case문으로 fallthrough
+		}
 	case 1:	// 주식
 	case 4:	// ECN
-		if (m_bKospi)	// KOSPI 주식
+		if (m_bNewUnit)		// 2023 주식 호가가격단위 개선
 		{
-			if (price < 1000)	// 2010.08.02 호가단위세분화 제도변경에 의한 수정
+			if (price < 2000)
 			{
 				unit = 1;
 				if (!bInc && price <= 1) unit = 0;
@@ -534,8 +574,9 @@ double CPricePopup::CalculateUnit(double price, bool bInc)
 			else if (price < 5000)
 			{
 				unit = 5;
-				if (!bInc && price <= 5) unit = 0;
-			}else if (price < 10000)
+				if (!bInc && price == 2000) unit = 1;
+			}
+			else if (price < 20000)
 			{
 				unit = 10;
 				if (!bInc && price == 5000) unit = 5;
@@ -543,9 +584,9 @@ double CPricePopup::CalculateUnit(double price, bool bInc)
 			else if (price < 50000)
 			{
 				unit = 50;
-				if (!bInc && price == 10000) unit = 10;
+				if (!bInc && price == 20000) unit = 10;
 			}
-			else if (price < 100000)
+			else if (price < 200000)
 			{
 				unit = 100;
 				if (!bInc && price == 50000) unit = 50;
@@ -560,37 +601,80 @@ double CPricePopup::CalculateUnit(double price, bool bInc)
 				unit = 1000;
 				if (!bInc && price == 500000) unit = 500;
 			}
+
 		}
-		else	// KOSDAQ 주식
+		else	// asis
 		{
-			if (price < 1000)	// 2010.08.02 호가단위세분화 제도변경에 의한 수정
+			if (m_bKospi)	// KOSPI 주식
 			{
-				unit = 1;
-				if (!bInc && price <= 1) unit = 0;
+				if (price < 1000)	// 2010.08.02 호가단위세분화 제도변경에 의한 수정
+				{
+					unit = 1;
+					if (!bInc && price <= 1) unit = 0;
+				}
+				else if (price < 5000)
+				{
+					unit = 5;
+					if (!bInc && price <= 5) unit = 0;
+				}
+				else if (price < 10000)
+				{
+					unit = 10;
+					if (!bInc && price == 5000) unit = 5;
+				}
+				else if (price < 50000)
+				{
+					unit = 50;
+					if (!bInc && price == 10000) unit = 10;
+				}
+				else if (price < 100000)
+				{
+					unit = 100;
+					if (!bInc && price == 50000) unit = 50;
+				}
+				else if (price < 500000)
+				{
+					unit = 500;
+					if (!bInc && price == 100000) unit = 100;
+				}
+				else if (price >= 500000)
+				{
+					unit = 1000;
+					if (!bInc && price == 500000) unit = 500;
+				}
 			}
-			else if (price < 5000)
+			else	// KOSDAQ 주식
 			{
-				unit = 5;
-				if (!bInc && price <= 5) unit = 0;
+				if (price < 1000)	// 2010.08.02 호가단위세분화 제도변경에 의한 수정
+				{
+					unit = 1;
+					if (!bInc && price <= 1) unit = 0;
+				}
+				else if (price < 5000)
+				{
+					unit = 5;
+					if (!bInc && price <= 5) unit = 0;
+				}
+				else if (price < 10000)
+				{
+					unit = 10;
+					if (!bInc && price == 5000) unit = 5;
+				}
+				else if (price < 50000)
+				{
+					unit = 50;
+					if (!bInc && price == 10000) unit = 10;
+				}
+				else if (price >= 50000)
+				{
+					unit = 100;
+					if (!bInc && price == 50000) unit = 50;
+				}
+				break;
 			}
-			else if (price < 10000)
-			{
-				unit = 10;
-				if (!bInc && price == 5000) unit = 5;
-			}
-			else if (price < 50000)
-			{
-				unit = 50;
-				if (!bInc && price == 10000) unit = 10;
-			}
-			else if (price >= 50000)
-			{
-				unit = 100;
-				if (!bInc && price == 50000) unit = 50;
-			}
-			break;
 		}
 		break;
+
 	case 2:	// 선물
 		if		(spcd=="61") unit=0.01;	// KTB
 		else if	(spcd=="63") unit=0.01;	// 5TB
@@ -676,39 +760,6 @@ double CPricePopup::CalculateUnit(double price, bool bInc)
 	case 9:	// ELW
 		unit = 5;	// 2010.08.02 일 호가단위제도 변경에 의해 ELW종목은 무조건 5원단위 호가 제공
 		break;
-	case 10: //주식선물
-		if (price < 5000)
-		{
-			unit = 2;
-			if (!bInc && price <= 5) unit = 0;
-		}
-		else if (price < 10000)
-		{
-			unit = 5;
-			if (!bInc && price == 5000) unit = 2;
-		}
-		else if (price < 50000)
-		{
-			unit = 25;
-			if (!bInc && price == 10000) unit = 5;
-		}
-		else if (price < 100000)
-		{
-			unit = 50;
-			if (!bInc && price == 50000) unit = 25;
-		}
-		else if (price < 500000)
-		{
-			unit = 250;
-			if (!bInc && price == 100000) unit = 50;
-		}
-		else if (price >= 500000)
-		{
-			unit = 500;
-			if (!bInc && price == 500000) unit = 250;
-		}
-		break;
-
 	}
 	return unit;
 }

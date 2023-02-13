@@ -9,7 +9,7 @@ __declspec(dllexport) CWnd* WINAPI axCreate(CWnd* pParent, void* cInfo)
 	struct _param*	param = (struct _param*)cInfo;
 	CMainWnd* pMainWnd = new CMainWnd(pParent, param);
 	
-	pMainWnd->Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, param->rect, pParent, 0);
+	pMainWnd->Create(NULL, NULL, WS_CHILD | WS_VISIBLE, param->rect, pParent, 0);
 	SetWindowPos(pMainWnd->m_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
 
 	return (CWnd*)pMainWnd;

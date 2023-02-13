@@ -1588,7 +1588,7 @@ void CDbar1::SetPosition()
 			CString tDept(readB,readL);
 			tDept.TrimLeft();tDept.TrimRight();
 
-			if(m_dept == tDept) 
+			if(m_dept == tDept)  //test acc
 			{
 				wRc.SetRect(wRc.right-1+GAP, xRc.top, wRc.right-1+GAP+buttonSize, xRc.top+xRc.Height());
 				m_tacnt->MoveWindow(wRc);

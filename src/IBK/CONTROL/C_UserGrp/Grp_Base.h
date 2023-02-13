@@ -21,7 +21,7 @@ public:
 	virtual CString	GetExcelHead(int idx);
 	virtual CString	GetExcelData(int idx);
 	virtual	void	DrawTickBottom(CDC* pDC);
-//	virtual	void	DrawName(CDC *pDC);
+	virtual	void	DrawName(CDC *pDC);
 	void	Resize();
 
 	void	DrawTickHorizon(CDC* pDC, double Max, double Min, int tickinfo);

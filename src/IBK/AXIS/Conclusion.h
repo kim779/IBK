@@ -20,9 +20,15 @@ protected:
 	CWnd*		m_parent;
 	CBrush		m_brush;
 
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr<class CfxIGrid> m_grid;
 	std::unique_ptr<class CfxGrid> m_pGrid;
+#else
+	class CfxIGrid*	m_grid;
+	class CfxGrid* m_pGrid;
+#endif
 
+	
 	int		m_x{}, m_y{};
 	CRect   m_recOri, m_recDef;
 	bool	m_binit;

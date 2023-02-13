@@ -5462,7 +5462,10 @@ void Cdepth::EW_Destroy()
 		m_pMBong.reset();
 
 	if (m_pRgn)
+	{
+		m_pRgn->DeleteObject();
 		m_pRgn.reset();
+	}
 }
 
 bool Cdepth::EW_Create()
@@ -5504,13 +5507,15 @@ void Cdepth::EW_Move()
 	if (m_pMBong)		m_pMBong->MoveWindow(rc);
 	if (m_pContract)	m_pContract->MoveWindow(rc);
 
-	CRgn	rgn, rgn1, rgn2;
-	rgn1.CreateRectRgn(crc.left, crc.top, crc.right, crc.bottom);
-	rgn2.CreateRectRgn(rc.left, rc.top, rc.right, rc.bottom);
-	rgn.CreateRectRgn(0, 0, 0, 0);
-	rgn.CombineRgn(&rgn1, &rgn2, RGN_DIFF);
-	if (m_pRgn)	
-		m_pRgn->CopyRgn(&rgn);
+	if (m_pRgn)
+	{
+		CRgn rgn1, rgn2;
+		rgn1.CreateRectRgn(crc.left, crc.top, crc.right, crc.bottom);
+		rgn2.CreateRectRgn(rc.left, rc.top, rc.right, rc.bottom);
+		m_pRgn->CombineRgn(&rgn1, &rgn2, RGN_DIFF);
+		rgn1.DeleteObject();
+		rgn2.DeleteObject();
+	}
 }
 
 void Cdepth::EW_Show()

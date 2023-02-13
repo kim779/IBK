@@ -15,3 +15,4 @@
 #define MMSG_INTER_GROUPCODESAVE			17  //관심 그룹내부종목저장
 #define MMSG_RET_INTER_GROUPCODESAVE	18  //관심 그룹내부종목저장
 #define MMSG_SEARCH_SISE								19  //관심 그룹코드의 시세 조회
+#define MMSG_TIME_INVESTTUJA						20 //티커 투자자 타이머(임시)

@@ -176,7 +176,7 @@ void CFxButton::DrawLine(CDC *DC, CRect EndPoints, COLORREF color)
 	DC->MoveTo(EndPoints.left, EndPoints.top);
 	DC->LineTo(EndPoints.right, EndPoints.bottom);
 	DC->SelectObject(oldPen);
-    newPen.DeleteObject();
+        newPen.DeleteObject();
 }
 
 void CFxButton::DrawLine(CDC *DC, long left, long top, long right, long bottom, COLORREF color)
@@ -187,14 +187,14 @@ void CFxButton::DrawLine(CDC *DC, long left, long top, long right, long bottom, 
 	DC->MoveTo(left, top);
 	DC->LineTo(right, bottom);
 	DC->SelectObject(oldPen);
-    newPen.DeleteObject();
+        newPen.DeleteObject();
 }
 
 
 void CFxButton::DrawButtonText(CDC *DC, CRect R, const char *Buf, COLORREF TextColor)
 {
-    COLORREF prevColor = DC->SetTextColor(TextColor);
-    DC->SetBkMode(TRANSPARENT);
+	COLORREF prevColor = DC->SetTextColor(TextColor);
+	DC->SetBkMode(TRANSPARENT);
 	DC->DrawText(Buf, strlen(Buf), R, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 	DC->SetTextColor(prevColor);
 }

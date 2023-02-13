@@ -461,10 +461,18 @@ void CDbar3::OnMouseMove(UINT nFlags, CPoint point)
 		}
 		
 		button = m_arButton.GetAt(ii);
+// 		if (xRc.PtInRect(point))
+// 		{
+// 			m_ToolTip->SetToolRect(this, ID_TOOLTIP, bRc);
+// 	 		SetToolTipText("종목 삭제");
+// 		}
+		
+		//OutputDebugString("SM DBAR3 MOVE\n");
 
 		if (!bRc.PtInRect(lpoint))	continue;
 
 		CClientDC	dc(this);
+		//OutputDebugString("SM DBAR3 MOVE RUN\n");
 
 		if(m_currButton != ii)
 		{
@@ -523,7 +531,7 @@ void CDbar3::OnRButtonDown(UINT nFlags, CPoint point)
 		m_deleteBtn = m_arButton.GetAt(ii);
 		break;
 	}
- 
+	
 	HWND m_hMain = AfxGetMainWnd()->m_hWnd;
 	CString stemp;
 	CString strHwnd;
@@ -2100,84 +2108,84 @@ CString CDbar3::parseX(CString &srcstr, CString substr)
 
 LRESULT CDbar3::OnMsgFromMain(WPARAM wParam, LPARAM lParam)
 {
-	
+
 	switch (LOWORD(wParam))
 	{
-/*	case MMSG_SEARCH_SISE:
-	{
-		char* pdata = (char*)lParam;
+		/*	case MMSG_SEARCH_SISE:
+			{
+				char* pdata = (char*)lParam;
 
-		struct	_grid {
-			char	code[12];					   //종목코드			 
-			char    hnam[20];                // 종목명                       
-			char    curr[8];					  // 현재가                      
-			char    diff[6];					  // 전일대비      (9999V99)      
-			char    gvol[12];				  // 거래량                       
-		};
+				struct	_grid {
+					char	code[12];					   //종목코드
+					char    hnam[20];                // 종목명
+					char    curr[8];					  // 현재가
+					char    diff[6];					  // 전일대비      (9999V99)
+					char    gvol[12];				  // 거래량
+				};
 
-		struct  _interMod {
-			char	keyf[2];		// ticker id
-			char	nrec[3];		// count jcode
-			struct	_grid	grid[1];	// data
-		};
+				struct  _interMod {
+					char	keyf[2];		// ticker id
+					char	nrec[3];		// count jcode
+					struct	_grid	grid[1];	// data
+				};
 
-		CString		code, name, price, diff, gvol;
-		_interMod* interMod = (struct _interMod*)pdata;
-		int	cnt = atoi(CString(interMod->nrec, sizeof(interMod->nrec)));
-		for (int ii = 0; ii < cnt; ii++)
-		{
-			code = CString(interMod->grid[ii].code, sizeof(interMod->grid[ii].code));	code.TrimRight();
-			name = CString(interMod->grid[ii].hnam, sizeof(interMod->grid[ii].hnam));	name.TrimRight();
-			price = CString(interMod->grid[ii].curr, sizeof(interMod->grid[ii].curr));	price.TrimRight();
-			diff = CString(interMod->grid[ii].diff, sizeof(interMod->grid[ii].diff));	diff.TrimLeft();
-			gvol = CString(interMod->grid[ii].gvol, sizeof(interMod->grid[ii].gvol));	gvol.TrimLeft();
-			//SetInter((char*)&interMod->grid[ii]);
-		}
-	}
-	break;
-	case MMSG_SEARCH_GROUPCODE:
-	{
-		char* pdata = (char*)lParam;
+				CString		code, name, price, diff, gvol;
+				_interMod* interMod = (struct _interMod*)pdata;
+				int	cnt = atoi(CString(interMod->nrec, sizeof(interMod->nrec)));
+				for (int ii = 0; ii < cnt; ii++)
+				{
+					code = CString(interMod->grid[ii].code, sizeof(interMod->grid[ii].code));	code.TrimRight();
+					name = CString(interMod->grid[ii].hnam, sizeof(interMod->grid[ii].hnam));	name.TrimRight();
+					price = CString(interMod->grid[ii].curr, sizeof(interMod->grid[ii].curr));	price.TrimRight();
+					diff = CString(interMod->grid[ii].diff, sizeof(interMod->grid[ii].diff));	diff.TrimLeft();
+					gvol = CString(interMod->grid[ii].gvol, sizeof(interMod->grid[ii].gvol));	gvol.TrimLeft();
+					//SetInter((char*)&interMod->grid[ii]);
+				}
+			}
+			break;
+			case MMSG_SEARCH_GROUPCODE:
+			{
+				char* pdata = (char*)lParam;
 
-		CString stmp, sRet, code;
-		CString strseq = CString(pdata, 2);
-		CString strgname = CString(&pdata[2], 20);
-		int cnt = atoi(CString(&pdata[22], 4));
-		int parseL = 26;
+				CString stmp, sRet, code;
+				CString strseq = CString(pdata, 2);
+				CString strgname = CString(&pdata[2], 20);
+				int cnt = atoi(CString(&pdata[22], 4));
+				int parseL = 26;
 
-		struct _jinfo* jinfo{};
-		char* pCode;
-		pCode = new char[sizeof(jinfo->code) + 1];
-		sRet.Empty();
+				struct _jinfo* jinfo{};
+				char* pCode;
+				pCode = new char[sizeof(jinfo->code) + 1];
+				sRet.Empty();
 
-		if (cnt <= 0)
-			return 0;
+				if (cnt <= 0)
+					return 0;
 
-		for (int ii = 0; ii < cnt; ii++)
-		{
-			jinfo = (struct _jinfo*)&pdata[parseL];
+				for (int ii = 0; ii < cnt; ii++)
+				{
+					jinfo = (struct _jinfo*)&pdata[parseL];
 
-			memset(pCode, 0x00, sizeof(jinfo->code) + 1);
-			memcpy(pCode, jinfo->code, sizeof(jinfo->code));  // 종목코드[12]
+					memset(pCode, 0x00, sizeof(jinfo->code) + 1);
+					memcpy(pCode, jinfo->code, sizeof(jinfo->code));  // 종목코드[12]
 
-			code.Format("%s", pCode);
-			code.TrimRight();
+					code.Format("%s", pCode);
+					code.TrimRight();
 
 
-			auto inter = std::make_unique<_inter>();
-			inter->Code = code;
-			m_arInter.Add(inter.get());
-			m_arInterByCode.SetAt(inter->Code, (CObject*)inter.get());
+					auto inter = std::make_unique<_inter>();
+					inter->Code = code;
+					m_arInter.Add(inter.get());
+					m_arInterByCode.SetAt(inter->Code, (CObject*)inter.get());
 
-			m_arSymData.SetAt(inter->Code, "x");
-			m_arSym.Add(inter->Code);
+					m_arSymData.SetAt(inter->Code, "x");
+					m_arSym.Add(inter->Code);
 
-			parseL += sizeof(struct _jinfo);
-		}
-		SendPiboSise();
-	}
-	break;
-	*/
+					parseL += sizeof(struct _jinfo);
+				}
+				SendPiboSise();
+			}
+			break;
+			*/
 	case MMSG_SEARCH_INTERGROUP:
 	{
 		CStringArray m_arrInterGroup;
@@ -2215,14 +2223,14 @@ LRESULT CDbar3::OnMsgFromMain(WPARAM wParam, LPARAM lParam)
 
 			parseL += sizeof(struct _grSearch);
 
-		//	m_arrInterGroup.SetAt(ii, sgname);
+			//	m_arrInterGroup.SetAt(ii, sgname);
 			m_arrInterGroup.Add(sgname);
 		}
 
 		delete[] pSeq; pSeq = nullptr;
 		delete[] pgame; pgame = nullptr;
 
-		CString		str, tmps;  
+		CString		str, tmps;
 		CMenuXP		menu;
 		menu.CreatePopupMenu();
 		int	index = 0;
@@ -2266,6 +2274,6 @@ LRESULT CDbar3::OnMsgFromMain(WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	}
-	
+
 	return 0;
 }

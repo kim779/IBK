@@ -72,32 +72,31 @@ long CMapWnd::OnMessage(WPARAM wParam, LPARAM lParam)
 			long	ledgerLength = 0;
 			char	nextKey{};
 
-			char* pBytes = (char*)lParam;
+			struct _extTHx* extTHx = (struct _extTHx*)lParam;
 
-			struct _extTH* extTH = (struct _extTH*)pBytes;
-
-			pBytes += L_extTH;
-			lParam += L_extTH;
-
-			if(extTH->size == 0)
+			char* pBytes = extTHx->data;
+			if (extTHx->size == 0)
+			{
+				//stmp.Format("[balance] extTHx->size =0  \r\n");
+				//OutputDebugString(stmp);
 				return 0;
+			}
 
 			struct _ledgerH ledger;
-			CopyMemory(&ledger, (void*)lParam, L_ledgerH);
+			CopyMemory(&ledger, (void*)pBytes, L_ledgerH);
 			sLedger = CString((char*)&ledger, L_ledgerH);
 			sErrCode = CString((char*)&ledger.emsg, 4);
 			sErrText = CString((char*)&ledger.emsg, 98);
 			nextKey = ledger.next[0];
 			ledgerLength = L_ledgerH;
 			
-			lParam += ledgerLength;
+			pBytes += ledgerLength;
 			
-			
-			if (extTH->key == KEY_NCONT)	// 체결내역
+			if (extTHx->key == KEY_NCONT)	// 체결내역
 			{
 				if (sErrCode.GetAt(0) != _T('0'))
 					return 0;
-				parsingNContData((char*)lParam);
+				parsingNContData(pBytes);
 				if (nextKey == 'Y')
 					sendNContTR(sLedger);
 			}else// if (key == KEY_HREMAIN || key == KEY_FREMAIN)	// 잔고
@@ -118,7 +117,7 @@ long CMapWnd::OnMessage(WPARAM wParam, LPARAM lParam)
 				{
 					//if (sErrCode != "1511")
 					{
-						CString trkey, keyHandle; trkey.Format("%d",extTH->key);
+						CString trkey, keyHandle; trkey.Format("%d",extTHx->key);
 						removeAccn(trkey);	// 20070824 memory leak 해결
 						keyHandle = GetHandleByKey(trkey);
 						
@@ -137,11 +136,11 @@ long CMapWnd::OnMessage(WPARAM wParam, LPARAM lParam)
 // 				CString s;
 // 				s.Format("JANGO CONTENT [%s]\n",(char*)lParam);
 // 				OutputDebugString(s);
-				CString sAccn = parsingRemainData((char*)lParam, extTH->size, sData, extTH->key);
+				CString sAccn = parsingRemainData(pBytes, extTHx->size - L_ledgerH, sErrCode, extTHx->key);
 				sAccn.TrimLeft(); sAccn.TrimRight();
 				if (sAccn!="")
 				{
-					CString trkey; trkey.Format("%d",extTH->key);
+					CString trkey; trkey.Format("%d",extTHx->key);
 					sendToControl(trkey);
 				}
 			}

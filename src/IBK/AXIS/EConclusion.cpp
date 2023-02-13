@@ -31,7 +31,9 @@ CEConclusion::CEConclusion(CWnd* pParent /*=NULL*/)
 
 CEConclusion::~CEConclusion()
 {
-
+#ifndef DF_USE_CPLUS17
+	if (m_table)	delete m_table;
+#endif
 }
 
 void CEConclusion::DoDataExchange(CDataExchange* pDX)
@@ -80,6 +82,7 @@ void CEConclusion::Init()
 	CProfile profile(GetProfileFileName(pkSTInfo));
 	rowN = profile.GetInt(section, "rowN", 5);
 
+#ifdef DF_USE_CPLUS17
 	if (!m_table.get())
 		m_table = std::make_unique<CNTable>(rowN);
 	if (!m_table->Create(NULL, "EACH CONCLUSION",
@@ -88,6 +91,16 @@ void CEConclusion::Init()
 		m_table = NULL;
 		return;
 	}
+#else
+	if (!m_table)	m_table = new CNTable(rowN);
+	if (!m_table->Create(NULL, "EACH CONCLUSION", 
+		WS_VISIBLE|WS_CHILD|WS_CLIPSIBLINGS, CRect(0, 0, 0, 0), this, (int) m_table))
+	{
+		delete m_table;
+		m_table = NULL;
+		return;
+	}
+#endif
 
 	CStringArray	ary;
 	for (int ii = 0; ii < rowN; ii++)

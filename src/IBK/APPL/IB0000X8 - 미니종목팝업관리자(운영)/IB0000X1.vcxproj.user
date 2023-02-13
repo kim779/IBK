@@ -8,6 +8,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerCommand>D:\IBKS_TEST\exe\axis.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>/a 172.16.202.106 /k IBK_TEST /i devil005 ahffkdy1#1</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments> /k IBK_TEST</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

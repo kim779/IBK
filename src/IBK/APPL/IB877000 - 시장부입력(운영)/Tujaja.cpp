@@ -130,6 +130,8 @@ int CTujaja::OnCreate(LPCREATESTRUCT lpCreateStruct)
 			m_pSeqn->AddString(buff);
 		}
 	}
+	SetWindowTheme(m_pSeqn->GetSafeHwnd(), L"", L"");
+
 
 	m_pResult = std::make_unique<CGridCtrl>();
 	if (m_pResult->Create(CRect(0,0,0,0), this, IDC_RESULT))

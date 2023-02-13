@@ -1,7 +1,13 @@
 // CrossLine.h: interface for the CCrossLine class.
 //
 //////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_CROSSLINE_H__D6C56114_D945_453D_B00B_C1BF86385132__INCLUDED_)
+#define AFX_CROSSLINE_H__D6C56114_D945_453D_B00B_C1BF86385132__INCLUDED_
+
+#if _MSC_VER > 1000
 #pragma once
+#endif // _MSC_VER > 1000
 
 class CCrossLine  
 {
@@ -27,3 +33,5 @@ private:
 	COLORREF	m_bgColor;
 	COLORREF	m_fgColor;
 };
+
+#endif // !defined(AFX_CROSSLINE_H__D6C56114_D945_453D_B00B_C1BF86385132__INCLUDED_)

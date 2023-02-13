@@ -232,7 +232,6 @@ public:
 public:
 	bool		m_bHold;
 public:
-	static DWORD WINAPI AlertThreader(LPVOID param);
 	bool bAlertClose;
 	CCriticalSection m_alertcs;
 	HANDLE m_alertevt, m_alertth;
@@ -291,7 +290,6 @@ public:
 public:
 	void		DispatchData(char* pData, int len);
 	void		DispatchMicheg(char *pData, int len, bool bErase=true);
-	void		DispatchAlert(CString Alert);
 	void		DispatchAlertX(struct _alertR* alertR);
 	void		DispatchNotice(CString Notice);
 	void		DispatchJango(CString Jango);
@@ -311,7 +309,7 @@ public:
 
 	
 	void		SetHold(bool bHold);
-	int			GetRowheight(){return (int)m_height;};
+	int		GetRowheight(){return (int)m_height;};
 	void		ChangeFont(CFont* pFont, CFont* pBFont);
 // Overrides
 	// ClassWizard generated virtual function overrides

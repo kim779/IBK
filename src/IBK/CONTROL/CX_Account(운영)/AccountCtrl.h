@@ -290,7 +290,7 @@ protected:
 	void	searchAction(int column);
 	bool	SearchData(CString sName, bool bAddAll);
 	bool	Search_MidData(CString sName, bool bAddAll);
-	bool	FindWordFromACCList(CString strSearch);
+	bool	FindWordFromACCList(CString strSearch, CAccountArr* pArr);
 	WORD	MakeHangul(char cChar1, char cChar2);
 	bool	IsChosung(WORD wHangul, WORD &wStart, WORD &wEnd);
 

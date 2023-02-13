@@ -53,16 +53,22 @@ CGrpWnd::CGrpWnd(CWnd *pView, CWnd *pParent, struct _param *pInfo)
 {
 	m_pView = pView;
 	m_pParent = pParent;
-	m_pToolTip = std::make_unique<CToolTip>(m_pView, this);
+	m_pToolTip = new CToolTip(m_pView, this);
+	m_pCrossLine = NULL;
 	
+	m_RgnCnt = m_DataCnt = m_GrpCnt = 0;
 	for (int ii = 0; ii < maxCnt; ii++)
 	{
-		m_pRgnInfo[ii] = nullptr;
-		m_pDataInfo[ii] = nullptr;
-		m_pGrpInfo[ii] = nullptr;
+		m_pRgnInfo[ii] = NULL;
+		m_pDataInfo[ii] = NULL;
+		m_pGrpInfo[ii] = NULL;
 	}
 
+	m_pMinMaxChk = NULL;
+	m_MinMaxCnt = 0;
 
+	m_bVol = m_bOutLine = false;
+	m_jChart = 0;
 	m_dKind = CDK_BONG;
 	m_dIndex = CDI_DAY;
 	m_dCount = 100;
@@ -70,6 +76,10 @@ CGrpWnd::CGrpWnd(CWnd *pView, CWnd *pParent, struct _param *pInfo)
 	m_dUnit = CDU_JONGMOK;
 
 	m_pivot = -100;
+	m_PMACnt = m_VMACnt = 0;
+	m_PMA[0] = m_PMA[1] = m_PMA[2] = m_PMA[3] = 0;
+	m_VMA[0] = m_VMA[1] = m_VMA[2] = m_VMA[3] = 0;
+	m_digit = 0;
 	m_power = 1;
 	m_fPoint = pInfo->point;
 	m_fName.Format("%s", pInfo->fonts);
@@ -81,11 +91,14 @@ CGrpWnd::CGrpWnd(CWnd *pView, CWnd *pParent, struct _param *pInfo)
 	m_ObjRect = pInfo->rect;
 	ParseParam((char*)pInfo->options.operator LPCTSTR());	
 
-	m_pFont = nullptr;
+	m_pFont = NULL;
 	m_ltColor = m_tRGB;
 	m_rtColor = m_tRGB;
 	m_btColor = m_tRGB;
+
 	m_PosData = _T("");
+	m_timerID = 0;
+
 	m_pApp = (CC_BongApp *)AfxGetApp();
 }
 
@@ -116,7 +129,7 @@ END_MESSAGE_MAP()
 
 LONG CGrpWnd::OnUser(WPARAM wParam, LPARAM lParam)
 {
-	const LONG	ret = 0;
+	LONG	ret = 0;
 	switch (LOBYTE(LOWORD(wParam)))
 	{
 	case DLL_OUBx:	// set data from server
@@ -126,7 +139,7 @@ LONG CGrpWnd::OnUser(WPARAM wParam, LPARAM lParam)
 	case DLL_INB:	// get data from out
 		return RequestHead();
 		break;
-	case DLL_ALERT:	// realtime data
+	case DLL_ALERTx:	// realtime data		
 		RealTimeData((char *)lParam);
 		break;
 	case DLL_SETPAL:
@@ -153,7 +166,7 @@ LONG CGrpWnd::OnUser(WPARAM wParam, LPARAM lParam)
 
 LONG CGrpWnd::OnGrp(WPARAM wParam, LPARAM lParam)
 {
-	const LONG	ret = 0;
+	LONG	ret = 0;
 
 	switch (LOWORD(wParam))
 	{
@@ -210,6 +223,7 @@ int CGrpWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	m_pToolTip->Create();
 	m_pToolTip->ShowWindow(SW_HIDE);
+
 	m_pFont = m_pApp->GetFont(m_pView, m_fPoint, m_fName);
 	
 	return 0;
@@ -270,7 +284,11 @@ void CGrpWnd::OnDestroy()
 		KillTimer(m_timerID);
 
 	if (m_pToolTip)
+	{
 		m_pToolTip->DestroyWindow();
+		delete m_pToolTip;
+		m_pToolTip = NULL;
+	}
 
 	RemoveComponent();
 
@@ -285,7 +303,7 @@ void CGrpWnd::OnMouseMove(UINT nFlags, CPoint point)
 		m_pToolTip->ShowWindow(SW_HIDE);
 		m_PosData.Format("%s", str);
 		KillTimer(TIMER_PID);
-		SetTimer(TIMER_PID, TIMER_PGAP, nullptr);
+		SetTimer(TIMER_PID, TIMER_PGAP, NULL);
 	}
 
 	MouseMove(false, point, true);
@@ -295,10 +313,15 @@ void CGrpWnd::OnMouseMove(UINT nFlags, CPoint point)
 
 int CGrpWnd::DispatchData(WPARAM wParam, LPARAM lParam)
 {
-	struct _extTHx* exTH = (struct _extTHx*)lParam;	
-	const int dlen      = exTH->size; 
-	char* pData	    = exTH->data;
+	//int	dlen = HIWORD(wParam);
+	//char	*pData = (char *)lParam;
+
+	struct _extTHx* exTH = (struct _extTHx*)lParam;
+	const int dlen = exTH->size;
+	char* pData = exTH->data;
+
 	RemoveComponent();
+
 	if (dlen < sz_CDJUGA)
 	{
 		Invalidate();
@@ -312,7 +335,7 @@ int CGrpWnd::DispatchData(WPARAM wParam, LPARAM lParam)
 	}
 
 	struct _cdJuga	*pcdJuga = (struct _cdJuga *)pData;
-	const int	dCnt = CGrp_Data::CharToInt(pcdJuga->nData, sizeof(pcdJuga->nData));
+	int	dCnt = CGrp_Data::CharToInt(pcdJuga->nData, sizeof(pcdJuga->nData));
 	if (dCnt <= 0)
 	{
 		Invalidate();
@@ -328,12 +351,11 @@ int CGrpWnd::DispatchData(WPARAM wParam, LPARAM lParam)
 	else
 		mgap = mgap * 60;
 	
-	int	dPos = sz_CDJUGA;	
-
-	m_pDataInfo[m_DataCnt] = std::make_unique<CGrp_Data>(this, m_dKind, 0, m_dIndex);
+	int	dPos = sz_CDJUGA;
+	m_pDataInfo[m_DataCnt] = new CGrp_Data(this, m_dKind, 0, m_dIndex);
 	m_pDataInfo[m_DataCnt]->SetDate(pcdJuga->pday);
 
-	const int	szFrame = m_pDataInfo[m_DataCnt]->AttachGraphData(&pData[dPos], m_totalDay, mgap);
+	int	szFrame = m_pDataInfo[m_DataCnt]->AttachGraphData(&pData[dPos], m_totalDay, mgap);
 	dPos += szFrame * m_totalDay;
 	m_DataCnt++;
 
@@ -344,7 +366,7 @@ int CGrpWnd::DispatchData(WPARAM wParam, LPARAM lParam)
 	m_dispPos = m_totalDay - m_dispDay;
 	m_dispEnd = m_dispPos + m_dispDay;
 
-	m_pCrossLine = std::make_unique<CCrossLine>(m_pView, this, m_pRGB, RGB(180,77,77));
+	m_pCrossLine = new CCrossLine(m_pView, this, m_pRGB, RGB(180,77,77));
 
 	AssignGraph();
 	ReviseTick();
@@ -361,7 +383,7 @@ void CGrpWnd::RealTimeData(CString sRTM)
 {
 	CString str = sRTM;
 	CStringList list;
-	int find = 0, index{};
+	int find = 0, index;
 	while (TRUE)
 	{
 		index = str.Find('\n', find);
@@ -387,7 +409,7 @@ void CGrpWnd::RealTimeData(CString sRTM)
 	bool	bRedraw = false;
 	for (int ii = 0; ii < m_GrpCnt; ii++)
 	{
-		const bool bRet = m_pGrpInfo[ii]->IsChangeMinMax(bShift);
+		bool bRet = m_pGrpInfo[ii]->IsChangeMinMax(bShift);
 		if (bRet)	bRedraw = true;
 	}
 
@@ -397,8 +419,8 @@ void CGrpWnd::RealTimeData(CString sRTM)
 	}
 	else
 	{
-		const int width = int(double(m_ObjRect.Width())*5 / m_dispDay);
-		const CRect	RC = CRect(m_ObjRect.right - width, m_ObjRect.top,
+		int width = int(double(m_ObjRect.Width())*5 / m_dispDay);
+		CRect	RC = CRect(m_ObjRect.right - width, m_ObjRect.top, 
 			m_ObjRect.right, m_ObjRect.bottom);
 
 		InvalidateRect(&RC);
@@ -410,7 +432,7 @@ bool CGrpWnd::Alert(CString sRTM)
 	CString	rtm = sRTM;
 	CMapStringToString	rtmStore;
 	CString	val, symbol;
-	int index{};
+	int	index;
 	for (; !rtm.IsEmpty(); )
 	{
 		index = rtm.Find('\t');
@@ -486,7 +508,7 @@ bool CGrpWnd::Alert(CString sRTM)
 	bool	bShift = false;
 	for (int ii = 0; ii < m_DataCnt; ii++)
 	{
-		const bool bRet = m_pDataInfo[ii]->UpdateRTM();
+		bool bRet = m_pDataInfo[ii]->UpdateRTM();
 		if (bRet)	bShift = true;
 	}
 
@@ -500,12 +522,12 @@ bool CGrpWnd::AssignRegion()
 
 	if (m_jChart)
 	{
-		m_pRgnInfo[m_RgnCnt] = std::make_unique<_RgnInfo>();
+		m_pRgnInfo[m_RgnCnt] = new _RgnInfo;
 		m_RgnCnt++;
 	}
 	if (m_bVol && !m_bSameRegion)
 	{
-		m_pRgnInfo[m_RgnCnt] = std::make_unique<_RgnInfo>();
+		m_pRgnInfo[m_RgnCnt] = new _RgnInfo;
 		m_RgnCnt++;
 	}
 
@@ -544,7 +566,7 @@ bool CGrpWnd::AssignGraph()
 		gInfo.pRGB = RGB(255, 255, 255);
 		gInfo.tRGB = RGB(10, 10, 10);
 
-		m_pGrpInfo[m_GrpCnt] = std::make_unique<CGrp_Juga>(m_pView, this, (char *)&gInfo);
+		m_pGrpInfo[m_GrpCnt] = new CGrp_Juga(m_pView, this, (char *)&gInfo);
 		m_GrpCnt++;
 
 		if (m_PMACnt)
@@ -557,7 +579,7 @@ bool CGrpWnd::AssignGraph()
 			gInfo.pRGB = RGB(255, 255, 255);
 			gInfo.tRGB = RGB(0, 0, 255);
 
-			m_pGrpInfo[m_GrpCnt] = std::make_unique<CGrp_MA>(m_pView, this, (char *)&gInfo);
+			m_pGrpInfo[m_GrpCnt] = new CGrp_MA(m_pView, this, (char *)&gInfo);
 			m_GrpCnt++;
 		}
 
@@ -576,7 +598,7 @@ bool CGrpWnd::AssignGraph()
 		gInfo.pRGB = RGB(255, 255, 255);
 		gInfo.tRGB = RGB(0, 0, 0);
 
-		m_pGrpInfo[m_GrpCnt] = std::make_unique<CGrp_Vol>(m_pView, this, (char *)&gInfo);
+		m_pGrpInfo[m_GrpCnt] = new CGrp_Vol(m_pView, this, (char *)&gInfo);
 		m_GrpCnt++;
 
 		if (m_VMACnt)
@@ -589,7 +611,7 @@ bool CGrpWnd::AssignGraph()
 			gInfo.pRGB = RGB(255, 255, 255);
 			gInfo.tRGB = RGB(0, 0, 255);
 
-			m_pGrpInfo[m_GrpCnt] = std::make_unique<CGrp_MA>(m_pView, this, (char *)&gInfo);
+			m_pGrpInfo[m_GrpCnt] = new CGrp_MA(m_pView, this, (char *)&gInfo);
 			m_GrpCnt++;
 		}
 
@@ -601,32 +623,33 @@ bool CGrpWnd::AssignGraph()
 
 void CGrpWnd::DrawGraph(CDC *pDC)
 {
-
+	m_cs.Lock();
 
 	DrawEmpty(pDC, true);
 	if (m_GrpCnt == 0)
 	{
 		DrawEmpty(pDC, false);
+		m_cs.Unlock();
 		return;
 	}
 
-	for (auto& item : m_pMinMaxChk)
+	for (int ii = 0; ii < m_MinMaxCnt; ii++)
 	{
-		item->Max = DBL_MIN;
-		item->Min = DBL_MAX;
-		item->tickx = 0;
-		item->ticky = 0;
+		m_pMinMaxChk[ii].Max = DBL_MIN;
+		m_pMinMaxChk[ii].Min = DBL_MAX;
+		m_pMinMaxChk[ii].tickx = 0;
+		m_pMinMaxChk[ii].ticky = 0;
 	}
 
-	int	gKind{};
-	double	dMin{}, dMax{};
-	struct _MinMaxChk* pMinMaxChk{};
-
+	int	gKind;
+	double	dMin, dMax;
+	struct _MinMaxChk	*pMinMaxChk;
+	class CGrp_Base	*pBase;
 	if (m_bSameRegion)
 	{
 		for (int ii = 0; ii < m_GrpCnt; ii++)
 		{
-			const auto& pBase = m_pGrpInfo[ii];
+			pBase = m_pGrpInfo[ii];
 			pMinMaxChk = GetMinMaxChk(pBase->GetRgnKey());
 			if (pMinMaxChk && pMinMaxChk->coMinMax)
 			{
@@ -650,7 +673,7 @@ void CGrpWnd::DrawGraph(CDC *pDC)
 	{
 		for (int ii = 0; ii < m_GrpCnt; ii++)
 		{
-			const auto& pBase = m_pGrpInfo[ii];
+			pBase = m_pGrpInfo[ii];
 			pMinMaxChk = GetMinMaxChk(pBase->GetRgnKey());
 			if (pMinMaxChk && pMinMaxChk->coMinMax)
 			{
@@ -682,6 +705,7 @@ void CGrpWnd::DrawGraph(CDC *pDC)
 	DrawEmpty(pDC, false);
 	m_pCrossLine->DrawCrossLine(pDC);
 
+	m_cs.Unlock();
 }
 
 void CGrpWnd::DrawEmpty(CDC *pDC, bool bInit)
@@ -724,23 +748,22 @@ void CGrpWnd::Resize()
 
 	CDC *pDC = GetDC();
 	CFont *pOldFont = pDC->SelectObject(m_pFont);
-	const CSize	sz = pDC->GetOutputTextExtent("99,999,999");
+	CSize	sz = pDC->GetOutputTextExtent("99,999,999");
 	
-	std::array<double, maxCnt> arrheight{};
-
+	double	*pHeight = new double[m_RgnCnt];
 	switch (m_RgnCnt)
 	{
 	case 1:
-		arrheight[0] = 1.0;
+		pHeight[0] = 1.0;
 		break;
 	case 2:
-		arrheight[0] = 0.7;
-		arrheight[1] = 0.3;
+		pHeight[0] = 0.7;
+		pHeight[1] = 0.3;
 		break;
 	case 3:
-		arrheight[0] = 0.4;
-		arrheight[1] = 0.3;
-		arrheight[2] = 0.3;
+		pHeight[0] = 0.4;
+		pHeight[1] = 0.3;
+		pHeight[2] = 0.3;
 		break;
 	}
 
@@ -780,11 +803,11 @@ void CGrpWnd::Resize()
 	for (int ii = 0; ii < m_RgnCnt; ii++)
 	{
 		m_pRgnInfo[ii]->tick[ctkLEFT].tkRect = 
-			CRect(0, top, m_GrpRect.left, top + int(m_GrpRect.Height()* arrheight[ii]));
+			CRect(0, top, m_GrpRect.left, top + int(m_GrpRect.Height()*pHeight[ii]));
 
 		m_pRgnInfo[ii]->tick[ctkRIGHT].tkRect = 
 			CRect(m_GrpRect.right, top, 
-			m_ObjRect.right, top + int(m_GrpRect.Height()* arrheight[ii]));
+			m_ObjRect.right, top + int(m_GrpRect.Height()*pHeight[ii]));
 
 		m_pRgnInfo[ii]->tick[ctkBOTTOM].tkRect = bottomRC;
 		m_pRgnInfo[ii]->gpRect.top = m_pRgnInfo[ii]->tick[ctkLEFT].tkRect.top;
@@ -792,11 +815,12 @@ void CGrpWnd::Resize()
 		m_pRgnInfo[ii]->gpRect.left = m_pRgnInfo[ii]->tick[ctkLEFT].tkRect.right;
 		m_pRgnInfo[ii]->gpRect.right = m_pRgnInfo[ii]->tick[ctkRIGHT].tkRect.left;
 
-		top = top + int(m_GrpRect.Height()* arrheight[ii]);
+		top = top + int(m_GrpRect.Height()*pHeight[ii]);
 	}
 
 	pDC->SelectObject(pOldFont);
 	ReleaseDC(pDC);
+	delete pHeight;
 
 	for (int ii = 0; ii < m_GrpCnt; ii++)
 		m_pGrpInfo[ii]->Resize();
@@ -855,7 +879,7 @@ void CGrpWnd::ParseParam(char *param)
 	if (nPos >= 0)
 	{
 		sTmp = sParam.Mid(nPos + sToken.GetLength());
-		const int type = atoi(sTmp);
+		int type = atoi(sTmp);
 		switch (type)
 		{
 		case CGK_LINE:	m_jChart = CGK_LINE;	break;
@@ -896,7 +920,7 @@ void CGrpWnd::ParseParam(char *param)
 	if (nPos >= 0)
 	{
 		sTmp = sParam.Mid(nPos + 2);
-		const int index = atoi(sTmp);
+		int index = atoi(sTmp);
 		switch (index)
 		{
 		case CDI_TICK:	m_dIndex = CDI_TICK;	break;
@@ -912,7 +936,7 @@ void CGrpWnd::ParseParam(char *param)
 	if (nPos >= 0)
 	{
 		sTmp = sParam.Mid(nPos + 2);
-		const int unit = atoi(sTmp);
+		int unit = atoi(sTmp);
 
 		switch (unit)
 		{
@@ -963,25 +987,63 @@ int CGrpWnd::RequestHead()
 
 void CGrpWnd::RemoveComponent()
 {
-	for (auto& item : m_pRgnInfo)
-		item.reset();
+	m_cs.Lock();
 
-	for (auto& item : m_pDataInfo)
-		item.reset();
+	if (m_RgnCnt)
+	{
+		for (int ii = 0; ii < m_RgnCnt; ii++)
+		{
+			if (m_pRgnInfo[ii])
+			{
+				delete m_pRgnInfo[ii];
+				m_pRgnInfo[ii] = NULL;
+			}
+		}
+	}
 
-	for (auto& item : m_pGrpInfo)
-		item.reset();
+	if (m_DataCnt)
+	{
+		for (int ii = 0; ii < m_DataCnt; ii++)
+		{
+			if (m_pDataInfo[ii])
+			{
+				delete m_pDataInfo[ii];
+				m_pDataInfo[ii] = NULL;
+			}
+		}
+	}
 
-	for (auto& item : m_pMinMaxChk)
-		item.reset();
-
-	m_pCrossLine.reset();
-
+	if (m_GrpCnt)
+	{
+		for (int ii = 0; ii < m_GrpCnt; ii++)
+		{
+			if (m_pGrpInfo[ii])
+			{
+				delete m_pGrpInfo[ii];
+				m_pGrpInfo[ii] = NULL;
+			}
+		}
+	}
 	m_RgnCnt = 0;
 	m_GrpCnt = 0;
 	m_DataCnt = 0;
+
+	if (m_pMinMaxChk)
+	{
+		delete m_pMinMaxChk;
+		m_pMinMaxChk = NULL;
+	}
 	m_MinMaxCnt = 0;
+
+	if (m_pCrossLine)
+	{
+		delete m_pCrossLine;
+		m_pCrossLine = NULL;
+	}
+
 	m_pParent->SendMessage(CM_CTRL, MAKEWPARAM(CTRL_Enable, FALSE), 0);
+
+	m_cs.Unlock();
 }
 
 int CGrpWnd::GetPalette(int index)
@@ -1052,7 +1114,7 @@ bool CGrpWnd::ChangeDisplay(int dispDay)
 
 	if (m_dispPos < 0)
 	{
-		const int gap = 0 - m_dispPos;
+		int gap = 0 - m_dispPos;
 		m_dispPos += gap;
 		m_dispEnd += gap;
 	}
@@ -1131,35 +1193,36 @@ void CGrpWnd::RecalculateMinMax()
 
 void CGrpWnd::ReviseTick()
 {
-	for (auto& item : m_pMinMaxChk)
-		item.reset();
+	if (m_pMinMaxChk)
+	{
+		delete[] m_pMinMaxChk;
+		m_pMinMaxChk = NULL;
+	}
 
 	m_MinMaxCnt = m_RgnCnt;
-
-	for(auto& item : m_pMinMaxChk)
-		item = std::make_unique<_MinMaxChk>();
+	m_pMinMaxChk = new _MinMaxChk[m_MinMaxCnt];
+	ZeroMemory(m_pMinMaxChk, sizeof(_MinMaxChk) * m_MinMaxCnt);
 
 	for (int ii = 0; ii < m_RgnCnt; ii++)
 	{
 		int	grpcnt = 0;
 		for (int jj = 0; jj < m_GrpCnt; jj++)
-		{
+		{			
 			if (m_pGrpInfo[jj]->GetRgnKey() == ii)
 				grpcnt++;
 		}
 
-		m_pMinMaxChk[ii]->region = ii;
-		if (m_RgnCnt > 1)
-			m_pMinMaxChk[ii]->coMinMax = 1;
+		m_pMinMaxChk[ii].region = ii;
+		if (grpcnt > 1)	m_pMinMaxChk[ii].coMinMax = 1;
 	}
 }
 
 _MinMaxChk* CGrpWnd::GetMinMaxChk(int rKey)
 {
 	if (rKey < 0 || rKey >= m_RgnCnt)
-		return nullptr;
+		return NULL;
 	
-	return m_pMinMaxChk[rKey].get();
+	return &m_pMinMaxChk[rKey];
 }
 
 void CGrpWnd::TipMouseMove(CPoint point)
@@ -1196,7 +1259,7 @@ void CGrpWnd::MouseMove(bool bIsTipEvent, CPoint point, bool bCrossOnly)
 			KillTimer(m_timerID);
 
 		m_timerID = TIMER_ID;
-		SetTimer(m_timerID, TIMER_GAP, nullptr);
+		SetTimer(m_timerID, TIMER_GAP, NULL);
 		return;
 	}
 
@@ -1244,7 +1307,7 @@ void CGrpWnd::MouseMove(bool bIsTipEvent, CPoint point, bool bCrossOnly)
 		KillTimer(m_timerID);
 
 	m_timerID = TIMER_ID;
-	SetTimer(m_timerID, TIMER_GAP, nullptr);
+	SetTimer(m_timerID, TIMER_GAP, NULL);
 }
 
 CString CGrpWnd::GetTipStr(CPoint point)

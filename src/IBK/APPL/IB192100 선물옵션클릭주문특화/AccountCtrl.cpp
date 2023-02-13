@@ -149,12 +149,12 @@ void CAccountCtrl::OnSize(UINT nType, int cx, int cy)
 {
 	CWnd::OnSize(nType, cx, cy);
 
-	//if (m_pCtrl)
-	//{
-	//	CRect rc;
-	//	GetClientRect(&rc);
-	//	m_pCtrl->MoveWindow(&rc, TRUE);
-	//}
+	if (m_pCtrl)
+	{
+		CRect rc;
+		GetClientRect(&rc);
+		m_pCtrl->MoveWindow(&rc, TRUE);
+	}
 }
 
 int CAccountCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) 

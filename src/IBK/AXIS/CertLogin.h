@@ -145,7 +145,11 @@ protected:
 	void	InfoRSC();
 	CWnd*	GetWnd(UINT nRes);
 	void	RunHelpCom();
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr<class	CMyToolTip>m_pToolTip;
+#else
+	class	CMyToolTip*	m_pToolTip;
+#endif
 
 // Implementation
 protected:

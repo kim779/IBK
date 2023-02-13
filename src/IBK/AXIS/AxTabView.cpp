@@ -29,6 +29,10 @@ CAxTabView::CAxTabView()
 
 CAxTabView::~CAxTabView()
 {
+#ifndef DF_USE_CPLUS17
+	if (m_tab)	
+		delete m_tab;
+#endif
 	AfxGetMainWnd()->SendMessage(WM_AXIS, MAKEWPARAM(axCLOSEV, m_key), 0);
 }
 
@@ -112,16 +116,33 @@ void CAxTabView::JustWindow(CString home, CString key, class CTMenu* menu,
 	//ModifyStyleEx(0, WS_EX_CLIENTEDGE, SWP_DRAWFRAME);
 
 	if (m_tab && !m_tab->m_hWnd)
+	{
+#ifdef DF_USE_CPLUS17
 		m_tab.reset();
+#else
+		delete m_tab;
+		m_tab = NULL;
+#endif
+	}
 
 	if (!m_tab)
 	{
+#ifdef DF_USE_CPLUS17
 		m_tab = std::make_unique<CNTab>(key, menu, aMapN, axiscall, m_key);
 		if (!m_tab->CreateEx(WS_EX_CLIENTEDGE, NULL, "tabview", WS_CHILD | WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, CRect(0,0,0,0), GetParent(), (int)m_tab.get()))
 		{
 			m_tab.reset();
 			Axis::MessageBox(this, "Error, Tab create fail.", MB_ICONASTERISK);
 		}
+#else
+		m_tab = new CNTab(key, menu, aMapN, axiscall, m_key);
+		if (!m_tab->CreateEx(WS_EX_CLIENTEDGE, NULL, "tabview", WS_CHILD|WS_CHILD|WS_CLIPSIBLINGS|WS_CLIPCHILDREN, CRect(0), GetParent(), (int) m_tab))
+		{
+			delete m_tab;
+			m_tab = NULL;
+			Axis::MessageBox(this, "Error, Tab create fail.", MB_ICONASTERISK);
+		}
+#endif
 	}
 
 	JustView(resize);

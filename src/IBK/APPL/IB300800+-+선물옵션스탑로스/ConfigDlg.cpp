@@ -6,16 +6,17 @@
 #include "ConfigDlg.h"
 #include "MainWnd.h"
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
-UINT	nExeChkID[] =	{IDC_CHECK1, IDC_CHECK2, IDC_CHECK3, IDC_CHECK4, IDC_CHECK5};
-UINT	nUnitCboID[] =	{IDC_COMBO1,IDC_COMBO2,IDC_COMBO3,IDC_COMBO4};
-UINT	nEditID[] =		{IDC_EDIT1, IDC_EDIT2, IDC_EDIT3, IDC_EDIT4, IDC_EDIT5, IDC_EDIT6};
-UINT	nTypeRadioID[] =		{IDC_RADIO1, IDC_RADIO2, IDC_RADIO3, IDC_RADIO4};
+UINT	nExeChkID[]    =	{IDC_CHECK1, IDC_CHECK2, IDC_CHECK3, IDC_CHECK4, IDC_CHECK5};
+UINT	nUnitCboID[]   =	{IDC_COMBO1,IDC_COMBO2,IDC_COMBO3,IDC_COMBO4};
+UINT	nEditID[]      =	{IDC_EDIT1, IDC_EDIT2, IDC_EDIT3, IDC_EDIT4, IDC_EDIT5, IDC_EDIT6};
+UINT	nTypeRadioID[] =	{IDC_RADIO1, IDC_RADIO2, IDC_RADIO3, IDC_RADIO4};
 
 /////////////////////////////////////////////////////////////////////////////
 // CConfigDlg dialog
@@ -130,6 +131,9 @@ BOOL CConfigDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 	LOGFONT lf = GetLogFont(12);
 	m_pFont.CreateFontIndirect(&lf);
+	SetWindowTheme(GetDlgItem(IDC_CHECK4)->GetSafeHwnd(), L"", L"");
+	SetWindowTheme(GetDlgItem(IDC_CHECK5)->GetSafeHwnd(), L"", L"");
+	SetWindowTheme(GetDlgItem(IDC_CHECK6)->GetSafeHwnd(), L"", L"");
 
 	if(!m_iType)
 	{
@@ -139,8 +143,6 @@ BOOL CConfigDlg::OnInitDialog()
 		GetDlgItem(IDC_STATICCTYPE)->ShowWindow(SW_HIDE);
 		GetDlgItem(IDC_STATICVOLUNIT)->ShowWindow(SW_SHOW);
 		GetDlgItem(IDC_VOLTYPECOMBO)->ShowWindow(SW_HIDE);
-		
-		
 	}
 	else
 	{
@@ -264,10 +266,6 @@ void CConfigDlg::SetConfigValue()
 			else
 				strVal.Format("%d",(int)(m_stConfig.ival[i]));
 
-// 			CString s;
-// 			s.Format("SETCONFIG : [%s]	[%f]\n",strVal,m_stConfig.ival[i]);
-// 			OutputDebugString(s);
-
 			SetDlgButtonCheck(nExeChkID[i], 1);
 			( (CComboBox*)GetDlgItem(nUnitCboID[i]) )->SetCurSel( m_stConfig.iunit[i]);
 			GetDlgItem(nEditID[i])->SetWindowText( strVal );
@@ -275,15 +273,10 @@ void CConfigDlg::SetConfigValue()
 			if(i==2)
 			{
 				strVal = "";
-				//strVal.Format("%.2f",m_stConfig.ival[3]);
 				if(m_stConfig.iunit[3] > 1)
 					strVal.Format("%.2f",m_stConfig.ival[3]);
 				else
 					strVal.Format("%d",(int)(m_stConfig.ival[3]));
-
-// 				CString s;
-// 				s.Format("SETCONFIG : [%s]	[%f]\n",strVal,m_stConfig.ival[i]);
-// 				OutputDebugString(s);
 
 				//고점대비
 				( (CComboBox*)GetDlgItem(nUnitCboID[3]) )->SetCurSel( m_stConfig.iunit[3]);
@@ -300,12 +293,6 @@ void CConfigDlg::SetConfigValue()
 	GetDlgItem(IDC_EDIT5)->SetWindowText(CStr(m_stConfig.ivolval));//수량
 
 	( (CComboBox*)GetDlgItem(IDC_PRICECOMBO) )->SetCurSel(m_stConfig.iprctype);//가격타입
-
-// 	CString strPrc;
-// 	strPrc.Format("IDC_PRICECOMBO : [%d]\n",m_stConfig.iprctype);
-// 	OutputDebugString(strPrc);
-
-	//GetDlgItem(IDC_EDIT6)->SetWindowText(CFStr(m_stConfig.iprcval,2,false));//가격 
 
 	CString s;
 	s.Format("ORG: [%f]		CONV : [%s]\n",m_stConfig.iprcval,CFStr(m_stConfig.iprcval));
@@ -878,19 +865,21 @@ HBRUSH CConfigDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	
 	// TODO: Change any attributes of the DC here
 	pDC->SetBkMode(TRANSPARENT); 
-	pDC->SetTextColor( ((CMainWnd*)m_pMain)->m_txtcolor); 
+	//pDC->SetTextColor( ((CMainWnd*)m_pMain)->m_txtcolor); 
 	
 	if(nCtlColor == CTLCOLOR_STATIC || nCtlColor == CTLCOLOR_BTN  )
 	{
 		if(pWnd->GetDlgCtrlID() == IDC_STATICNUM)
 			pDC->SetTextColor( RGB(0, 0, 255)); 
+		
+		if (pWnd->GetDlgCtrlID() == IDC_CHECK4 || pWnd->GetDlgCtrlID() == IDC_CHECK5 || pWnd->GetDlgCtrlID() == IDC_CHECK6)
+		{
+			pDC->SetTextColor(RGB(0, 0, 255));
+		}
+		
 		hbr = CreateSolidBrush(0xFFFFFF);
 	}
 
-	if(pWnd->GetDlgCtrlID() == IDC_CHECK4 || pWnd->GetDlgCtrlID() == IDC_CHECK5 || pWnd->GetDlgCtrlID() == IDC_CHECK6)
-	{
-		pDC->SetTextColor(0xFF0000);
-	}
 	
 	// TODO: Return a different brush if the default is not desired
 	return hbr;

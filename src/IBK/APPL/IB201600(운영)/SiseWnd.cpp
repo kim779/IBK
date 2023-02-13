@@ -346,16 +346,15 @@ void CSiseWnd::InitSymbol(CRect rect, int Row, int Col)
 			symbolparam.options = _T("/a89/b91/c92/d69/i99");
 			
 			m_pwndSymbol = (*axCreate)(m_pMainWnd, &symbolparam);
-			m_pwndSymbol->SetWindowPos(&wndTop, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE);
-			
-			//내렸다 올라오면 심볼 사라지는 현상 해결
-			m_pwndSymbol->SetParent(this);
-			
 			if (m_pwndSymbol == nullptr)
 			{
 				AfxFreeLibrary(m_hiSymbol);
 				m_hiSymbol = nullptr;
 			}
+			
+			m_pwndSymbol->SetWindowPos(&wndTop, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE);	
+			//내렸다 올라오면 심볼 사라지는 현상 해결
+			m_pwndSymbol->SetParent(this);			
 		}
 	}
 }

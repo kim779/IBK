@@ -741,6 +741,7 @@ void CMainWnd::Init()
 	m_cbGroup->MoveWindow(CRect(rect.left, rect.top-22, rect.left+150, rect.top+100));
 	m_cbGroup->SetFont(m_pFont, FALSE);
 	m_cbGroup->ShowWindow(SW_SHOW);
+	SetWindowTheme(m_cbGroup->GetSafeHwnd(), L"", L"");
 
 	//설정버튼
 	hBITMAP    = GetAxHBitmap(m_fileIMG + "조회BTN.BMP");
@@ -969,19 +970,23 @@ void CMainWnd::parsingGroupList(char *datB, int datL)
 	{
 		strGrid.Format("GRID%02d", ii);
 		nKind = GetPrivateProfileInt(strGrid, KEY_DATA, 0, m_fileCFG);	
-		nGroup = max(CAST_TREEID(nKind)->value, 1);		//2016.03.30 KSJ 그룹을 그대로 가져오기
-			
-		if(ii == 0)
+		nGroup = max(CAST_TREEID(nKind)->value, 1);		//2016.03.30 KSJ 그룹을 그대로 가져오기			
+		
+		if ((nGroup - 1) < m_cbGroup->GetCount())
 		{
-			m_cbGroup->SetCurSel(nGroup -1);
-			m_nCurGrid = 1;
+			if(ii == 0 )	
+			{
+				
+				m_cbGroup->SetCurSel(nGroup - 1);
+				m_nCurGrid = 1;
+			}
+
+			if (nGroup > 150)
+				break;
+
+			strGroup.Format("%d", nGroup);
+			m_pGroupWnd[ii]->queryCodes(strGroup, GetGroupName(nGroup));
 		}
-
-		if (nGroup > 150)
-			break;
-
-		strGroup.Format("%d", nGroup);
-		m_pGroupWnd[ii]->queryCodes(strGroup, GetGroupName(nGroup));
 	}
 }
 

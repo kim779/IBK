@@ -216,7 +216,7 @@ int COrderWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_pOrderType = std::make_unique<CComboBox>();
 	m_pOrderType->Create(WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CBS_DROPDOWNLIST, 
 						CRect(rcCtrl.left, rcCtrl.top, rcCtrl.right, 200), this, IDC_ORDERTYPE);
-
+	SetWindowTheme(m_pOrderType->GetSafeHwnd(), L"", L"");
 	rcCtrl.left = rcCtrl.right + SZ_CTRL_HGAP + 3;
 	rcCtrl.right = rcCtrl.left + SZ_CTRL_2STATIC;
 
@@ -230,7 +230,7 @@ int COrderWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_pCondition = std::make_unique<CComboBox>();
 	m_pCondition->Create(WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CBS_DROPDOWNLIST, 
 						CRect(rcCtrl.left, rcCtrl.top, rcCtrl.right, 200), this, IDC_CONDITION);
-
+	SetWindowTheme(m_pCondition->GetSafeHwnd(), L"", L"");
 	rcCtrl.left = rcCtrl.right + SZ_CTRL_HGAP + 3;
 	rcCtrl.right = rcCtrl.left + SZ_CTRL_2STATIC;
 
@@ -276,7 +276,7 @@ int COrderWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_pPriceUnit->Create(WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CBS_DROPDOWNLIST, 
 						CRect(rcCtrl.left, rcCtrl.top, rcCtrl.right, 200), this, IDC_PRICEUNIT);
 
-
+	SetWindowTheme(m_pPriceUnit->GetSafeHwnd(), L"", L"");
 	rcCtrl.left = rcCtrl.right + 1;
 	rcCtrl.right = rcCtrl.left + SZ_CTRL_3EDIT;
 

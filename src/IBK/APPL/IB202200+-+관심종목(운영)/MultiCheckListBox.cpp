@@ -140,6 +140,7 @@ void CMultiCheckListBox::PreDrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 			::SelectObject(bitmapDC.m_hDC, hOldBitmap);
 			bitmapDC.DeleteDC();
+			first_brush.DeleteObject();
 		}
 
 		pDC->SetBkColor(oldBkColor);

@@ -806,15 +806,6 @@ LONG CMainWnd::OperDLLOUB(CRecvData& rdata)
 	WORD kind = rdata.key;
 	struct _trkey* trkey = (struct _trkey*)&kind;
 
-	if ((trkey->kind != TRKEY_GRIDNEW) && (trkey->kind != TRKEY_GRIDNEWS) && (trkey->kind != TRKEY_GRIDROW))
-	{
-		if (kind > TRKEY_INTER)
-		{
-			receiveOub(rdata.key, rdata.data);
-			return ret;
-		}
-	}
-	
 	switch (trkey->kind)
 	{
 	case TRKEY_GROUPACCNLIST:
@@ -874,8 +865,6 @@ LONG CMainWnd::OperDLLOUB(CRecvData& rdata)
 	default:
 		break;
 	}
-
-
 	return ret;
 }
 
@@ -896,10 +885,10 @@ LONG CMainWnd::OnUser(WPARAM wParam, LPARAM lParam)
 	break;
 	case DLL_OUBx:
 	{
-		struct	_extTH* th = (struct _extTH*)lParam;
+		struct	_extTHx* th = (struct _extTHx*)lParam;
 		
 		CRecvData rdata;
-		rdata.SetData(th->size, th->key, (char*)(lParam + L_extTH));
+		rdata.SetData(th->size, th->key, th->data);
 
 		ret = OperDLLOUB(rdata);
 		this->EnableWindow(TRUE);
@@ -1831,8 +1820,7 @@ void CMainWnd::OnTimer(UINT nIDEvent)
 			const auto&it = _mapRealData.find(code.first);	
 			if (it != _mapRealData.end())
 				m_pGroupWnd->RecvRTSx((LPARAM)it->second.get());
-		});
-		
+		});		
 		_mRealtime.clear();
 	}
 	CWnd::OnTimer(nIDEvent);
@@ -1926,8 +1914,8 @@ void CMainWnd::RTS_RecvRTSx(LPARAM lParam)
 	struct _alertR *alertR = (struct _alertR *)lParam;
 	DWORD *data = nullptr;
 	char *pdata = nullptr;
+	
 	data = (DWORD *)alertR->ptr[0];
-
 	code = alertR->code;
 	code.Trim();
 
@@ -1946,7 +1934,7 @@ void CMainWnd::RTS_RecvRTSx(LPARAM lParam)
 	if (atoi(m_strBeginTime) <= atoi(strCurTime) && atoi(m_strBeginTimeEnd) >= atoi(strCurTime)) //장전동시호가 시간이면
 		bCheckTime = true;
 
-	if (atoi(m_strEndTime) <= atoi(strCurTime) && atoi(m_strEndTimeEnd) + 1000 >= atoi(strCurTime)) //장마감동시호가 시간이면
+	if (atoi(m_strEndTime) <= atoi(strCurTime) /*&& atoi(m_strEndTimeEnd) + 1000 >= atoi(strCurTime)*/) //장마감동시호가 시간이면
 		bCheckTime = true;
 
 	if(bCheckTime)	//동시호가 시간이면 기존처리
@@ -1971,19 +1959,22 @@ void CMainWnd::RTS_RecvRTSx(LPARAM lParam)
 
 	_mRealtime.emplace(std::make_pair(code, 1));	
 	const auto mt = _mapRealData.emplace(code, std::make_unique<struct _Ralert>());
+
 	mt.first->second->size = alertR->size;
 	mt.first->second->stat = alertR->stat;
 	mt.first->second->code = code;
-	mt.first->second->ptr[111].reset();
 
+//	mt.first->second->ptr[111].reset();
 	for (auto item : rmap)
 	{
 		const int ii = item.first;
 		pdata = (char*)data[ii];
 
 		if (pdata == nullptr)
+		{
+			mt.first->second->ptr[ii].reset();
 			continue;
-
+		}
 		const int len = strlen(pdata) + 1;	
 		mt.first->second->ptr[ii].reset(std::make_unique<char[]>(len).release());
 		ZeroMemory(mt.first->second->ptr[ii].get(), len);
@@ -2172,8 +2163,7 @@ void CMainWnd::Request_GroupCode(int iseq)
 	updn->uinfo.retc[0] = 'O';
 	stmp.Format("%d", index);
 	memcpy((char*)&sendB[sz_uinfo], stmp, stmp.GetLength());
-
-	sendTR(trUPDOWN, sendB.data(), sendL, TRKEY_INTER + iseq);
+	sendTR(trUPDOWN, sendB.data(), sendL, TRKEY_INTER);
 }
 
 void CMainWnd::receiveOub(int key, CString data)
@@ -2184,9 +2174,12 @@ void CMainWnd::receiveOub(int key, CString data)
 		char	gnam[30];
 	};
 
-	if  (key == TRKEY_GROUP)
+	if (key == TRKEY_GROUP)
 	{
 		const int cnt = atoi(data.Left(4));
+
+//XMSG(그룹개수);
+//AxStd::_Msg("그룹 총개수[%d]",  cnt);
 		data = data.Mid(4);
 		data.Trim();
 		if (!data.IsEmpty() && cnt > 0)
@@ -2194,29 +2187,31 @@ void CMainWnd::receiveOub(int key, CString data)
 			std::vector<std::pair<CString, CString>> vGroupName;
 			const gsl::span<_glistex> groupList((_glistex*)data.GetString(), cnt);
 
-			std::sort(groupList.begin(), groupList.end(), [](auto item, auto item1){
+			std::sort(groupList.begin(), groupList.end(), [](auto item, auto item1) {
 				return CString(item.ngrs, 2).Trim().Compare((CString(item1.ngrs, 2).Trim())) < 0;
 			});
-		
-			for_each(groupList.begin(), groupList.end(), [&](auto item){
+
+			for_each(groupList.begin(), groupList.end(), [&](auto item) {
 				const CString groupKey = CString(item.ngrs, 2).Trim();
 				const CString groupName = CString(item.gnam, 30).Trim();
+				//AxStd::_Msg("그룹키[%s]", groupKey);
+				//AxStd::_Msg("그룹명[%s]", groupName);
 				vGroupName.emplace_back(std::make_pair(groupName, groupKey));
 			});
 
 			if (m_pTreeWnd)
 				m_pTreeWnd->makeInterGroup(vGroupName);
 			if (m_pToolWnd)
-				m_pToolWnd->addGroup(vGroupName);		
-			
+				m_pToolWnd->addGroup(vGroupName);
+
 			if (m_pGroupWnd)
 			{
 				auto& map = m_pGroupWnd->_GroupName;
 				for_each(vGroupName.begin(), vGroupName.end(), [&](const auto item) {
 					map.emplace(std::make_pair(atoi(item.second), item.first));
-				});
+					});
 
-				m_pGroupWnd->SelectOper();	
+				m_pGroupWnd->SelectOper();
 				if (!_bInit)
 				{
 					m_pGroupWnd->InitSetGroup();

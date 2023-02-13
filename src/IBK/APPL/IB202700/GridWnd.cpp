@@ -1218,6 +1218,7 @@ void CGridWnd::ClearSearchMap()
 {
 	m_pSearchMap.RemoveAll();
 	_vIndex.clear();
+	_mapFms.clear();
 }
 
 void CGridWnd::CopyInter(_inters* pCpy, _inters* pSrc)
@@ -4168,7 +4169,7 @@ void CGridWnd::parsingGridOne(char *datB, int datL, int update)
 					// END DEL
 					CString mCode, entry;
 					int sizeCode;
-					mCode = CString(pinters->code, sizeof(pinters->code));
+					mCode = pinters->code;
 					sizeCode = strlen(mCode);
 
 					switch (gridHdr.symbol[3])
@@ -4320,15 +4321,15 @@ void CGridWnd::RecvOper(int kind, CRecvData* rdata)
 	case TRKEY_GRIDUPJONG:
 	case TRKEY_GRIDNEW:
 	case SEND_GRID:
+		ClearSearchMap();
 		parsingGrid(rdata->data, rdata->size);
 		// Map 초기화 KSI
-		ClearSearchMap();
 		ReSetSearchMap();	//2011.12.29 KSJ 
 		break;
 	case TRKEY_GRIDROW:
+		ClearSearchMap();
 		parsingGridOne(rdata->data, rdata->size, m_updateROW);
 		// Map 초기화 KSI
-		ClearSearchMap();
 		ReSetSearchMap();	//2011.12.29 KSJ 
 		break;
 	case TRKEY_GRIDSAVE:

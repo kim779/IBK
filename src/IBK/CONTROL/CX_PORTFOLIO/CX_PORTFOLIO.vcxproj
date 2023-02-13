@@ -103,7 +103,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/REGINTEREST.DLL</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/CX_Portfolio.DLL</OutputFile>
       <ImportLibrary>.\Debug\CX_PORTFOLIO.lib</ImportLibrary>
       <ModuleDefinitionFile>.\CX_PORTFOLIO.def</ModuleDefinitionFile>
     </Link>

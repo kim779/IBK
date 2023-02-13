@@ -22,7 +22,6 @@ public:
 
 	DECLARE_DYNCREATE(CAxBrowser)
 
-
 public:
 	//{{AFX_DATA(CAxBrowser)
 		// NOTE: the ClassWizard will add data members here
@@ -32,7 +31,6 @@ public:
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAxBrowser)
 	public:
-	virtual void OnBeforeNavigate2(LPCTSTR lpszURL, DWORD nFlags, LPCTSTR lpszTargetFrameName, CByteArray& baPostedData, LPCTSTR lpszHeaders, gsl::not_null<BOOL*> pbCancel);
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
@@ -43,5 +41,6 @@ public:
 		// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+	virtual void OnBeforeNavigate2(LPCTSTR lpszURL, DWORD nFlags, LPCTSTR lpszTargetFrameName, CByteArray& baPostedData, LPCTSTR lpszHeaders, BOOL* pbCancel);
 };
 

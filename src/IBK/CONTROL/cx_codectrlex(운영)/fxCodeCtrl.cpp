@@ -1289,10 +1289,10 @@ bool CCodeEdit::isHexNumeric2(CString str)
 	return false;
 */
 
-	for (int ii = 1; ii < str.GetLength(); ii++)
+	for (int ii = 0; ii < str.GetLength(); ii++)
 	{
-		//ELW 는 4번째에 영문이 들어갈 수 있음
-		if (ii != 3 && str.GetAt(ii) < '0' || str.GetAt(ii) > '9')
+		//ELW 는 3번째부터 영문이 들어갈 수 있음
+		if (ii < 2 && (str.GetAt(ii) < '0' || str.GetAt(ii) > '9'))
 			return false;
 	}
 

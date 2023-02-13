@@ -78,12 +78,6 @@ CHogaWnd::CHogaWnd(CWnd *pParent, CWnd *pView)
 {
 	SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
 	bAlertClose = false;
-	m_alertevt = CreateEvent(NULL, TRUE, FALSE, NULL);
-	m_alertth = ::CreateThread(NULL, 0, AlertThreader, this, 0, NULL);
-	if (m_alertth==NULL)
-		TRACE("스레드 생성 실패");
-	else 
-		SetThreadPriority(m_alertth, THREAD_PRIORITY_NORMAL); 
 
 	m_pParent = (CMapWnd*)pParent;
 	m_pView = pView;
@@ -134,10 +128,6 @@ CHogaWnd::CHogaWnd(CWnd *pParent, CWnd *pView)
 CHogaWnd::~CHogaWnd()
 {
 	bAlertClose = true;
-	::ResetEvent(m_alertevt);
-	TerminateThread(m_alertth, 0);
-	CloseHandle(m_alertevt);
-	CloseHandle(m_alertth);
 	
 	rsvd_cs.Lock();
 	const map<HWND, CHogaWnd*>::iterator pos = v_Windows.find(this->m_hWnd);
@@ -980,202 +970,6 @@ void CHogaWnd::DispatchMicheg(char *pData, int len, bool bErase)
 	Invalidate();
 }
 
-DWORD WINAPI CHogaWnd::AlertThreader(LPVOID param)
-{
-	CHogaWnd *pWnd = (CHogaWnd*)param;
-	if (pWnd==NULL) return -1;
-
-	while(!pWnd->bAlertClose)
-	{
-		/*
-		pWnd->m_alertcs.Lock();
-		if (pWnd->m_alertmsg.empty()) 
-		{
-			pWnd->m_alertcs.Unlock();
-			::ResetEvent(pWnd->m_alertevt);
-			::WaitForSingleObject( pWnd->m_alertevt, INFINITE );
-		} else {
-			pWnd->m_alertmsg.pop_back();
-			iDrawQueue = pWnd->m_alertmsg.size();
-			if (iDrawQueue>5) pWnd->m_alertmsg.resize(5);
-			pWnd->m_alertcs.Unlock();
-			pWnd->DrawScreen();
-		}
-		*/
-		pWnd->m_alertcs.Lock();
-		if (pWnd->m_alertmsg.size()>7)
-			pWnd->m_alertmsg.resize(7);
-		pWnd->m_alertcs.Unlock();
-		pWnd->DrawScreen();
-		if (pWnd->m_alertmsg.empty())
-		{
-			::ResetEvent(pWnd->m_alertevt);
-			::WaitForSingleObject(pWnd->m_alertevt, 30);
-		}
-
-	}
-	TRACE("AlertThreader Stopped\n");
-	return 0;
-}
-
-void CHogaWnd::DispatchAlert(CString alert)
-{
-	int index = alert.Find('\t');
-	if (index <= 0) return;
-
-	CString tmpS, val, code = alert.Left(index++);
-
-	if (m_pParent->GetCode()!=code) return;
-
-	alert = alert.Mid(index);
-	CMapStringToString	rtmStore;
-	CString	symbol;
-	for (; !alert.IsEmpty(); )
-	{
-		index = alert.Find('\t');
-
-		if (index<0) break;
-		symbol = alert.Left(index++);
-		alert = alert.Mid(index);
-
-		index = alert.Find('\t');
-		if (index < 0)
-			index = alert.GetLength();
-		val = alert.Left(index++);
-
-		rtmStore.SetAt(symbol, val);
-
-		if (alert.GetLength()<=index) break;
-		alert = alert.Mid(index);
-	}
-
-	CString	dvol; // 매도호가총수량
-	CString svol; // 매수호가총수량
-	CString pdvl; // 매도호가총건수
-	CString psvl; // 매수호가총건수
-
-	bool bCurrChg = false;
-	class CHoga hoga[10];
-	for (POSITION pos = rtmStore.GetStartPosition(); pos;)
-	{
-		rtmStore.GetNextAssoc(pos, symbol, val);
-		if (symbol == "023")			// 현재가
-		{
-			if (m_curr != val) 
-			{
-				bCurrChg = true;
-				m_curr = val;
-			}
-		}
-		else if (symbol == "024")		// 전일대비
-			m_diff = val;
-		else if (symbol == "029")
-			m_siga = val;
-		else if (symbol == "030")
-			m_koga = val;
-		else if (symbol == "031")
-			m_jega = val;
-		else if (symbol == "051")
-			m_hoga[0].mdga = val;
-		else if (symbol == "052")
-			m_hoga[1].mdga = val;
-		else if (symbol == "053")
-			m_hoga[2].mdga = val;
-		else if (symbol == "054")
-			m_hoga[3].mdga = val;
-		else if (symbol == "055")
-			m_hoga[4].mdga = val;
-		else if (symbol == "071")
-			m_hoga[0].msga = val;
-		else if (symbol == "072")
-			m_hoga[1].msga = val;
-		else if (symbol == "073")
-			m_hoga[2].msga = val;
-		else if (symbol == "074")
-			m_hoga[3].msga = val;
-		else if (symbol == "075")
-			m_hoga[4].msga = val;
-		else if (symbol == "041")
-			m_hoga[0].dvol = val;
-		else if (symbol == "042")
-			m_hoga[1].dvol = val;
-		else if (symbol == "043")
-			m_hoga[2].dvol = val;
-		else if (symbol == "044")
-			m_hoga[3].dvol = val;
-		else if (symbol == "045")
-			m_hoga[4].dvol = val;
-		else if (symbol == "061")
-			m_hoga[0].svol = val;
-		else if (symbol == "062")
-			m_hoga[1].svol = val;
-		else if (symbol == "063")
-			m_hoga[2].svol = val;
-		else if (symbol == "064")
-			m_hoga[3].svol = val;
-		else if (symbol == "065")
-			m_hoga[4].svol = val;
-		else if (symbol == "211")
-			m_hoga[0].dcnt = val;
-		else if (symbol == "212")
-			m_hoga[1].dcnt = val;
-		else if (symbol == "213")
-			m_hoga[2].dcnt = val;
-		else if (symbol == "214")
-			m_hoga[3].dcnt = val;
-		else if (symbol == "215")
-			m_hoga[4].dcnt = val;
-		else if (symbol == "221")
-			m_hoga[0].scnt = val;
-		else if (symbol == "222")
-			m_hoga[1].scnt = val;
-		else if (symbol == "223")
-			m_hoga[2].scnt = val;
-		else if (symbol == "224")
-			m_hoga[3].scnt = val;
-		else if (symbol == "225")
-			m_hoga[4].scnt = val;
-		else if (symbol == "101")
-			m_dvol = val;
-		else if (symbol == "103")
-			m_dcnt = val;
-		else if (symbol == "106")
-			m_svol = val;
-		else if (symbol == "108")
-			m_scnt = val;
-	}
-	m_dscha.Format("%.f", str2double(m_svol) - str2double(m_dvol));
-	if (str2double(m_dscha) > 0)	m_dscha = "+" + m_dscha;
-
-	if (bCurrChg)
-	{
-		//TRACE("ALERT : KOGA[%s], JEGA[%s]\n", (LPCSTR)m_koga, (LPCSTR)m_jega);
-		if (m_bHold)	
-			setScroll(m_depth);		
-		m_rsvCode = m_pParent->GetCode();
-		m_rsvCurr = m_curr;
-
-		if (getConfirmJumun())
-		{
-			rsvd_cs.Lock();
-			v_rsvdData.push_back( pair<CString,CString>(m_rsvCode, m_rsvCurr) );
-			::SetTimer(m_hWnd, TMID_RESERVE, TMGAP_RESERVE, CheckReserve);
-			rsvd_cs.Unlock();
-		}
-		else
-		{
-			checkReserveJumun(m_rsvCode, m_rsvCurr);
-		}
-
-		if (!bCurrChg) m_bReal = true;
-	}
-
-	m_alertcs.Lock();
-	m_alertmsg.push_back(1);
-	m_alertcs.Unlock();
-	SetEvent(m_alertevt);
-}
-
 
 void CHogaWnd::DispatchAlertX(struct _alertR* alertR)
 {
@@ -1308,10 +1102,7 @@ void CHogaWnd::DispatchAlertX(struct _alertR* alertR)
 		if (!bCurrChg) m_bReal = true;
 	}
 
-	m_alertcs.Lock();
-	m_alertmsg.push_back(1);
-	m_alertcs.Unlock();
-	SetEvent(m_alertevt);
+	Invalidate();
 }
 
 

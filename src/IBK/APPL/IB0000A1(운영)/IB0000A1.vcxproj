@@ -154,7 +154,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/IB0000A1.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/IB0000A1.dll</OutputFile>
       <ImportLibrary>.\Debug\IB0000A1.lib</ImportLibrary>
       <AdditionalDependencies>../../control/fx_grid/Debug/fx_grid.lib;../../dll/axiscm/Debug/axiscm.lib;../../control/fx_misc/Debug/fx_misc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\IB0000A1.def</ModuleDefinitionFile>

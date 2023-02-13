@@ -762,14 +762,18 @@ LONG CMainWnd::OperDLLOUB(WPARAM wParam, LPARAM lParam)
 	const int len = ex->size;
 	
 	CString strRem = CString(data,len);
-
-slog.Format("+++++++++ dll_oub cx_interest key=[%d]   \n", ex->key);
-OutputDebugString(slog);
-
-	if (ex->key > TRKEY_INTER)
+	if (ex->key == TRKEY_INTER)
 	{
-		_groupKey = ex->key - TRKEY_INTER;
-		m_pTreeWnd->receiveOub(CString(data, len), ex->key - TRKEY_INTER);
+		const CString skey = strRem.Left(2);
+
+		if (atoi(skey) < 0)
+			return ret;
+
+		_groupKey = atoi(skey);
+		if (_groupKey < 0)
+			return ret;
+
+		m_pTreeWnd->receiveOub(CString(data, len), _groupKey);
 		return ret;
 	}
 
@@ -930,10 +934,6 @@ COLORREF CMainWnd::getAxColor(int color)
 
 void CMainWnd::sendTR(CString name, CString data, BYTE type, int key, CString keyName, int uniqueKey)
 { 
-	CString slog;
-	slog.Format("-------[cx_interest] trc=[%s]   uniqueKey=[%d]  data=[%.10s]  \n ", name, uniqueKey, data);
-	OutputDebugString(slog);
-
 	if(m_bMainClose)
 		return;
 
@@ -950,7 +950,7 @@ void CMainWnd::sendTR(CString name, CString data, BYTE type, int key, CString ke
 	trData += keyName;
 	trData += '\t';
 	trData += std::string((char *)&udat, L_userTH);
- 	trData += data.GetString();
+	trData += data.GetString();
 	
 	const LRESULT result = m_pWnd->SendMessage(WM_USER, MAKEWPARAM(invokeTRx, trData.size() - L_userTH - m_param.name.GetLength() - 1), (LPARAM)trData.c_str());
 	if (result)
@@ -1505,9 +1505,6 @@ void CMainWnd::RequestMarketTime()
 
 void CMainWnd::uploadBackup()
 {
-	CString slog;
-	slog.Format("\r\n----------------uploadBackup ----------------------\r\n");
-	OutputDebugString(slog);
 	int	sendL = 0;
 	char	sendB[16 * 1024]{}, tempB[32]{};
 	//	char	strUinfo[500];
@@ -1692,13 +1689,8 @@ void CMainWnd::SetViewType(BOOL bType)
 
 void CMainWnd::ChangeGroup(short nIndex) 
 {
-	CString slog;
-	slog.Format("-------- ChangeGroup  nIndex=[%d]  m_bChangeGroup=[%d]\n", nIndex, m_bChangeGroup);
-	OutputDebugString(slog);
-
 	if(m_bChangeGroup == TRUE)
 		return;
-
 	//2011.12.20 KSJ 컨트롤을 종료하지 않고 GridWnd의 m_bSorting을 false로 만들어 준다.
 	if(m_pGroupWnd)
 		m_pGroupWnd->SetInitSortingValue();
@@ -1764,15 +1756,15 @@ BSTR CMainWnd::GetCode()
 
 void CMainWnd::OnPortfolio(LPCTSTR result) 
 {
-	Variant(guideCC, (char*)result);
 	CString str(result);
 
-	CString slog;
-	slog.Format("\r\n----------------OnPortfolio [%s]---------------------\r\n", str);
-	OutputDebugString(slog);
+	if (m_bChangeGroup == TRUE)
+		return;
 
 	if( str == "start")
 		return;
+
+	//m_pGroupWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_SETUPOK, 0));
 
 	const int	ret = (int)m_pToolWnd->SendMessage(WM_MANAGE, MK_SETUPOK);
 	m_pTreeWnd->SendMessage(WM_MANAGE, MK_SETUPOK);
@@ -1843,8 +1835,8 @@ BOOL CMainWnd::IsWindow()
 
 void CMainWnd::ClearGrid() 
 {
-	m_pGroupWnd->SendMessage(WM_MANAGE,MK_CLEAR);
-
+//	if (!m_bChangeGroup)
+//		m_pGroupWnd->SendMessage(WM_MANAGE,MK_CLEAR);
 }
 
 void CMainWnd::SetExpect(BOOL bExpect) 
@@ -1922,9 +1914,6 @@ BSTR CMainWnd::GetRemainCode()
 
 void CMainWnd::SearchGroupList() 
 {
-	CString slog;
-	slog.Format("\r\n----------------SearchGroupList ----------------------\r\n");
-	OutputDebugString(slog);
 	// TODO: Add your dispatch handler code here
 	CString strSendData;
 	struct _updn updn;
@@ -1956,11 +1945,6 @@ void CMainWnd::SearchGroupList()
 //2020 관심그룹 리스트 조회 
 void CMainWnd::SearchGroupList(bool bInit)  //최초 열때 조회, 설정창으로 그룹등 변경후 조회 두가지로 나뉨
 {
-	CString slog;
-	slog.Format("\r\n----------------SearchGroupList  bInit----------------------\r\n");
-	OutputDebugString(slog);
-
-
 	CString strSendData;
 	struct _updn updn;
 	
@@ -2018,16 +2002,12 @@ void CMainWnd::OnCbGroupDataChanged()
 
 void CMainWnd::SearchGroupCode(short index) 
 {
-	CString slog;
-	slog.Format("\r\n----------------SearchGroupCode  [%d]----------------------\r\n", index);
-	OutputDebugString(slog);
-
 	// TODO: Add your dispatch handler code here
 	CString sdata;
 	sdata.Format("%d", index);
 
-//	if(m_bChangeGroup == TRUE)
-//		return;
+	if(m_bChangeGroup == TRUE)
+		return;
 
 	if(m_pGroupWnd)
 		m_pGroupWnd->SetInitSortingValue();
@@ -2077,10 +2057,6 @@ void CMainWnd::SearchGroupCode(short index)
 
 void CMainWnd::Request_GroupCode(int iseq)
 {
-	CString slog;
-	slog.Format("\r\n----------------Request_GroupCode  [%d]----------------------\r\n", iseq);
-	OutputDebugString(slog);
-
 	const int index = iseq;
 	int sendL = 0;
 	CString stmp;
@@ -2099,5 +2075,5 @@ void CMainWnd::Request_GroupCode(int iseq)
 	stmp.Format("%02d", index);
 	memcpy((char*)&sendB[sz_uinfo], stmp, 2);
 
-	sendTR(trUPDOWN, sendB.data(), US_KEY, m_param.key, m_param.name, TRKEY_INTER + iseq);
+	sendTR(trUPDOWN, sendB.data(), US_KEY, m_param.key, m_param.name, TRKEY_INTER);
 }

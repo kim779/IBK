@@ -2381,7 +2381,7 @@ DWORD CButtonST::OnDrawBackground(CDC* pDC, CRect* pRect)
 	CBrush		brBackground(crColor);
 
 	pDC->FillRect(pRect, &brBackground);
-
+	brBackground.DeleteObject();
 	return BTNST_OK;
 } // End of OnDrawBackground
 
@@ -2414,6 +2414,7 @@ DWORD CButtonST::OnDrawBorder(CDC* pDC, CRect* pRect)
 		{
 			CBrush brBtnShadow(GetSysColor(COLOR_BTNSHADOW));
 			pDC->FrameRect(pRect, &brBtnShadow);
+			brBtnShadow.DeleteObject();
 		}
 	}
 	else // ...else draw non pressed button
@@ -2456,6 +2457,9 @@ DWORD CButtonST::OnDrawBorder(CDC* pDC, CRect* pRect)
 			pDC->SelectObject(pOldPen);
 		} // else
 		
+		pen3DLight.DeleteObject();
+		penBtnShadow.DeleteObject();
+		pen3DDKShadow.DeleteObject();
 		penBtnHiLight.DeleteObject();
 	} // else
 

@@ -701,7 +701,6 @@ void CGroupWnd::RecvOper(int kind, CRecvData *rdata)
 	case TRKEY_GRIDNEW:
 	case TRKEY_LASTSET:
 	case TRKEY_GRIDSAVE:
-		//		testSaveFile("nullptr");
 		m_GridWnd[trkey->group]->SendMessage(WM_MANAGE, MAKEWPARAM(MK_RECVDATA, kind), (LPARAM)rdata);
 		if (m_bAutoCloseSave)
 		{

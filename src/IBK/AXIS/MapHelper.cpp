@@ -2627,7 +2627,7 @@ s.Format("[AXIS]_ [map] ChangeChild[CString] : mapN=[%s] trigger=[%d] key=[%d]\n
 												    mapN, trigger, key);
 OutputDebugString(s);
 
-	WriteLog("ChangeChild %s %d %d", (LPCSTR)mapN, trigger, position);
+//	WriteLog("ChangeChild %s %d %d", (LPCSTR)mapN, trigger, position);
 // 	if (m_main->IsForeignMap(mapN))
 // 	{
 // 		m_main->RunForeignMap();
@@ -3826,7 +3826,6 @@ OutputDebugString(s);
 		pop->SetPos(xPosition, yPosition);
 	const int w = LOWORD(size);
 	const int h = HIWORD(size);
-
 	pop->SetSize(LOWORD(size), HIWORD(size));
 	m_main->m_modal = pop;
 	m_main->m_activeMapN = pop->m_mapN;

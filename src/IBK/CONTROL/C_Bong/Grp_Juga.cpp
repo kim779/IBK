@@ -52,10 +52,8 @@ void CGrp_Juga::DrawGraph(CDC *pDC)
 	if (m_Max == DBL_MIN || m_Min == DBL_MAX)
 		return;
 
-	if (m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkLEFT].bDraw)	
-		DrawTickHorizon(pDC, m_Max, m_Min, ctkLEFT);
-	if (m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkRIGHT].bDraw)	
-		DrawTickHorizon(pDC, m_Max, m_Min, ctkRIGHT);
+	if (m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkLEFT].bDraw)	DrawTickHorizon(pDC, m_Max, m_Min, ctkLEFT);
+	if (m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkRIGHT].bDraw)	DrawTickHorizon(pDC, m_Max, m_Min, ctkRIGHT);
 	DrawTickBottom(pDC);
 
 	switch (m_gKind)
@@ -74,41 +72,41 @@ void CGrp_Juga::DrawGraph(CDC *pDC)
 
 void CGrp_Juga::DrawBong(CDC *pDC)
 {
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 
-	const COLORREF upColor = m_clrUp;
-	const COLORREF dnColor = m_clrDn;
+	COLORREF upColor = m_clrUp;
+	COLORREF dnColor = m_clrDn;
 
 	CPen *upPen = m_pApp->GetPen(m_pView, PS_SOLID, 1, upColor);
 	CPen *dnPen = m_pApp->GetPen(m_pView, PS_SOLID, 1, dnColor);
-	CPen* sPen{};
+	CPen *sPen;
 	 
 	CBrush *upBrush =  m_pApp->GetBrush(m_pView, upColor);
 	CBrush *dnBrush =  m_pApp->GetBrush(m_pView, dnColor);
-	CBrush* sBrush{};
+	CBrush *sBrush;
 
-	const int DrawHeight = m_DrawRect.Height();
-	const int DrawWidth  = m_DrawRect.Width();
+	int DrawHeight = m_DrawRect.Height();
+	int DrawWidth  = m_DrawRect.Width();
 
 	double ValueHeight = (double)DrawHeight / (double)(m_Max - m_Min);
 	if (ValueHeight == 0.0) 
 		ValueHeight = 1.0;
 
-	double fpr{}, hpr{}, lpr{}, epr{};
+	double fpr, hpr, lpr, epr;
 	CPoint pointFPR, pointHPR, pointLPR, pointEPR;
 
-	double	dValue{};
-	CPoint	pt[11]{};
+	double	dValue;
+	CPoint	pt[11];
 
 	ZeroMemory(&m_MaxDayIndex, sz_cgIndex);
 	ZeroMemory(&m_MinDayIndex, sz_cgIndex);
 	m_dispMinVal = INT_MAX;
 	m_dispMaxVal = INT_MIN;
 
-	bool	bUp{};
-	struct _cgBong* gBong{}, * rBong{};
+	bool	bUp;
+	struct _cgBong	*gBong, *rBong;
 	for (int ii = 0; ii < dispEnd - dispPos; ii++)
 	{
 		gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(ii+dispPos);
@@ -127,7 +125,7 @@ void CGrp_Juga::DrawBong(CDC *pDC)
 		pointEPR.x += int(dValue);
 		pointEPR.x -= 1;	// 그래프간 간격
 
-		const int	gap = pointEPR.x - pointFPR.x;
+		int	gap = pointEPR.x - pointFPR.x;
 		if (gap > 20)
 		{
 			pointFPR.x += (gap-20)/2;
@@ -232,30 +230,30 @@ void CGrp_Juga::DrawBong(CDC *pDC)
 
 void CGrp_Juga::DrawBar(CDC *pDC)
 {
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 
 	CPen	*cPen = m_pApp->GetPen(m_pView, PS_SOLID, 1, m_tRGB);
 	CPen	*sPen = pDC->SelectObject(cPen);
 
-	const int DrawHeight = m_DrawRect.Height();
-	const int DrawWidth  = m_DrawRect.Width();
+	int DrawHeight = m_DrawRect.Height();
+	int DrawWidth  = m_DrawRect.Width();
 
 	double ValueHeight = m_Max - m_Min;
 	if (ValueHeight == 0) 
 		ValueHeight = 1;
 
-	double hpr{}, lpr{}, epr{};
+	double hpr, lpr, epr;
 	CPoint pointHPR, pointLPR, pointEPR;
 
-	double	dValue{};
+	double	dValue;
 	ZeroMemory(&m_MaxDayIndex, sz_cgIndex);
 	ZeroMemory(&m_MinDayIndex, sz_cgIndex);
 	m_dispMinVal = INT_MAX;
 	m_dispMaxVal = INT_MIN;
 
-	struct _cgBong* gBong{};
+	struct _cgBong	*gBong;
 	for (int ii = 0; ii < dispEnd - dispPos; ii++)
 	{
 		gBong = (struct _cgBong*)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(ii+dispPos);
@@ -307,18 +305,18 @@ void CGrp_Juga::DrawBar(CDC *pDC)
 
 void CGrp_Juga::DrawLine(CDC *pDC)
 {
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 	
-	const COLORREF color = m_tRGB;
-	const int lineWidth = 1;
+	COLORREF color = m_tRGB;
+	int lineWidth = 1;
 	
 	CPen	*cPen = m_pApp->GetPen(m_pView, PS_SOLID, lineWidth, color);
 	CPen	*sPen = pDC->SelectObject(cPen);
 
-	const int DrawHeight = m_DrawRect.Height();
-	const int DrawWidth  = m_DrawRect.Width();
+	int DrawHeight = m_DrawRect.Height();
+	int DrawWidth  = m_DrawRect.Width();
 
 	double ValueHeight = m_Max - m_Min;
 	if (!ValueHeight) ValueHeight = 1;
@@ -326,10 +324,11 @@ void CGrp_Juga::DrawLine(CDC *pDC)
 	int drawShift = 0;
 	drawShift = int((DrawWidth/dispDay) / 2);	// Center
 
-	double epr{};
+	double epr;
 	
 	CPoint pointEPR;
-	const CPoint pointSPR = CPoint(-1, -1);
+	CPoint pointFPR;
+	CPoint pointSPR = CPoint(-1, -1);
 
 	ZeroMemory(&m_MaxDayIndex, sz_cgIndex);
 	ZeroMemory(&m_MinDayIndex, sz_cgIndex);
@@ -337,7 +336,7 @@ void CGrp_Juga::DrawLine(CDC *pDC)
 	m_dispMinVal = INT_MAX;
 
 	int	bInit = true;
-	struct _cgBong* gBong{};
+	struct _cgBong	*gBong;
 	for (int ii = 0; ii < dispEnd - dispPos; ii++)
 	{
 		gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(ii+dispPos);
@@ -385,12 +384,12 @@ void CGrp_Juga::DrawMinMaxDay(CDC* pDC)
 
 	CString	valstr, dispStr;
 	CRect	tkRect;
-	CPen* uPen{}, * dPen{}, * sPen{};
-	CFont* sFont{};
+	CPen	*uPen, *dPen, *sPen;
+	CFont	*sFont;
 	CSize	size;
 
-	const COLORREF	upColor = RGB(255, 0, 0);
-	const COLORREF	dnColor = RGB(0, 0, 255);
+	COLORREF	upColor = RGB(255, 0, 0);
+	COLORREF	dnColor = RGB(0, 0, 255);
 
 	uPen = m_pApp->GetPen(m_pView, PS_SOLID, 1, upColor);
 	dPen = m_pApp->GetPen(m_pView, PS_SOLID, 1, dnColor);
@@ -398,8 +397,8 @@ void CGrp_Juga::DrawMinMaxDay(CDC* pDC)
 	sFont = pDC->SelectObject(m_pGrpWnd->m_pFont);
 	size = pDC->GetTextExtent("틱의높이");
 	sPen = pDC->SelectObject(uPen);
-	const int	sMode = pDC->SetBkMode(TRANSPARENT);
-	const COLORREF sColor = pDC->SetTextColor(upColor);
+	int	sMode = pDC->SetBkMode(TRANSPARENT);
+	COLORREF sColor = pDC->SetTextColor(upColor);
 	
 	CString	MaxDayStr, MinDayStr;
 	if (m_dIndex == CDI_TICK || m_dIndex == CDI_MIN)
@@ -417,9 +416,9 @@ void CGrp_Juga::DrawMinMaxDay(CDC* pDC)
 			m_MinDayIndex.date.mm, m_MinDayIndex.date.dd);		
 	}
 
-	const CRect	rect = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].tkRect;
-	const int	nWidth = rect.Width();
-	const int	nHeight = size.cy;
+	CRect	rect = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].tkRect;
+	int	nWidth = rect.Width();
+	int	nHeight = size.cy;
 
 	m_MaxDayPos.y -= 2;
 	m_MinDayPos.y += 2;
@@ -511,18 +510,13 @@ bool CGrp_Juga::CalculateMinMax()
 		m_pGrpWnd->m_pDataInfo[m_dKey]->GetDataCount() <= 0)
 		return false;
 
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
-
-
-XMSG();
-AxStd::_Msg("시작점 [%d]", dispPos);
-AxStd::_Msg("끝점 [%d]", dispEnd);
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 
 	if (m_gKind == CGK_LINE)
 	{
-		struct _cgBong* gBong{};
+		struct _cgBong	*gBong;
 		for (int ii = 0; ii < dispEnd - dispPos; ii++)
 		{
 			gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(ii+dispPos);
@@ -532,19 +526,14 @@ AxStd::_Msg("끝점 [%d]", dispEnd);
 	}
 	else
 	{
-		struct _cgBong* gBong{};
+		struct _cgBong	*gBong;
 		for (int ii = 0; ii < dispEnd - dispPos; ii++)
 		{
 			gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(ii+dispPos);
-			if (m_Max < gBong->hpr)	
-				m_Max = gBong->hpr;
-			if (m_Min > gBong->lpr)	
-				m_Min = gBong->lpr;
+			if (m_Max < gBong->hpr)	m_Max = gBong->hpr;
+			if (m_Min > gBong->lpr)	m_Min = gBong->lpr;
 		}
 	}
-AxStd::_Msg("MAX [%f]", m_Max);
-AxStd::_Msg("MIN [%f]", m_Min);
-
 
 	double gap = m_Max - m_Min;
 	if (gap == 0)
@@ -566,8 +555,8 @@ AxStd::_Msg("MIN [%f]", m_Min);
 
 bool CGrp_Juga::IsChangeMinMax(bool bShift)
 {
-	const double	m_sMax = m_Max;
-	const double	m_sMin = m_Min;
+	double	m_sMax = m_Max;
+	double	m_sMin = m_Min;
 
 	if (!CalculateMinMax())
 		return false;
@@ -589,17 +578,17 @@ CString CGrp_Juga::GetDisplayPosData(CPoint pt)
 		m_pGrpWnd->m_pDataInfo[m_dKey]->GetDataCount() <= 0)
 		return dispStr;
 
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 
-	const int	xPosition = pt.x - m_DrawRect.left;
-	const double	szOneDay = double(m_DrawRect.Width()) / double(dispDay);
+	int	xPosition = pt.x - m_DrawRect.left;
+	double	szOneDay = double(m_DrawRect.Width()) / double(dispDay);
 	int	dataPos = int(double(xPosition) / szOneDay);
 	dataPos += dispPos;
 
 	CString	stmp;
-	const struct _cgBong	*gBong =
+	struct _cgBong	*gBong = 
 		 (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(dataPos);
 
 	if (m_dIndex == CDI_TICK)
@@ -640,7 +629,7 @@ CString CGrp_Juga::GetExcelData(int idx)
 	else
 	{
 		CString	stmp;
-		const struct _cgBong	*gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(idx);
+		struct _cgBong	*gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(idx);
 
 		FormatVariableComma(stmp, gBong->fpr, m_pGrpWnd->m_digit);
 		dispStr += stmp + "\t";

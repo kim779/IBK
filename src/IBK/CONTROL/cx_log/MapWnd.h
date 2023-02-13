@@ -21,7 +21,7 @@ public:
 
 // Attributes
 public:
-
+	UINT AFXAPI HashDataAXIS(LPCSTR key);
 // Operations
 public:
 

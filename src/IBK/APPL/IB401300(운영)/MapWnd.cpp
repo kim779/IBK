@@ -571,6 +571,7 @@ int CMapWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_cbMarket->Create(WS_CHILD|WS_VISIBLE|CBS_DROPDOWNLIST|CBS_SIMPLE, CRect(0,0,0,0), this, IDC_CBMARKET);
 	m_cbMarket->SetFont(m_pFont, FALSE);
 
+
 	m_cbMarket->ResetContent();
 
 	m_cbMarket->AddString("일반");
@@ -586,6 +587,11 @@ int CMapWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_cbMonth = std::make_unique<CComboBox>();
 	m_cbMonth->Create(WS_CHILD|WS_VISIBLE|CBS_DROPDOWNLIST|CBS_SIMPLE, CRect(0,0,0,0), this, IDC_CBMONTH);
 	m_cbMonth->SetFont(m_pFont, FALSE);
+
+
+	SetWindowTheme(m_cbMonth->GetSafeHwnd(), L"", L"");
+	SetWindowTheme(m_cbMarket->GetSafeHwnd(), L"", L"");
+
 
 	const CString scr_names[] = {"옵션종합현재가", "옵션종합이론가", "옵션종합민감도", "KRX민감도", "옵션시고저"};
 	for(n=0; n<SCR_TYPES; ++n)
@@ -767,7 +773,11 @@ HBRUSH CMapWnd::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		pDC->SetBkMode(TRANSPARENT);
 		return m_pBrBk->operator HBRUSH();
 	}
-
+	else if (nID == IDC_CBMARKET || nID == IDC_CBMONTH)
+	{
+		pDC->SetBkColor(RGB(255, 255, 255));
+	}
+	
 	return hbr;
 }
 

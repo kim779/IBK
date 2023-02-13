@@ -25,11 +25,18 @@ static char THIS_FILE[]=__FILE__;
 CGrp_MA::CGrp_MA(CWnd *pView, class CGrpWnd *pGrpWnd, char *pInfo)
 : CGrp_Base(pView, pGrpWnd, pInfo)
 {
-	_maData* maData = nullptr;
-	if (_vMA.size() == 0)
+	m_pMAV = NULL;
+	m_maQue.RemoveAll();
+	_maData* maData = NULL;
+	if (m_maQue.GetSize() == 0)
 	{
 		for (int ii = 0; ii < m_pGrpWnd->m_totalDay; ii++)
-			_vMA.emplace_back(std::make_unique<_maData>());
+		{
+			maData = new _maData();
+			for (int jj = 0; jj < maxMA; jj++)
+				maData->nmav[jj] = GD_UNUSED;
+			m_maQue.Add(maData);
+		}
 	}
 
 	if (m_gKind == CGK_PMA)
@@ -56,7 +63,19 @@ CGrp_MA::CGrp_MA(CWnd *pView, class CGrpWnd *pGrpWnd, char *pInfo)
 
 CGrp_MA::~CGrp_MA()
 {
-	_vMA.clear();
+	if (m_pMAV)
+	{
+		delete[] m_pMAV;	m_pMAV = NULL;
+	}
+
+	struct	_maData* maData;
+	for (int ii = 0; ii <= m_maQue.GetUpperBound(); ii++)
+	{
+		maData = m_maQue.GetAt(ii);
+		delete[] maData;
+		maData = NULL;
+	}
+	m_maQue.RemoveAll();
 }
 
 void CGrp_MA::DrawGraph(CDC *pDC)
@@ -82,21 +101,25 @@ void CGrp_MA::DrawGraph(CDC *pDC)
 
 void CGrp_MA::DrawMA(CDC* pDC)
 {
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
-	const int	totalDay = m_pGrpWnd->m_totalDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
+	int	totalDay = m_pGrpWnd->m_totalDay;
 
-	const DWORD	cIndex[maxMA] = {RGB(0,202,2), RGB(255,144,0), RGB(191,169,218), RGB(126,26,77)};
-	const CPoint		pt = CPoint(0, 0);
+	if (m_pMAV)
+	{
+		delete[] m_pMAV;	m_pMAV = NULL;
+	}
+	m_pMAV = new double[m_pGrpWnd->m_totalDay + 1];
+
+	DWORD	cIndex[maxMA] = {RGB(0,202,2), RGB(255,144,0), RGB(191,169,218), RGB(126,26,77)};
+	CPoint		pt = CPoint(0, 0);
 	CString		dispText;
-	const int		width = 1;
-	const int		style = PS_SOLID;
-	COLORREF	color{};
-	const int		idx = 0;
-	struct	_maData* maData{};
-
-	m_pMAV.resize(totalDay, nullptr);
+	int		width = 1;
+	int		style = PS_SOLID;
+	COLORREF	color;
+	int		idx = 0;
+	struct	_maData* maData;
 	for (int ii = 0; ii < maxMA; ii++)
 	{
 		if (m_pMA[ii] <= 0)
@@ -105,57 +128,61 @@ void CGrp_MA::DrawMA(CDC* pDC)
 		color = cIndex[ii];
 		for (int kk = 0; kk < totalDay; kk++)
 		{
-			maData = _vMA.at(kk).get();
-			m_pMAV[kk] = &maData->nmav[ii];
+			maData = (struct _maData *) m_maQue.GetAt(kk);
+			m_pMAV[kk] = maData->nmav[ii];
 		}
-
 		if (DrawLineMA(pDC, m_pMA[ii], style, width, color))
 		{
 			dispText.Format("ÀÌÆò(%d)", m_pMA[ii]);
 			DrawTickIndex(pDC, dispText, color, true, false, false);
 		}
 	}
+
+	if (m_pMAV)
+	{
+		delete[] m_pMAV;	m_pMAV = NULL;
+	}
 }
 
 bool CGrp_MA::DrawLineMA(CDC* pDC, int nDay, int style, int width, COLORREF color)
 {
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 
-	const int DrawHeight = m_DrawRect.Height();
-	const int DrawWidth  = m_DrawRect.Width();
+	int DrawHeight = m_DrawRect.Height();
+	int DrawWidth  = m_DrawRect.Width();
 
 	double ValueHeight = m_Max - m_Min;
 	if (!ValueHeight) ValueHeight = 1;
 
-	const int drawShift = int((double(DrawWidth)/ double(dispDay)) / 2);
+	int drawShift = int((double(DrawWidth)/ double(dispDay)) / 2);
 
 	int	start = 0;
 	if (dispPos < nDay)
 		start = nDay - dispPos - 1;
-	const int	cnt = 0;
-	double	dVal{};
+	int	cnt = 0;
+	double	dVal;
 	int ii = 0;
 	for (ii = start; ii < dispEnd - dispPos; ii++)
 	{
-		if (m_pMAV[ii + dispPos] && *m_pMAV[ii+dispPos] != GD_UNUSED)
+		if (m_pMAV[ii+dispPos] != GD_UNUSED)
 			break;
 	}
-	const int	nPoint = (dispEnd - dispPos) - start;
+	int	nPoint = (dispEnd - dispPos) - start;
 	if (nPoint <= 0)
 		return false;
 	
 	CPen	*cPen = m_pApp->GetPen(m_pView, style, width, color);
 	CPen	*sPen = pDC->SelectObject(cPen);
 
-	double	dbTemp{};
+	double	dbTemp;
 	CPoint	pointMAV;
 	
 	bool	bInit = true;
 	for (; ii < dispEnd - dispPos; ii++)
 	{
-		dVal = *m_pMAV[ii+dispPos];
+		dVal = m_pMAV[ii+dispPos];
 		if (dVal < m_Min)	dVal = m_Min;
 		if (dVal > m_Max)	dVal = m_Max;
 
@@ -190,25 +217,27 @@ bool CGrp_MA::CalculateMinMax()
 	m_Max = INT_MIN;
 	m_Min = INT_MAX;
 
-	if (_vMA.size() == 0)
+	if (m_maQue.GetSize() == 0)
 		return false;
 
-	const int	start = m_pGrpWnd->m_dispPos;
-	const int	end = m_pGrpWnd->m_dispEnd;
+	int	start = m_pGrpWnd->m_dispPos;
+	int	end = m_pGrpWnd->m_dispEnd;
 
-	double dVal{};
-	for_each(_vMA.begin() + start, _vMA.begin() + end, [&](auto& item)
+	double dVal;
+	struct	_maData* maData;
+	for (int ii = start; ii < end; ii++)
 	{
+		maData = m_maQue.GetAt(ii);
 		for (int jj = 0; jj < m_maCnt; jj++)
 		{
-			if (item->nmav[jj] == GD_UNUSED)
+			if (maData->nmav[jj] == GD_UNUSED)
 				continue;
 
-			dVal = item->nmav[jj];
+			dVal = maData->nmav[jj];
 			if (dVal > m_Max)	m_Max = dVal;
 			if (dVal < m_Min)	m_Min = dVal;
 		}
-	});
+	}
 
 	if (m_Max == INT_MIN || m_Min == INT_MAX)
 		return false;
@@ -236,16 +265,21 @@ bool CGrp_MA::CalculateMinMax()
 
 bool CGrp_MA::IsChangeMinMax(bool bShift)
 {
-	const double	sMax = m_Max;
-	const double  sMin = m_Min;
+	double	sMax = m_Max;
+	double  sMin = m_Min;
 
 	if (bShift)
 	{
-		auto& maData = _vMA.emplace_back(std::make_unique<_maData>());
+		struct	_maData *maData;
+
+		maData = new _maData;
 		for (int jj = 0; jj < maxMA; jj++)
 			maData->nmav[jj] = GD_UNUSED;
+		m_maQue.Add(maData);
 
-		_vMA.erase(_vMA.begin());
+		maData = m_maQue.GetAt(0);
+		delete[] maData;	maData = NULL;
+		m_maQue.RemoveAt(0);
 	}
 
 	if (m_gKind == CGK_PMA)
@@ -273,12 +307,12 @@ CString CGrp_MA::GetDisplayPosData(CPoint pt)
 		m_pGrpWnd->m_pDataInfo[m_dKey]->GetDataCount() <= 0)
 		return dispStr;
 
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 
-	const int	xPosition = pt.x - m_DrawRect.left;
-	const double	szOneDay = double(m_DrawRect.Width()) / double(dispDay);
+	int	xPosition = pt.x - m_DrawRect.left;
+	double	szOneDay = double(m_DrawRect.Width()) / double(dispDay);
 	int	dataPos = int(double(xPosition) / szOneDay);
 	dataPos += dispPos;
 
@@ -288,7 +322,7 @@ CString CGrp_MA::GetDisplayPosData(CPoint pt)
 	int	digit = m_pGrpWnd->m_digit;
 	if (m_gKind == CGK_VMA)	digit = 0;
 
-	const struct _maData	*maData = _vMA.at(dataPos).get();
+	struct _maData	*maData = m_maQue.GetAt(dataPos);
 	if (m_gKind == CGK_VMA)
 	{
 		for (int ii = 0; ii < m_maCnt; ii++)
@@ -375,7 +409,7 @@ CString CGrp_MA::GetExcelData(int idx)
 	{
 		int	digit = m_pGrpWnd->m_digit;
 		if (m_gKind == CGK_VMA)	digit = 0;
-		const struct _maData	*maData = _vMA.at(idx).get();
+		struct _maData	*maData = m_maQue.GetAt(idx);
 		for (int ii = 0; ii < m_maCnt; ii++)
 		{
 			if (maData->nmav[ii] == GD_UNUSED)
@@ -397,25 +431,24 @@ int CGrp_MA::CalculatePMA(int idx, int nDay)
 	if (idx < 0 || nDay <= 0)
 		return -1;
 
-	int	ii{};
-	struct	_cgBong* gBong{};
-	struct	_maData* maData{};
-	class CGrp_Data	*pGrpData = m_pGrpWnd->m_pDataInfo[m_dKey].get();
+	int	ii;
+	struct	_cgBong* gBong;
+	struct	_maData* maData;
+	class CGrp_Data	*pGrpData = m_pGrpWnd->m_pDataInfo[m_dKey];
 	
-	const int totalCnt = m_pGrpWnd->m_totalDay;
-	std::vector<double> pvDBL;
-
+	int totalCnt = m_pGrpWnd->m_totalDay;
+	double* pvDBL = new double[totalCnt+1];
 	for (ii = 0; ii < totalCnt; ii++)
 	{
 		gBong = (struct _cgBong *)pGrpData->GetGraphData(ii);
-		pvDBL.emplace_back(double(gBong->epr));
+		pvDBL[ii] = double(gBong->epr);
 	}
 
-	double	valTOT{};
+	double	valTOT;
 	for (ii = nDay - 1; ii < totalCnt; ii++)
 	{
 		gBong = (struct _cgBong *)pGrpData->GetGraphData(ii);
-		maData = _vMA.at(ii).get();
+		maData = (struct _maData *)m_maQue.GetAt(ii);
 
 		valTOT = 0.0;
 		for (int jj = ii; jj > ii - nDay; jj--)
@@ -435,15 +468,17 @@ int CGrp_MA::CalculatePMA(int idx, int nDay)
 		}
 		maData->nmav[idx] = valTOT/double(nDay);
 	}
+	delete [] pvDBL;
+	pvDBL = NULL;
 
 	return idx;
 }
 
 void CGrp_MA::CalculateLastPMA()
 {
-	struct _cgBong* gBong{};
-	const int totalCnt = m_pGrpWnd->m_totalDay;
-	class CGrp_Data	*pGrpData = m_pGrpWnd->m_pDataInfo[m_dKey].get();
+	struct _cgBong	*gBong;
+	int totalCnt = m_pGrpWnd->m_totalDay;
+	class CGrp_Data	*pGrpData = m_pGrpWnd->m_pDataInfo[m_dKey];
 	int ii = 0;
 	for (ii = totalCnt - 1; ii >= 0; ii--)
 	{
@@ -455,17 +490,17 @@ void CGrp_MA::CalculateLastPMA()
 	if (ii < 0)
 		return;
 
-	const int	lastIDX = ii;
-	const int	validCnt = lastIDX + 1;
+	int	lastIDX = ii;
+	int	validCnt = lastIDX + 1;
 
-	int	jj{};
-	double	valTOT{};
+	int	jj;
+	double	valTOT;
 
-	if (_vMA.size() == 0)
+	if (m_maQue.GetSize() == 0)
 		return;
 
-	struct _maData	*maData = _vMA.rbegin()->get();
-	for (ii = 0; ii < m_maCnt; ii++)
+	struct _maData	*maData = m_maQue.GetAt(m_maQue.GetUpperBound());
+	for (int ii = 0; ii < m_maCnt; ii++)
 	{
 		if (m_pMA[ii] <= 0)
 			break;
@@ -497,24 +532,24 @@ int CGrp_MA::CalculateVMA(int idx, int nDay)
 	if (idx < 0 || nDay <= 0)
 		return -1;
 
-	int	ii{};
-	struct	_cgBong* gBong{};
-	struct	_maData* maData{};
-	class CGrp_Data	*pGrpData = m_pGrpWnd->m_pDataInfo[m_dKey].get();
+	int	ii;
+	struct	_cgBong* gBong;
+	struct	_maData* maData;
+	class CGrp_Data	*pGrpData = m_pGrpWnd->m_pDataInfo[m_dKey];
 	
-	const int totalCnt = m_pGrpWnd->m_totalDay;
-	std::vector<double> pvDBL;
+	int totalCnt = m_pGrpWnd->m_totalDay;
+	double* pvDBL = new double[totalCnt+1];
 	for (ii = 0; ii < totalCnt; ii++)
 	{
 		gBong = (struct _cgBong *)pGrpData->GetGraphData(ii);
-		pvDBL.emplace_back(double(gBong->trn));
+		pvDBL[ii] = double(gBong->trn);
 	}
 
-	double	valTOT{};
+	double	valTOT;
 	for (ii = nDay - 1; ii < totalCnt; ii++)
 	{
 		gBong = (struct _cgBong *)pGrpData->GetGraphData(ii);
-		maData = (struct _maData *)_vMA.at(ii).get();
+		maData = (struct _maData *)m_maQue.GetAt(ii);
 
 		valTOT = 0.0;
 		for (int jj = ii; jj > ii - nDay; jj--)
@@ -534,14 +569,17 @@ int CGrp_MA::CalculateVMA(int idx, int nDay)
 		}
 		maData->nmav[idx] = valTOT/double(nDay);
 	}
+	delete [] pvDBL;
+	pvDBL = NULL;
+
 	return idx;
 }
 
 void CGrp_MA::CalculateLastVMA()
 {
-	struct _cgBong* gBong{};
-	const int totalCnt = m_pGrpWnd->m_totalDay;
-	class CGrp_Data	*pGrpData = m_pGrpWnd->m_pDataInfo[m_dKey].get();
+	struct _cgBong	*gBong;
+	int totalCnt = m_pGrpWnd->m_totalDay;
+	class CGrp_Data	*pGrpData = m_pGrpWnd->m_pDataInfo[m_dKey];
 	int ii = 0;
 	for (ii = totalCnt - 1; ii >= 0; ii--)
 	{
@@ -553,17 +591,17 @@ void CGrp_MA::CalculateLastVMA()
 	if (ii < 0)
 		return;
 
-	const int	lastIDX = ii;
-	const int	validCnt = lastIDX + 1;
+	int	lastIDX = ii;
+	int	validCnt = lastIDX + 1;
 
-	int	jj{};
-	double	valTOT{};
+	int	jj;
+	double	valTOT;
 
-	if (_vMA.size() == 0)
+	if (m_maQue.GetSize() == 0)
 		return;
 
-	struct _maData* maData = _vMA.rbegin()->get();
-	for (ii = 0; ii < m_maCnt; ii++)
+	struct _maData	*maData = m_maQue.GetAt(m_maQue.GetUpperBound());
+	for (int ii = 0; ii < m_maCnt; ii++)
 	{
 		if (m_pMA[ii] <= 0)
 			break;

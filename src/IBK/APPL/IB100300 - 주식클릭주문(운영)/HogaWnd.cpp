@@ -2172,7 +2172,6 @@ int CHogaWnd::GetPriceUnit(int iPrice, bool bPlus)
 
 		if (m_eMarket == KOSPI || m_eMarket == KOSDAQ)
 		{
-			// (1000원미만 1원단휘 호가 적용 2010.08.02 by lkm 
 			if (bPlus)
 			{
 				if (iPrice < 2000)			iPrice += 1;

@@ -23,7 +23,11 @@ protected:
 
 	CRect	m_baseRc;
 
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr<class CNTable> m_table;
+#else
+	class CNTable*	m_table;
+#endif
 
 // Dialog Data
 	//{{AFX_DATA(CEConclusion)

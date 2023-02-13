@@ -1400,7 +1400,6 @@ void CMapForm::queryGroupSave(int sendKey, int selType)
 
 	m_sendB = std::make_unique<char[]>(m_calBufL + 1);
 
-	//memset(m_sendB.get(), 0x00, m_calBufL + 1);
 	memset(m_sendB.get(), ' ', m_calBufL + 1);
 
 	pgmid = std::make_unique<_gmid>();
@@ -1663,7 +1662,7 @@ void CMapForm::sendTR(CString trC, char* pBytes, int nBytes, char key)
 
 	memcpy(udat->trc, trC, trC.GetLength());
 	udat->key = key;
-	//udat->stat = US_ENC;
+	udat->stat = US_ENC;
 
 	CopyMemory(&sndB[L_userTH], pBytes, nBytes);
 	m_pParent->SendMessage(WM_USER, MAKEWPARAM(invokeTRx, nBytes), (LPARAM)sndB.get());

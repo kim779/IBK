@@ -74,25 +74,25 @@ void CGrp_Vol::DrawGraph(CDC *pDC)
 
 void CGrp_Vol::DrawVolume(CDC *pDC)
 {
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 
 	CPen	*sPen = pDC->SelectObject(m_penUp);
 	CBrush	*sBrush = pDC->SelectObject(m_brUp);
 
-	const int DrawHeight = m_DrawRect.Height();
-	const int DrawWidth  = m_DrawRect.Width();
+	int DrawHeight = m_DrawRect.Height();
+	int DrawWidth  = m_DrawRect.Width();
 
 	double ValueHeight = m_Max - m_Min;
 	if (ValueHeight == 0) 
 		ValueHeight = 1;
 
-	double	trn{};
-	double	dValue{}, dPrvValue = 0;
+	double	trn;
+	double	dValue, dPrvValue = 0;
 	CRect	rectTRN;
 
-	struct _cgBong* gBong{};
+	struct _cgBong	*gBong;
 	for (int ii = 0; ii < dispEnd - dispPos; ii++)
 	{
 		gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(ii+dispPos);
@@ -106,7 +106,7 @@ void CGrp_Vol::DrawVolume(CDC *pDC)
 		rectTRN.right += int((DrawWidth * (ii +1)) / dispDay+0.5);
 		rectTRN.right -= 1;
 
-		const int	gap = rectTRN.right - rectTRN.left;
+		int	gap = rectTRN.right - rectTRN.left;
 		if (gap > 20)
 		{
 			rectTRN.left += (gap-20)/2;
@@ -161,11 +161,11 @@ bool CGrp_Vol::CalculateMinMax()
 		m_pGrpWnd->m_pDataInfo[m_dKey]->GetDataCount() <= 0)
 		return false;
 
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 
-	struct _cgBong* gBong{};
+	struct _cgBong	*gBong;
 	for (int ii = 0; ii < dispEnd - dispPos; ii++)
 	{
 		gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(ii+dispPos);
@@ -178,8 +178,8 @@ bool CGrp_Vol::CalculateMinMax()
 
 bool CGrp_Vol::IsChangeMinMax(bool bShift)
 {
-	const double	m_sMax = m_Max;
-	const double	m_sMin = m_Min;
+	double	m_sMax = m_Max;
+	double	m_sMin = m_Min;
 
 	if (!CalculateMinMax())
 		return false;
@@ -201,17 +201,17 @@ CString CGrp_Vol::GetDisplayPosData(CPoint pt)
 		m_pGrpWnd->m_pDataInfo[m_dKey]->GetDataCount() <= 0)
 		return dispStr;
 
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 
-	const int	xPosition = pt.x - m_DrawRect.left;
-	const double	szOneDay = double(m_DrawRect.Width()) / double(dispDay);
+	int	xPosition = pt.x - m_DrawRect.left;
+	double	szOneDay = double(m_DrawRect.Width()) / double(dispDay);
 	int	dataPos = int(double(xPosition) / szOneDay);
 	dataPos += dispPos;
 
 	CString	stmp, stmp2, sSign, sSign2;
-	const struct _cgBong	*gBong =
+	struct _cgBong	*gBong = 
 		 (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(dataPos);
 	if (m_dIndex == CDI_MIN || m_dIndex == CDI_TICK)
 	{
@@ -242,7 +242,7 @@ CString CGrp_Vol::GetExcelData(int idx)
 	}
 	else
 	{
-		const struct _cgBong	*gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(idx);
+		struct _cgBong	*gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(idx);
 		FormatVariableComma(dispStr, gBong->trn, 0);
 	}
 

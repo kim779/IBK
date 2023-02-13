@@ -27,7 +27,7 @@ public:
 	CString			m_user;
 	CString			m_id;
 	CString			m_home;
-	CBrush			m_bkBrush;
+//	CBrush			m_bkBrush;
 	CString			m_strPal;
 
 	COLORREF		m_clrPallete{};

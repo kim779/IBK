@@ -21,6 +21,7 @@ CDlgInter::CDlgInter(CWnd* pParent /*=nullptr*/, char* proot)
 	: CDialog(IDD_DIG_INTER, pParent)
 {
 	m_pMainFrame = pParent;
+	HWND hwnd = ((CWnd*)m_pMainFrame)->GetSafeHwnd();
 	//CString strRoot, strUser;
 	//strRoot.Format("%s", proot);
 	//char buff[MAX_PATH]{};

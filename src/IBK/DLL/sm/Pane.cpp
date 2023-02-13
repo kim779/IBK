@@ -30,11 +30,13 @@ static char THIS_FILE[] = __FILE__;
 #define TM_UPDOWN	7003
 #define TM_INTER	7004
 #define TM_NEWNEWS	7005
+#define TM_INDEX_TUJA	 7006
 
 #define TMI_INDEX	3000
 #define TMI_NEWS	5000
 #define TMI_UPDOWN	10000
 #define TMI_INTER	3000
+#define TMI_INDEX_TUJA	15000
 
 #define ID_TOOLTIP  1
 
@@ -552,6 +554,12 @@ void CPane::OnTimer(UINT nIDEvent)
 	CString slog;
 	switch (nIDEvent)
 	{
+	case TM_INDEX_TUJA:
+	{
+		HWND m_hMain = AfxGetMainWnd()->m_hWnd;
+		::SendMessage(m_hMain, WM_INTERMSG, MAKEWPARAM(MMSG_TIME_INVESTTUJA, 0), 0);
+	}
+	break;
 	case TM_INDEX:
 	case TM_UPDOWN:
 		m_index++;
@@ -1831,7 +1839,11 @@ void CPane::SetFmx(bool setting, int kind, int key, CString symbol, CString dat)
 		{
 		case TKIND_INDEX:
 			if (m_arSym.GetSize() > 1)
+			{
 				SetTimer(TM_INDEX, TMI_INDEX, NULL);
+				//	KillTimer(TM_INDEX_TUJA);
+				//	SetTimer(TM_INDEX_TUJA, TMI_INDEX_TUJA, NULL);
+			}
 			break;
 		case TKIND_UPDOWN:
 			if (m_arSym.GetSize() > 1)
@@ -2085,9 +2097,13 @@ void CPane::UpdatePaneData(int kind, CString dat)
 	SetData(dat);
 	Invalidate();
 }
-
+//#define DF_USE_MINI 1
 void CPane::ProcessRTS(CString symbol, DWORD* data)
 {
+	/*CString stmp;
+	stmp.Format("-- [%s] [%s] \r\n\ ", symbol, data );
+	OutputDebugString(stmp);*/
+
 	int const arrtick[4][20] = { {0,23,24,27,28,29,30,31,32,33,34,207,326,361,501,502,503,600},  //지수
 									{0,14,15,16,22,41,42,44,45,46,47,48,49,301},           //뉴스
 									{0,34,251,252,253,254,255,256},                        //등락 
@@ -2113,6 +2129,7 @@ void CPane::ProcessRTS(CString symbol, DWORD* data)
 
 	if (m_kind != TKIND_NEWS && oldfms.GetCount())
 	{
+#ifdef DF_USE_MINI
 		for (int jj = 0;  jj < sizeof(arrtick[m_kind]) / sizeof(int); jj++)
 		{
 			if (jj == 0)
@@ -2129,21 +2146,21 @@ void CPane::ProcessRTS(CString symbol, DWORD* data)
 				oldfms.SetAt(keys, (char*)data[arrtick[m_kind][jj]]);
 			}	
 		}
+#else		
 		
-		/*
 		for (int jj=0;jj<1000;jj++)
 		{
 			if(data[jj])
 			{
 				keys.Format("%03d",jj);
 
-				stmp.Format("--------------------- m_kind=[%d]  symbol=[%s] rtssym=[%s] data=[%s] \n", m_kind, symbol, keys, (char*)data[jj]);
+			//	stmp.Format("--------------------- m_kind=[%d]  symbol=[%s] rtssym=[%s] data=[%s] \n", m_kind, symbol, keys, (char*)data[jj]);
 			//	OutputDebugString(stmp);
 
 				oldfms.SetAt(keys, (char*)data[jj]);
 			}
 		}
-		*/
+#endif
 
 		for (POSITION pos = oldfms.GetStartPosition(); pos; )
 		{
@@ -2159,6 +2176,7 @@ void CPane::ProcessRTS(CString symbol, DWORD* data)
 	}
 	else if(m_kind == TKIND_NEWS)
 	{
+#ifdef DF_USE_MINI
 		const int isize = sizeof(arrtick[m_kind]) / sizeof(int);
 		for (int jj = 0; jj < sizeof(arrtick[m_kind]) / sizeof(int); jj++)
 		{
@@ -2176,20 +2194,20 @@ void CPane::ProcessRTS(CString symbol, DWORD* data)
 				newfms.SetAt(keys, (char*)data[arrtick[m_kind][jj]]);
 			}
 		}
-		/*
+#else
 		for (int jj=0;jj<1000;jj++)
 		{
 			if(data[jj])
 			{
 				keys.Format("%03d",jj);
 	
-				stmp.Format("---------------------m_kind=[%d]   symbol=[%s] rtssym=[%s] dat=[%s] \n",m_kind, symbol, keys, (char*)data[jj] );
+		//		stmp.Format("---------------------m_kind=[%d]   symbol=[%s] rtssym=[%s] dat=[%s] \n",m_kind, symbol, keys, (char*)data[jj] );
 		//		OutputDebugString(stmp);
 
 				newfms.SetAt(keys, (char*)data[jj]);
 			}
 		}
-		*/
+#endif
 		for (POSITION pos = newfms.GetStartPosition(); pos; )
 		{
 			newfms.GetNextAssoc(pos, keys, value);
@@ -2378,7 +2396,7 @@ void CPane::SetData(CString dat)
 	CString stmp, sym, sdata, value;
 	int pos{};
 	stmp = dat;
-	
+
 	if ((m_kind == TKIND_INDEX) || (m_kind == TKIND_UPDOWN))
 	{
 		while (!stmp.IsEmpty())
@@ -2399,12 +2417,15 @@ void CPane::SetData(CString dat)
 				sdata = stmp.Left(pos++);
 				stmp = stmp.Mid(pos);
 			}
-
+			// J = KRX100, KOSPI, KOSPI200, KOSDAQ, KOSDAQ벤처, KQ150, KRX SRI
+			// K = 최근월, 차근월, KP최근월, KP차근월, KP최근월 Basis
+			// W = KOSPI 프로그램, KOSDAQ 프로그램
+			// M = KOSPI투자자(금액), KOSDAQ투자자(금액), 선물투자자(수량), 콜투자자(금액), 풋투자자(금액)
 			if (sym == "000")
 			{
 				if (m_kind == TKIND_INDEX)
 				{
-					if (sdata != "J" && sdata != "W" && sdata != "X")
+					if (sdata != "J" && sdata != "W" && sdata != "X" && sdata != "M" && sdata != "K")  //업종 , 프로그램, 예상, 투자자별  업종 매매
 						return;
 				}
 				else if (m_kind == TKIND_UPDOWN)

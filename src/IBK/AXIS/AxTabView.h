@@ -19,8 +19,11 @@ protected:
 // Attributes
 public:
 	int		m_key{};
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr<class CNTab> m_tab;
-
+#else
+	class CNTab*	m_tab;
+#endif
 // Operations
 public:
 	void	SizeWindow(CSize size);

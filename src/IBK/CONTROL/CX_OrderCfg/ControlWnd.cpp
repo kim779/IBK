@@ -61,6 +61,8 @@ CControlWnd::CControlWnd()
 	m_bDoAlert	= false;
 	m_bQueryQty	= false;
 
+	m_bNewUnit	= FALSE;
+
 	for (int ii = 0; ii < 24; ii++)
 		m_sise[ii] = "";
 }
@@ -191,7 +193,13 @@ void CControlWnd::CreateCtrl(CWnd* pParent, struct _param* pParam)
 
 	// Create Cfg
 	struct	_param	param;
-	CString	path; path.Format("%s/%s/%s", Variant(homeCC, ""), DEVDIR, "CX_CFG.DLL");
+	CString	home, path;
+	
+	home = Variant(homeCC, "");
+	path.Format(_T("%s/%s/axis.ini"), home, TABDIR);
+	m_bNewUnit = GetPrivateProfileInt("K2023SyStem", "Newhgunit", 0, path);
+
+	path.Format("%s/%s/%s", home, DEVDIR, "CX_CFG.DLL");
 	param.name	= "Cfg";
 	param.fonts	= "굴림체";
 	param.point	= 9;
@@ -1056,15 +1064,19 @@ BSTR CControlWnd::_MoveTick(LPCTSTR Prc, short Tick)
 		break;
 	default: // 주식
 		nVal = atoi(Prc);
-		const	bool	bKospi = (m_pParent->SendMessage(WM_USER, MAKEWPARAM(codeTYPE, 0), (LPARAM)m_itemCd.GetString()) == 1) ? true : false;
-		if (bKospi)
+		if (m_bNewUnit)		// 2023 주식 호가가격단위 개선
 		{
+			if (nVal < 2000)
+			{
+				nDelta = 1;
+				if (Tick < 0 && nVal <= 1) nDelta = 0;
+			}
 			if (nVal < 5000)
 			{
 				nDelta = 5;
-				if (Tick < 0 && nVal <= 5) nDelta = 0;
+				if (Tick < 0 && nVal == 2000) nDelta = 1;
 			}
-			else if (nVal < 10000)
+			else if (nVal < 20000)
 			{
 				nDelta = 10;
 				if (Tick < 0 && nVal == 5000) nDelta = 5;
@@ -1072,9 +1084,9 @@ BSTR CControlWnd::_MoveTick(LPCTSTR Prc, short Tick)
 			else if (nVal < 50000)
 			{
 				nDelta = 50;
-				if (Tick < 0 && nVal == 10000) nDelta = 10;
+				if (Tick < 0 && nVal == 20000) nDelta = 10;
 			}
-			else if (nVal < 100000)
+			else if (nVal < 200000)
 			{
 				nDelta = 100;
 				if (Tick < 0 && nVal == 50000) nDelta = 50;
@@ -1090,26 +1102,63 @@ BSTR CControlWnd::_MoveTick(LPCTSTR Prc, short Tick)
 				if (Tick < 0 && nVal == 500000) nDelta = 500;
 			}
 		}
-		else
+		else	// as-is
 		{
-			if (nVal < 5000)
+			const	bool	bKospi = (m_pParent->SendMessage(WM_USER, MAKEWPARAM(codeTYPE, 0), (LPARAM)m_itemCd.GetString()) == 1) ? true : false;
+			if (bKospi)
 			{
-				nDelta = 5;
-			}
-			else if (nVal < 10000)
-			{
-				nDelta = 10;
-				if (Tick < 0 && nVal == 5000) nDelta = 5;
-			}
-			else if (nVal < 50000)
-			{
-				nDelta = 50;
-				if (Tick < 0 && nVal == 10000) nDelta = 10;
+				if (nVal < 5000)
+				{
+					nDelta = 5;
+					if (Tick < 0 && nVal <= 5) nDelta = 0;
+				}
+				else if (nVal < 10000)
+				{
+					nDelta = 10;
+					if (Tick < 0 && nVal == 5000) nDelta = 5;
+				}
+				else if (nVal < 50000)
+				{
+					nDelta = 50;
+					if (Tick < 0 && nVal == 10000) nDelta = 10;
+				}
+				else if (nVal < 100000)
+				{
+					nDelta = 100;
+					if (Tick < 0 && nVal == 50000) nDelta = 50;
+				}
+				else if (nVal < 500000)
+				{
+					nDelta = 500;
+					if (Tick < 0 && nVal == 100000) nDelta = 100;
+				}
+				else
+				{
+					nDelta = 1000;
+					if (Tick < 0 && nVal == 500000) nDelta = 500;
+				}
 			}
 			else
 			{
-				nDelta = 100;
-				if (Tick < 0 && nVal == 50000) nDelta = 50;
+				if (nVal < 5000)
+				{
+					nDelta = 5;
+				}
+				else if (nVal < 10000)
+				{
+					nDelta = 10;
+					if (Tick < 0 && nVal == 5000) nDelta = 5;
+				}
+				else if (nVal < 50000)
+				{
+					nDelta = 50;
+					if (Tick < 0 && nVal == 10000) nDelta = 10;
+				}
+				else
+				{
+					nDelta = 100;
+					if (Tick < 0 && nVal == 50000) nDelta = 50;
+				}
 			}
 		}
 		nVal = nVal + nDelta * Tick;

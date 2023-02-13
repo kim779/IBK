@@ -154,7 +154,7 @@ stmp.Format("조회값 현재가=[%s] 매입금액=[%s] 평가금액=[%s]", m_curr, m_maip, m_
 // 	CString strTemp;
 // 	strTemp.Format("[KSJ][ParsingRemainData111] 융자금포함[%d] 신용[%s] 종목[%s](%s) dFee(%d) 수량(%d) 단가(%f) 매입금액(%.f) 원매입금액(%.f) 평가금액(%f) 체결여부(%d) 수익률(%f) 신용금액(%f) 현재가(%s)",
 // 		m_dCalcType, m_creditS, m_name, m_code, m_dFee, atoi(m_remain), atof(m_pmaip), atof(m_maip), atof(m_omaip), atof(m_rprice), m_bchg ? 1:0, atof(m_psuik), atof(m_symt), m_curr);
-
+//putDebugString(strTemp);
 // 	testSaveFile(strTemp);
 
 //TRACE("잔고조회 [%s:%s] 수익[%s]\n", m_code, m_name, m_psuik);

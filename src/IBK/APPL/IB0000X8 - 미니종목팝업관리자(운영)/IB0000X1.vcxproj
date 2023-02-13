@@ -113,7 +113,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/IB0000X8.DLL</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/IB0000X8.DLL</OutputFile>
       <ImportLibrary>.\Debug\IB0000X8.lib</ImportLibrary>
       <ModuleDefinitionFile>.\IB0000X1.def</ModuleDefinitionFile>
     </Link>
@@ -195,6 +195,7 @@
     <ClInclude Include="data_io.h" />
     <ClInclude Include="FindEdit.h" />
     <ClInclude Include="IB0000X1.h" />
+    <ClInclude Include="ioformat.h" />
     <ClInclude Include="ListBoxEx.h" />
     <ClInclude Include="ListPopup.h" />
     <ClInclude Include="MapWnd.h" />

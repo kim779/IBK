@@ -222,9 +222,9 @@ END_MESSAGE_MAP()
 BOOL CCertLogin::OnInitDialog() 
 {
 	AfxEnableControlContainer();
+	
 	CDialog::OnInitDialog();
 	SetWindowText("IBK hot Trading");
-	//GetParent()->PostMessage(WM_USER, MAKEWPARAM(MMSG_CREATEWIZARD, 0));
 	CEdit* edit = (CEdit*)GetDlgItem(IDC_DUSER);
 	edit->SetPasswordChar('*');
 	edit = (CEdit*)GetDlgItem(IDC_DPASS);
@@ -625,7 +625,7 @@ BOOL CCertLogin::OnInitDialog()
 		//dkkim 2015.10.10
 		//자동로그인시 보안프로그램 실행후 로그인 시작을 위해서 수정
 		PostMessage(WM_COMMAND, IDC_DRUN);
-	
+
 		return FALSE;
 	}
 	
@@ -641,7 +641,6 @@ BOOL CCertLogin::OnInitDialog()
 
 	ModifyStyleEx(0, WS_EX_APPWINDOW, SWP_FRAMECHANGED);
 
-	
 	//dateData(FALSE);
 	return FALSE;
 }
@@ -1833,13 +1832,25 @@ void CCertLogin::OnDestroy()
 	ReleaseShapeButton();
 
 	KillTimer(1000);
+
+#ifndef DF_USE_CPLUS17
+	if (m_pToolTip)
+	{
+		delete m_pToolTip;
+		m_pToolTip = NULL;
+	}
+#endif
 }
 
 void CCertLogin::ShowToolTip()
 {
 	if (m_pToolTip == NULL)
 	{
+#ifdef DF_USE_CPLUS17
 		m_pToolTip = std::make_unique<CMyToolTip>();
+#else
+		m_pToolTip = new CMyToolTip;
+#endif
 		m_pToolTip->Create(this->m_hWnd, STR_CAPS, AfxGetResourceHandle()
 			,TTS_NOPREFIX | TTS_BALLOON 
 			, _T("주  의")

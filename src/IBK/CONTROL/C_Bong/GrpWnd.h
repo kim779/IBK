@@ -1,4 +1,11 @@
+#if !defined(AFX_GRPWND_H__CE1648E7_7460_4979_A6AA_DC9778CEA1F3__INCLUDED_)
+#define AFX_GRPWND_H__CE1648E7_7460_4979_A6AA_DC9778CEA1F3__INCLUDED_
+
+#if _MSC_VER > 1000
 #pragma once
+#endif // _MSC_VER > 1000
+// GrpWnd.h : header file
+//
 
 /////////////////////////////////////////////////////////////////////////////
 // CGrpWnd window
@@ -10,18 +17,18 @@
 
 struct _tick
 {
-	bool	bDraw{};
-	int	lcolor{};
-	int	lstyle{};
-	int	lwidth{};
+	bool	bDraw;
+	int	lcolor;
+	int	lstyle;
+	int	lwidth;
 	CRect	tkRect;
 };
 
 struct _RgnInfo
 {
-	int	tkHeight{};
+	int	tkHeight;
 
-	_tick	tick[3]{};	// left/right/bottom
+	_tick	tick[3];	// left/right/bottom
 	CRect	gpRect;		// graph rect
 };
 
@@ -74,52 +81,50 @@ public:
 	void	StartOrderSignal(CString sPrice);
 	void	EndOrderSignal();
 public:
-	std::array<std::unique_ptr<struct _RgnInfo>, maxCnt>    m_pRgnInfo;
-	std::array<std::unique_ptr<class CGrp_Data>, maxCnt>	m_pDataInfo;
-	std::array<std::unique_ptr<class CGrp_Base>, maxCnt>	m_pGrpInfo;
-	int		m_RgnCnt{};
-	int		m_DataCnt{};
-	int		m_GrpCnt{};
+	struct _RgnInfo	*m_pRgnInfo[maxCnt];
+	class CGrp_Data	*m_pDataInfo[maxCnt];
+	class CGrp_Base	*m_pGrpInfo[maxCnt];
+	int		m_RgnCnt; 
+	int		m_DataCnt;
+	int		m_GrpCnt;
 	CString		m_sParam;
 
+	struct _MinMaxChk	*m_pMinMaxChk;
+	int	m_MinMaxCnt;
 
-	std::array<std::unique_ptr<struct _MinMaxChk>, maxCnt>	m_pMinMaxChk;
-//	struct _MinMaxChk	*m_pMinMaxChk{};
-	int		m_MinMaxCnt{};
+	int		m_PMA[4];
+	int		m_PMACnt;
+	int		m_VMA[4];
+	int		m_VMACnt;
 
-	int		m_PMA[4]{};
-	int		m_PMACnt{};
-	int		m_VMA[4]{};
-	int		m_VMACnt{};
+	int		m_totalDay;
+	int		m_dispPos;
+	int		m_dispEnd;
+	int		m_dispDay;
 
-	int		m_totalDay{};
-	int		m_dispPos{};
-	int		m_dispEnd{};
-	int		m_dispDay{};
+	int		m_pivot;
+	int		m_digit;
+	double		m_power;
+	int		m_dKind;	// param option
+	int		m_dIndex;	// param option
+	int		m_dUnit;	// param option
+	int		m_dDay;		// param option
+	int		m_dCount;	// param option
+	int		m_jChart;	// param option
+	bool		m_bVol;		// param option
+	bool		m_bOutLine;	// param option
+	bool		m_bSameRegion;	// param option
+	int		m_VolColor;	// param option
 
-	int		m_pivot{};
-	int		m_digit{};
-	double		m_power{};
-	int		m_dKind{};	// param option
-	int		m_dIndex{};	// param option
-	int		m_dUnit{};	// param option
-	int		m_dDay{};		// param option
-	int		m_dCount{};	// param option
-	int		m_jChart{};	// param option
-	bool		m_bVol{};		// param option
-	bool		m_bOutLine{};	// param option
-	bool		m_bSameRegion{};	// param option
-	int		m_VolColor{};	// param option
-
-	CFont		*m_pFont{};
-	int		m_fPoint{};
+	CFont		*m_pFont;
+	int		m_fPoint;
 	CString		m_fName;
 	CRect		m_ObjRect;
 	CRect		m_GrpRect;
 
-	COLORREF	m_ltColor{};	// left tick color
-	COLORREF	m_rtColor{};	// right tick color
-	COLORREF	m_btColor{};	// bottom tick color
+	COLORREF	m_ltColor;	// left tick color
+	COLORREF	m_rtColor;	// right tick color
+	COLORREF	m_btColor;	// bottom tick color
 	
 	CString		m_siga;
 	CString		m_koga;
@@ -151,22 +156,30 @@ private:
 	void	ReviseTick();
 
 private:
-	CWnd* m_pView{};
-	CWnd* m_pParent{};
-	std::unique_ptr<class CToolTip>	   m_pToolTip;
-	std::unique_ptr<class CCrossLine>  m_pCrossLine;
+	CWnd	*m_pView;
+	CWnd	*m_pParent;
+	class CToolTip	*m_pToolTip;
+	class CCrossLine	*m_pCrossLine;
 	CString	m_sHeader;
 
-	int	m_TickView{};
+	int	m_TickView;
 
 	CString	m_PosData;
-	UINT	m_timerID{};
+	UINT	m_timerID;
 
-	COLORREF	m_fRGB{};	// Fixed Graph Tick Color
-	COLORREF	m_tRGB{};
-	COLORREF	m_pRGB{};
+	COLORREF	m_fRGB;	// Fixed Graph Tick Color
+	COLORREF	m_tRGB;
+	COLORREF	m_pRGB;
 
-	bool			m_bCtrl{};
+	CCriticalSection	m_cs;
+	bool			m_bCtrl;
 
-	CC_BongApp* m_pApp{};
+	CC_BongApp		*m_pApp;
 };
+
+/////////////////////////////////////////////////////////////////////////////
+
+//{{AFX_INSERT_LOCATION}}
+// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#endif // !defined(AFX_GRPWND_H__CE1648E7_7460_4979_A6AA_DC9778CEA1F3__INCLUDED_)

@@ -1,7 +1,13 @@
 // Grp_Base.h: interface for the CGrp_Base class.
 //
 //////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_GRP_BASE_H__FE8A4317_D994_495D_BC6C_4E7C373D5FE8__INCLUDED_)
+#define AFX_GRP_BASE_H__FE8A4317_D994_495D_BC6C_4E7C373D5FE8__INCLUDED_
+
+#if _MSC_VER > 1000
 #pragma once
+#endif // _MSC_VER > 1000
 
 #include "../../h/axiscgrp.h"
 
@@ -54,3 +60,5 @@ protected:
 	double	m_Min;
 	CC_BongApp	*m_pApp;
 };
+
+#endif // !defined(AFX_GRP_BASE_H__FE8A4317_D994_495D_BC6C_4E7C373D5FE8__INCLUDED_)

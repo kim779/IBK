@@ -811,7 +811,10 @@ void CMapWnd::create()
 	m_pSelList->AddString(STR_COMBODATA_ALL);
 	m_pSelList->AddString(STR_COMBODATA_THEME);
 	m_pSelList->AddString(STR_COMBODATA_REMAINDER);
-	m_pSelList->AddString(STR_COMBODATA_INTEREST);
+	m_pSelList->AddString(STR_COMBODATA_INTEREST);	
+	SetWindowTheme(m_pSelList->GetSafeHwnd(), L"", L"");
+	
+
 //	m_pSelList->AddString("KRX섹터");
 	m_pSelList->SetCurSel(0);
 
@@ -991,6 +994,7 @@ void CMapWnd::CreateSearchCtrl_Theme()
 	m_pThemeList->Create(WS_VISIBLE|WS_CHILD|WS_GROUP|BS_GROUPBOX|WS_VSCROLL, 
 		                 CZ_THEME_LIST, this, IDC_THEME_LIST);
 	m_pThemeList->SetFont(m_font, TRUE);
+	SetWindowTheme(m_pThemeList->GetSafeHwnd(), L"", L"");
 }
 
 void CMapWnd::CreateSearchCtrl_Remainder()
@@ -1030,7 +1034,10 @@ void CMapWnd::CreateSearchCtrl_Interest()
 	m_pInterestGroupList = std::make_unique<CComboBox>();
 	m_pInterestGroupList->Create(WS_VISIBLE|WS_CHILD|WS_GROUP|BS_GROUPBOX|BS_GROUPBOX, 
 		                         CZ_INTEREST_GROUPLIST, this, IDC_INTEREST_GROUPLIST);
+					 
 	m_pInterestGroupList->SetFont(m_font, TRUE);
+	SetWindowTheme(m_pInterestGroupList->GetSafeHwnd(), L"", L"");
+	
 }
 
 void CMapWnd::CreateSearchCtrl_KRX()
@@ -1236,6 +1243,7 @@ void CMapWnd::settujaCombo()
 		m_tujatype1->Create(WS_BORDER|WS_VISIBLE|CBS_DROPDOWNLIST|WS_VSCROLL|WS_TABSTOP|LVS_ALIGNTOP|LVS_REPORT,
 			CRect(8,207,80,460), this, IDC_TUJATYPE1);
 		m_tujatype1->SetFont(m_font, TRUE);
+		SetWindowTheme(m_tujatype1->GetSafeHwnd(), L"", L"");
 		m_tujatype1->AddString("_지수");
 		m_tujatype1->AddString("KOSPI");
 		m_tujatype1->AddString("KOSDAQ");
@@ -1294,6 +1302,7 @@ void CMapWnd::loadTUJA()
 			CRect(83,207,255,460), this, IDC_TUJATYPE2);
 		m_tujatype2->SetFont(m_font, TRUE);
 		m_tujatype2->SetDroppedWidth(110);
+		SetWindowTheme(m_tujatype2->GetSafeHwnd(), L"", L"");
 	}
 
 	m_tujatype1->GetLBText(m_tujatype1->GetCurSel(),strdata);
@@ -1372,6 +1381,7 @@ void CMapWnd::setElwCombo()
 		m_rtype->Create(WS_BORDER|WS_VISIBLE|CBS_DROPDOWNLIST|WS_VSCROLL|WS_TABSTOP|LVS_ALIGNTOP|LVS_REPORT,
 			            CRect(8,207,59,460), this, IDC_RTYPE);
 		m_rtype->SetFont(m_font, TRUE);
+		SetWindowTheme(m_rtype->GetSafeHwnd(), L"", L"");
 		m_rtype->AddString("권리");
 		m_rtype->AddString("콜");
 		m_rtype->AddString("풋");
@@ -1386,6 +1396,7 @@ void CMapWnd::setElwCombo()
 			             CRect(63,207,131,460), this, IDC_BSTOCK);
 		m_bstock->SetFont(m_font, TRUE);
 		m_bstock->SetDroppedWidth(110);
+		SetWindowTheme(m_bstock->GetSafeHwnd(), L"", L"");
 		m_bstock->AddString(" _기초자산");
 		m_bstock->SetCurSel(0);
 	}
@@ -1395,6 +1406,7 @@ void CMapWnd::setElwCombo()
 		m_icorp->Create(WS_BORDER|WS_VISIBLE|CBS_DROPDOWNLIST|WS_VSCROLL|WS_TABSTOP|LVS_ALIGNTOP|LVS_REPORT, 
 						CRect(135,207,192,460), this, IDC_ICORP);
 		m_icorp->SetFont(m_font, TRUE);
+		SetWindowTheme(m_icorp->GetSafeHwnd(), L"", L"");
 		m_icorp->SetDroppedWidth(120);
 		m_icorp->AddString("발행사");
 		m_icorp->SetCurSel(0);
@@ -1405,6 +1417,7 @@ void CMapWnd::setElwCombo()
 		m_month->Create(WS_BORDER|WS_VISIBLE|CBS_DROPDOWNLIST|WS_VSCROLL|WS_TABSTOP|LVS_ALIGNTOP|LVS_REPORT, 
 			            CRect(196,207,252,460), this, IDC_MONTH);
 		m_month->SetFont(m_font, TRUE);
+		SetWindowTheme(m_month->GetSafeHwnd(), L"", L"");
 		m_month->SetDroppedWidth(50);
 		m_month->AddString("만기");
 		m_month->SetCurSel(0);

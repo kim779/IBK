@@ -663,8 +663,10 @@ void CMainDlg::ParseSum(CString sSumdata)
 {	
 	int i = 0;
 	CString temp = "", temp_2 = "";
-	while(AfxExtractSubString(sParseData[i], sSumdata, i++, char(9)))
+
+	while(AfxExtractSubString(sParseData[i], sSumdata, i, 0x09))
 	{
+		i++;
 	}
 
 	i = 0;

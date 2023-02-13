@@ -2,6 +2,7 @@
 #include "exSpin.h"
 #include <math.h>
 #include <locale.h>
+#include <EzIni.hpp>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -307,6 +308,11 @@ void CExSpin::SetLimitText(int len)
 	if (m_pEdit)	m_pEdit->SetLimitText(len);
 }
 
+void CExSpin::SetRoot(CString sRoot)
+{
+	m_pSpin->_sRoot = sRoot;
+}
+
 /////////////////////////////////////////////////////////////////////
 // Spin Button
 CSpinCtrl::CSpinCtrl(CWnd* pWnd, DWORD attr, DWORD spType)
@@ -459,6 +465,8 @@ void CSpinCtrl::formatComma(CString& text)
 	
 }
 
+
+
 void CSpinCtrl::checkDelta(BOOL nFlag)
 {
 	CWnd *pWnd = GetBuddy();
@@ -469,50 +477,36 @@ void CSpinCtrl::checkDelta(BOOL nFlag)
 	tmpS.Remove(',');
 	const double	spVal = atof(tmpS);
 
-	if (m_spType & spKOSPI)
+	int val = 0;
+	if (!_sRoot.IsEmpty())
 	{
-		if (nFlag==TRUE)	// Up
+		EZIni ini(AxStd::FORMAT("%s/%s/%s", _sRoot, "tab", "axis.ini"));
+		val = ini["K2023SyStem"]["Newhgunit"] << 0;
+	}
+
+	if (val == 1)
+	{
+		if (m_spType & spETFKOSPI)
 		{
-			if (spVal < 1000)
-				m_delta = 1;
-			else if (spVal >= 1000 && spVal < 5000)
+			m_delta = 5;
+			/*
+			if (spVal < 5000)
 				m_delta = 5;
-			else if (spVal >= 5000 && spVal < 10000)
+			else if (spVal >= 5000 && spVal < 50000)
 				m_delta = 10;
-			else if (spVal >= 10000 && spVal < 50000)
-				m_delta = 50;
 			else if (spVal >= 50000 && spVal < 100000)
 				m_delta = 100;
 			else if (spVal >= 100000 && spVal < 500000)
 				m_delta = 500;
 			else
 				m_delta = 1000;
+			*/
 		}
-		else
+		else if (m_spType & spETFKOSDAQ)
 		{
-			if (spVal <= 1000)
-				m_delta = 1;
-			else if (spVal > 1000 && spVal <= 5000)
-				m_delta = 5;
-			else if (spVal > 5000 && spVal <= 10000)
-				m_delta = 10;
-			else if (spVal > 10000 && spVal <= 50000)
-				m_delta = 50;
-			else if (spVal > 50000 && spVal <= 100000)
-				m_delta = 100;
-			else if (spVal > 100000 && spVal <= 500000)
-				m_delta = 500;
-			else
-				m_delta = 1000;
-		}
-	}
-	else if (m_spType & spKOSDAQ)
-	{
-		if (nFlag==TRUE)	// Up
-		{
-			if (spVal < 1000)
-				m_delta = 1;
-			else if (spVal >= 1000 && spVal < 5000)
+			m_delta = 5;
+			/*
+			if (spVal < 5000)
 				m_delta = 5;
 			else if (spVal >= 5000 && spVal < 10000)
 				m_delta = 10;
@@ -520,88 +514,220 @@ void CSpinCtrl::checkDelta(BOOL nFlag)
 				m_delta = 50;
 			else
 				m_delta = 100;
+			*/
 		}
-		else				// Down
+		else if (m_spType & spFUTURE)
 		{
-			if (spVal <= 1000)
-				m_delta = 1;
-			else if (spVal > 1000 && spVal <= 5000)
-				m_delta = 5;
-			else if (spVal > 5000 && spVal <= 10000)
+			m_delta = 0.05;
+		}
+		else if (m_spType & spOPTION)
+		{
+			if (nFlag)
+			{
+				if (spVal < 3)
+					m_delta = 0.01;
+				else
+					m_delta = 0.05;
+			}
+			else
+			{
+				if (spVal <= 3)
+					m_delta = 0.01;
+				else
+					m_delta = 0.05;
+			}
+		}
+		else if (m_spType & spSOPT)
+		{
+			if (spVal < 1000)
 				m_delta = 10;
-			else if (spVal > 10000 && spVal <= 50000)
+			else if (spVal >= 1000 && spVal < 2000)
+				m_delta = 20;
+			else if (spVal >= 2000 && spVal < 5000)
+				m_delta = 50;
+			else if (spVal >= 5000 && spVal < 10000)
+				m_delta = 100;
+			else
+				m_delta = 200;
+		}
+		else if (m_spType & spRATE)
+		{
+			m_delta = 0.01;
+		}
+		else
+		{
+			if (nFlag == TRUE)	// Up
+			{
+				if (spVal < 2000)
+					m_delta = 1;
+				else if (spVal >= 2000 && spVal < 5000)
+					m_delta = 5;
+				else if (spVal >= 5000 && spVal < 20000)
+					m_delta = 10;
+				else if (spVal >= 20000 && spVal < 50000)
+					m_delta = 50;
+				else if (spVal >= 50000 && spVal < 200000)
+					m_delta = 100;
+				else if (spVal >= 200000 && spVal < 500000)
+					m_delta = 500;
+				else
+					m_delta = 1000;
+			}
+			else
+			{
+				if (spVal <= 2000)
+					m_delta = 1;
+				else if (spVal > 2000 && spVal <= 5000)
+					m_delta = 5;
+				else if (spVal > 5000 && spVal <= 20000)
+					m_delta = 10;
+				else if (spVal > 20000 && spVal <= 50000)
+					m_delta = 50;
+				else if (spVal > 50000 && spVal <= 200000)
+					m_delta = 100;
+				else if (spVal > 200000 && spVal <= 500000)
+					m_delta = 500;
+				else
+					m_delta = 1000;
+			}
+		}
+	}
+	else
+	{
+		if (m_spType & spKOSPI)
+		{
+			if (nFlag == TRUE)	// Up
+			{
+				if (spVal < 1000)
+					m_delta = 1;
+				else if (spVal >= 1000 && spVal < 5000)
+					m_delta = 5;
+				else if (spVal >= 5000 && spVal < 10000)
+					m_delta = 10;
+				else if (spVal >= 10000 && spVal < 50000)
+					m_delta = 50;
+				else if (spVal >= 50000 && spVal < 100000)
+					m_delta = 100;
+				else if (spVal >= 100000 && spVal < 500000)
+					m_delta = 500;
+				else
+					m_delta = 1000;
+			}
+			else
+			{
+				if (spVal <= 1000)
+					m_delta = 1;
+				else if (spVal > 1000 && spVal <= 5000)
+					m_delta = 5;
+				else if (spVal > 5000 && spVal <= 10000)
+					m_delta = 10;
+				else if (spVal > 10000 && spVal <= 50000)
+					m_delta = 50;
+				else if (spVal > 50000 && spVal <= 100000)
+					m_delta = 100;
+				else if (spVal > 100000 && spVal <= 500000)
+					m_delta = 500;
+				else
+					m_delta = 1000;
+			}
+		}
+		else if (m_spType & spKOSDAQ)
+		{
+			if (nFlag == TRUE)	// Up
+			{
+				if (spVal < 1000)
+					m_delta = 1;
+				else if (spVal >= 1000 && spVal < 5000)
+					m_delta = 5;
+				else if (spVal >= 5000 && spVal < 10000)
+					m_delta = 10;
+				else if (spVal >= 10000 && spVal < 50000)
+					m_delta = 50;
+				else
+					m_delta = 100;
+			}
+			else				// Down
+			{
+				if (spVal <= 1000)
+					m_delta = 1;
+				else if (spVal > 1000 && spVal <= 5000)
+					m_delta = 5;
+				else if (spVal > 5000 && spVal <= 10000)
+					m_delta = 10;
+				else if (spVal > 10000 && spVal <= 50000)
+					m_delta = 50;
+				else
+					m_delta = 100;
+			}
+		}
+		else if (m_spType & spETFKOSPI)
+		{
+			m_delta = 5;
+			/*
+			if (spVal < 5000)
+				m_delta = 5;
+			else if (spVal >= 5000 && spVal < 50000)
+				m_delta = 10;
+			else if (spVal >= 50000 && spVal < 100000)
+				m_delta = 100;
+			else if (spVal >= 100000 && spVal < 500000)
+				m_delta = 500;
+			else
+				m_delta = 1000;
+			*/
+		}
+		else if (m_spType & spETFKOSDAQ)
+		{
+			m_delta = 5;
+			/*
+			if (spVal < 5000)
+				m_delta = 5;
+			else if (spVal >= 5000 && spVal < 10000)
+				m_delta = 10;
+			else if (spVal >= 10000 && spVal < 50000)
 				m_delta = 50;
 			else
 				m_delta = 100;
+			*/
 		}
-	}
-	else if (m_spType & spETFKOSPI)
-	{
-		m_delta = 5;
-		/*
-		if (spVal < 5000)
-			m_delta = 5;
-		else if (spVal >= 5000 && spVal < 50000)
-			m_delta = 10;
-		else if (spVal >= 50000 && spVal < 100000)
-			m_delta = 100;
-		else if (spVal >= 100000 && spVal < 500000)
-			m_delta = 500;
-		else
-			m_delta = 1000;
-		*/
-	}
-	else if (m_spType & spETFKOSDAQ)
-	{
-		m_delta = 5;
-		/*
-		if (spVal < 5000)
-			m_delta = 5;
-		else if (spVal >= 5000 && spVal < 10000)
-			m_delta = 10;
-		else if (spVal >= 10000 && spVal < 50000)
-			m_delta = 50;
-		else
-			m_delta = 100;
-		*/
-	}
-	else if (m_spType & spFUTURE)
-	{
-		m_delta = 0.05;
-	}
-	else if (m_spType & spOPTION)
-	{
-		if(nFlag) 
+		else if (m_spType & spFUTURE)
 		{
-			if (spVal < 3)
-				m_delta = 0.01;		
-			else
-				m_delta = 0.05;
-		} 
-		else 
-		{
-			if (spVal <= 3)
-				m_delta = 0.01;		
-			else
-				m_delta = 0.05;
+			m_delta = 0.05;
 		}
-	}
-	else if (m_spType & spSOPT)
-	{
-		if (spVal < 1000)
-			m_delta = 10;
-		else if (spVal >= 1000 && spVal < 2000)
-			m_delta = 20;
-		else if (spVal >= 2000 && spVal < 5000)
-			m_delta = 50;
-		else if (spVal >= 5000 && spVal < 10000)
-			m_delta = 100;
-		else
-			m_delta = 200;
-	}
-	else if (m_spType & spRATE)
-	{
-		m_delta = 0.01;	
+		else if (m_spType & spOPTION)
+		{
+			if (nFlag)
+			{
+				if (spVal < 3)
+					m_delta = 0.01;
+				else
+					m_delta = 0.05;
+			}
+			else
+			{
+				if (spVal <= 3)
+					m_delta = 0.01;
+				else
+					m_delta = 0.05;
+			}
+		}
+		else if (m_spType & spSOPT)
+		{
+			if (spVal < 1000)
+				m_delta = 10;
+			else if (spVal >= 1000 && spVal < 2000)
+				m_delta = 20;
+			else if (spVal >= 2000 && spVal < 5000)
+				m_delta = 50;
+			else if (spVal >= 5000 && spVal < 10000)
+				m_delta = 100;
+			else
+				m_delta = 200;
+		}
+		else if (m_spType & spRATE)
+		{
+			m_delta = 0.01;
+		}
 	}
 }
 

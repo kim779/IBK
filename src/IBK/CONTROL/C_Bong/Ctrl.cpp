@@ -63,7 +63,7 @@ void CExScrollBar::HScroll(UINT nSBCode, UINT nPos)
 {
 	SCROLLINFO sInfo;
 	GetScrollInfo(&sInfo, SIF_ALL);  
-	const int pos = GetScrollPos();
+	int pos = GetScrollPos();
 	switch (nSBCode)
 	{
 	case SB_LINEDOWN:
@@ -104,12 +104,12 @@ int CExScrollBar::getPos(int type, int gap)
 	ClientToScreen(scrollRC);
 
 	GetOwner()->ScreenToClient(scrollRC);
-	const int cx = GetSystemMetrics(SM_CXHSCROLL);
+	int cx = GetSystemMetrics(SM_CXHSCROLL);
 	scrollRC.left += cx;
 	scrollRC.right -= cx;
 	if (scrollRC.PtInRect(pt))
 	{
-		const int xpos = pt.x - scrollRC.left;
+		int xpos = pt.x - scrollRC.left;
 		nPos = int(100 * xpos / (float)scrollRC.Width());
 		switch (type)
 		{

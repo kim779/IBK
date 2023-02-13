@@ -46,8 +46,8 @@ void CCrossLine::DrawCrossLine(CDC *pDC)
 	CPen	*sPen = pDC->SelectObject(cPen);
 	CBrush	*cBrush = m_pApp->GetBrush(m_pView, m_fgColor^m_bgColor);
 	CBrush	*sBrush = pDC->SelectObject(cBrush);
-	const int	sROP = pDC->SetROP2(R2_XORPEN);
-	const int	sMode = pDC->SetBkMode(TRANSPARENT);
+	int	sROP = pDC->SetROP2(R2_XORPEN);
+	int	sMode = pDC->SetBkMode(TRANSPARENT);
 
 	pDC->MoveTo(m_DrawRect.left, m_curPt.y);
 	pDC->LineTo(m_DrawRect.right, m_curPt.y);

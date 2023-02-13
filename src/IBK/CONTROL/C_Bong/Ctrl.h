@@ -1,7 +1,13 @@
 // Ctrl.h: interface for the CCtrl class.
 //
 //////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_CTRL_H__51CC0C70_4B0B_43C6_8968_C150BD8D3FD2__INCLUDED_)
+#define AFX_CTRL_H__51CC0C70_4B0B_43C6_8968_C150BD8D3FD2__INCLUDED_
+
+#if _MSC_VER > 1000
 #pragma once
+#endif // _MSC_VER > 1000
 
 ////////////////////////////////////////////////////////////
 class CExSlider : public CSliderCtrl
@@ -37,3 +43,7 @@ public:
 private:
 	int	getPos(int type, int gap = -1);
 };
+
+
+
+#endif // !defined(AFX_CTRL_H__51CC0C70_4B0B_43C6_8968_C150BD8D3FD2__INCLUDED_)

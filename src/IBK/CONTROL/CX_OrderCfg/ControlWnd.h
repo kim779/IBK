@@ -71,6 +71,8 @@ public:
 	bool	m_bDoAlert;
 	bool	m_bQueryQty;
 
+	BOOL	m_bNewUnit;	// 2023 호가단위개선 적용
+
 // Operations
 public:
 	CString Variant(int comm, CString data);

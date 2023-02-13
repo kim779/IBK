@@ -576,7 +576,7 @@ protected:
 	// Editing
 	virtual CSize GetCellExtent(int nRow, int nCol, CDC* pDC);
 	virtual bool  OnEditCell(int nRow, int nCol, UINT nChar);
-	virtual std::any CreateInPlaceEdit(CRect& rect, DWORD dwStyle, UINT nID,
+	virtual void CreateInPlaceEdit(CRect& rect, DWORD dwStyle, UINT nID,
 				int nRow, int nCol, LPCTSTR szText, int limit, int nChar);
 	virtual void  OnEndEditCell(int nRow, int nCol, CString str);
 

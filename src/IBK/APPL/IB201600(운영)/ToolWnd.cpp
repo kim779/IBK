@@ -390,29 +390,44 @@ BOOL CToolWnd::OnCommand(WPARAM wParam, LPARAM lParam)
 	switch (LOWORD(wParam))
 	{
 	case IDC_BTN1:
-		m_nBtnIndex = 0;
-		ClickButton(m_nBtnIndex);
-		m_pParent->SendMessage(WM_MANAGE,MK_LOADSNAP,m_nBtnIndex);
+		if (m_nBtnIndex != 0)
+		{
+			m_nBtnIndex = 0;
+			ClickButton(m_nBtnIndex);
+			m_pParent->SendMessage(WM_MANAGE, MK_LOADSNAP, m_nBtnIndex);
+		}
 		break;
 	case IDC_BTN2:
-		m_nBtnIndex = 1;
-		ClickButton(m_nBtnIndex);
-		m_pParent->SendMessage(WM_MANAGE,MK_LOADSNAP,m_nBtnIndex);
+		if (m_nBtnIndex != 1)
+		{
+			m_nBtnIndex = 1;
+			ClickButton(m_nBtnIndex);
+			m_pParent->SendMessage(WM_MANAGE, MK_LOADSNAP, m_nBtnIndex);
+		}
 		break;
 	case IDC_BTN3:
-		m_nBtnIndex = 2;
-		ClickButton(m_nBtnIndex);
-		m_pParent->SendMessage(WM_MANAGE,MK_LOADSNAP,m_nBtnIndex);
+		if (m_nBtnIndex != 2)
+		{
+			m_nBtnIndex = 2;
+			ClickButton(m_nBtnIndex);
+			m_pParent->SendMessage(WM_MANAGE, MK_LOADSNAP, m_nBtnIndex);
+		}
 		break;
 	case IDC_BTN4:
-		m_nBtnIndex = 3;
-		ClickButton(m_nBtnIndex);
-		m_pParent->SendMessage(WM_MANAGE,MK_LOADSNAP,m_nBtnIndex);
+		if (m_nBtnIndex != 3)
+		{
+			m_nBtnIndex = 3;
+			ClickButton(m_nBtnIndex);
+			m_pParent->SendMessage(WM_MANAGE, MK_LOADSNAP, m_nBtnIndex);
+		}
 		break;
 	case IDC_BTN5:
-		m_nBtnIndex = 4;
-		ClickButton(m_nBtnIndex);
-		m_pParent->SendMessage(WM_MANAGE,MK_LOADSNAP,m_nBtnIndex);
+		if (m_nBtnIndex != 4)
+		{
+			m_nBtnIndex = 4;
+			ClickButton(m_nBtnIndex);
+			m_pParent->SendMessage(WM_MANAGE, MK_LOADSNAP, m_nBtnIndex);
+		}
 		break;
 	case IDC_SAVE:
 		{
@@ -819,8 +834,7 @@ HBRUSH CToolWnd::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	if (nID == IDC_RADIO_10HG || nID == IDC_RADIO_5HG || nID == IDC_CHECK_SELECT || nID == IDC_CHECK_PRICE)
 	{
 		pDC->SetBkColor(GetColor(66));
-		return (HBRUSH) ::CreateSolidBrush(GetColor(66));
-
+		return GetAxBrush(GetColor(66))->operator HBRUSH();  
 	}	
 	else if(nCtlColor == CTLCOLOR_STATIC)
 	{

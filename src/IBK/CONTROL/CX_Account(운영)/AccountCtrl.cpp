@@ -2654,15 +2654,18 @@ void CAccountCtrl::searchAction(int column)
 #define	ChosungS	0xA4A1	// ㄱ
 #define	ChosungE	0xA4BE	// ㅎ
 
-bool CAccountCtrl::FindWordFromACCList(CString strSearch)
+bool CAccountCtrl::FindWordFromACCList(CString strSearch, CAccountArr* pArr)
 {
 	CString	strName;
 	std::shared_ptr<CAccount> pAcc = nullptr;
 
 	m_arrSearchAcc.RemoveAll();
-	for (int ii = 0; ii < m_arrAllAcc.GetSize(); ii++)
+	if (pArr == nullptr)
+		return false;
+
+	for (int ii = 0; ii < pArr->GetSize(); ii++)
 	{
-		pAcc = m_arrAllAcc.GetAt(ii);
+		pAcc = pArr->GetAt(ii);
 		strName = pAcc->m_strAccntName;
 		if (strName.Find(strSearch) >= 0)
 		{
@@ -2680,12 +2683,23 @@ bool CAccountCtrl::Search_MidData(CString sName, bool bAddAll)
 {	
 	CString	strName;
 	bool	breturn = true;
+	CAccountArr* pArr = nullptr;
 	std::shared_ptr<CAccount> pAcc = nullptr;
+
+	if (m_bGroup)
+	{
+		if (m_nSelectGroup == 0)
+			pArr = &m_arrAllAcc;
+		else
+			pArr = &m_arrGroupAcc;
+	}
+	else
+		pArr = &m_arrHistoryAcc; 
 
 	m_arrSearchAcc.RemoveAll();
 	if (sName.IsEmpty())
 	{
-		m_arrSearchAcc.Copy(m_arrAllAcc);
+		m_arrSearchAcc.Copy(*pArr);
 		return true;
 	}
 
@@ -2694,7 +2708,7 @@ bool CAccountCtrl::Search_MidData(CString sName, bool bAddAll)
 
 	if (sLen == 1 || sLen > 2)  //영어 한글자 혹은 한글(초성만아님) 혹은 영어 두글자 이상
 	{	// 일반검색적용(길이만큼 맞는것만 적용)  //맨처음 입력받으면 이거다
-		FindWordFromACCList(sName);
+		FindWordFromACCList(sName, pArr);
 	}
 	else if (sLen == 2)
 	{
@@ -2710,9 +2724,9 @@ bool CAccountCtrl::Search_MidData(CString sName, bool bAddAll)
 			wHangul = MakeHangul(sName.GetAt(ii), sName.GetAt(ii+1));
 			if (IsChosung(wHangul, wStart, wEnd))
 			{	// 초성 비교
-				for (int jj = 0; jj < m_arrAllAcc.GetSize(); jj++)
+				for (int jj = 0; jj < pArr->GetSize(); jj++)
 				{
-					pAcc = m_arrAllAcc.GetAt(jj);
+					pAcc = pArr->GetAt(jj);
 					strName = pAcc->m_strAccntName;
 					strName.TrimLeft();
 					if (strName.GetLength() < 2)	
@@ -2745,12 +2759,12 @@ bool CAccountCtrl::Search_MidData(CString sName, bool bAddAll)
 			}
 			else  //초성이 아니고 완성된 한글
 			{
-				FindWordFromACCList(sName);
+				FindWordFromACCList(sName, pArr);
 				breturn = true;
 			}
 		}
 		else
-			FindWordFromACCList(sName);
+			FindWordFromACCList(sName, pArr);
 	}
 
 	return breturn;
@@ -3498,6 +3512,7 @@ void CAccountCtrl::QueryAccntName(CString strAccount)
 
 		datb[index++] = (BYTE)TRKEY_ACCNTNAME;
 		CopyMemory(&datb[index], (char*)m_Param.name.GetString(), m_Param.name.GetLength());
+		index += m_Param.name.GetLength();
 		datb[index++] = '\t';
 	}
 

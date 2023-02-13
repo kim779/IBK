@@ -8,13 +8,13 @@
 #include <algorithm>
 using namespace std;
 
-#include "../../h/jmcode.h"
-#include "../../h/interSt.h"
-#include "sys/stat.h"
-
 #include "ioformat.h"
 
 #define TRKEY_GROUPARR 99
+
+#include "../../h/jmcode.h"
+#include "../../h/interSt.h"
+#include "sys/stat.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -2126,7 +2126,7 @@ void CMapWnd::sendTR(CString trCode, char* datB, int datL, int key)
 	uTH->stat = US_PASS;
 
 	CopyMemory(&sendB[L_userTH], datB, datL);
-	int iret =  m_pParent->SendMessage(WM_USER, MAKEWPARAM(invokeTRx, datL), (LPARAM)sendB.get());
+	int iret = m_pParent->SendMessage(WM_USER, MAKEWPARAM(invokeTRx, datL), (LPARAM)sendB.get());
 }
 
 void CMapWnd::LoadInterest()
@@ -2149,11 +2149,7 @@ void CMapWnd::LoadInterest()
 	updn->uinfo.retc[0] = 'U';
 
 	sendTR("PIDOMYST", sendB, sendL, TRKEY_GROUPARR);
-
-	/*m_gpno.RemoveAll();
-	m_gpnm.RemoveAll();
-
-	char buff[1024];
+	/*char buff[1024];
 	DWORD dwSize;
 	CString path;
 	path.Format("%s\\user\\%s\\portfolio.ini", Variant(homeCC,""), Variant(nameCC,""));

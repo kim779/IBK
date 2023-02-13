@@ -52,7 +52,7 @@
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>D:\IBKS_TEST\src\AxRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\AxRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -104,6 +104,7 @@
       <MapExports>true</MapExports>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <IgnoreSpecificDefaultLibraries>libc.lib;libci.lib;</IgnoreSpecificDefaultLibraries>
+      <StackReserveSize>2097152</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -152,7 +153,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>D:\IBKS_TEST\exe/axis.exe</OutputFile>
+      <OutputFile>../../exe/axis.exe</OutputFile>
       <AdditionalDependencies>../dll/axiscm/Debug/axiscm.lib;../dll/sm/Debug/axissm.lib;Imm32.lib;../dll/axiscp/Debug/axiscp.lib;Msimg32.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -831,6 +832,9 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="Trs5klib.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\APPL\IB202700\IB202700.dsw" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

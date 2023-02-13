@@ -742,8 +742,6 @@ bool CGrp_Base::IsChangeMinMax(bool bShift)
 
 void CGrp_Base::DrawGraph(CDC *pDC)
 {
-	if (m_pGrpWnd)
-		DrawTickIndex(pDC, m_pGrpWnd->m_pDataInfo->m_pInfo[m_dKey]->name, m_tRGB);
 	struct _NMinMaxChk *pMinMaxChk;
 	if (pMinMaxChk = m_pGrpWnd->GetMinMaxChk(m_rKey))
 	{
@@ -753,6 +751,7 @@ void CGrp_Base::DrawGraph(CDC *pDC)
 			m_Min = pMinMaxChk->Min[m_mIndex];
 			if (m_Max == INT_MIN || m_Min == INT_MAX)
 			{
+		//		DrawTickIndex(pDC, m_pGrpWnd->m_pDataInfo->m_pInfo[m_dKey]->name, m_tRGB);
 				return;
 			}
 		}
@@ -760,6 +759,7 @@ void CGrp_Base::DrawGraph(CDC *pDC)
 
 	if (m_Max == INT_MIN || m_Min == INT_MAX)
 	{
+	//	DrawTickIndex(pDC, m_pGrpWnd->m_pDataInfo->m_pInfo[m_dKey]->name, m_tRGB);
 		return;
 	}
 
@@ -770,10 +770,10 @@ void CGrp_Base::DrawGraph(CDC *pDC)
 	DrawChart(pDC);
 }
 
-//void CGrp_Base::DrawName(CDC *pDC)
-//{
-//	DrawTickIndex(pDC, m_pGrpWnd->m_pDataInfo->m_pInfo[m_dKey]->name, m_tRGB);
-//}
+void CGrp_Base::DrawName(CDC *pDC)
+{
+	DrawTickIndex(pDC, m_pGrpWnd->m_pDataInfo->m_pInfo[m_dKey]->name, m_tRGB);
+}
 
 bool CGrp_Base::Draw3DPole(CDC* pDC, CRect rc, int xGap, int yGap, COLORREF orgColor)
 {
@@ -1017,12 +1017,12 @@ void CGrp_Base::DrawDateBottom(CDC *pDC)
 			if (ii != 0 && gVal->index.year.date.dd == svDay)
 				continue;
 			
-			if (ii == 0)
+			//if (ii == 0)
 				dispStr.Format("%02d:%02d", gVal->index.year.time.hh,
 					gVal->index.year.time.mm);
-			else
-				dispStr.Format("%02d/%02d", 
-					gVal->index.year.date.mm, gVal->index.year.date.dd);
+			//else
+			//	dispStr.Format("%02d/%02d", 
+			//		gVal->index.year.date.mm, gVal->index.year.date.dd);
 
 			svDay = gVal->index.year.date.dd;
 

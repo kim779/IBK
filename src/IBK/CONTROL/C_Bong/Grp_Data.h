@@ -1,7 +1,13 @@
 // Grp_Data.h: interface for the CGrp_Data class.
 //
 //////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_GRP_DATA_H__FE6A1F8B_ECEA_4A9D_9E33_F0F873BDEA88__INCLUDED_)
+#define AFX_GRP_DATA_H__FE6A1F8B_ECEA_4A9D_9E33_F0F873BDEA88__INCLUDED_
+
+#if _MSC_VER > 1000
 #pragma once
+#endif // _MSC_VER > 1000
 
 #include <afxtempl.h>
 
@@ -14,29 +20,31 @@ public:
 public:
 	int	AttachGraphData(char* data, int count, int mgap);
 	bool	UpdateRTM();
-	struct _cgBong*	GetGraphData(int index);
+	char*	GetGraphData(int index);
 	int	GetDataGap() { return m_dGap; }
-	size_t	GetDataCount() { return _vData.size(); }
+	int	GetDataCount() { return m_DataQue.GetSize(); }
 	void	SetDate(char* pDate);
 	static int	CharToInt(const char* cnvB, int cnvL);
 
 public:
-	int	m_dKind{};
-	int	m_dKey{};
-	int	m_dIndex{};
-	int	m_dGap{};
-	int	m_szFrame{};			// Frame Size (1 Que Size)
+	int	m_dKind;
+	int	m_dKey;
+	int	m_dIndex;
+	int	m_dGap;
+	int	m_szFrame;			// Frame Size (1 Que Size)
 
 private:
+	bool	CreateDataQue(int count);
 	inline	double	CharToDouble(const char* cnvB, int cnvL);
 	void	GetTime(int min, int pHH, int pMM, int cHH, int cMM, int &nHH, int &nMM);
 
 private:
-	class CGrpWnd* m_pGrpWnd{};
-	std::vector<std::unique_ptr<struct _cgBong>> _vData;
+	class CGrpWnd *m_pGrpWnd;
+	CArray	<char*, char*> m_DataQue;	// Data Array
 
-
-	short		m_yy{};	// year
-	unsigned char	m_mm{};	// month
-	unsigned char	m_dd{};	// day
+	short		m_yy;	// year
+	unsigned char	m_mm;	// month
+	unsigned char	m_dd;	// day
 };
+
+#endif // !defined(AFX_GRP_DATA_H__FE6A1F8B_ECEA_4A9D_9E33_F0F873BDEA88__INCLUDED_)

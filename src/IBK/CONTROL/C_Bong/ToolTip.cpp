@@ -18,7 +18,7 @@ static char THIS_FILE[] = __FILE__;
 
 CToolTip::CToolTip(CWnd *pView, CWnd *pGrpWnd)
 {
-	WNDCLASS wndcls{};
+	WNDCLASS wndcls;
 	HINSTANCE hInst = AfxGetInstanceHandle();
 	if(!(::GetClassInfo(hInst, JUGA_TOOLTIP_CLASS, &wndcls)))
 	{
@@ -26,10 +26,10 @@ CToolTip::CToolTip(CWnd *pView, CWnd *pGrpWnd)
 		wndcls.lpfnWndProc	= ::DefWindowProc;
 		wndcls.cbClsExtra	= wndcls.cbWndExtra = 0;
 		wndcls.hInstance	= hInst;
-		wndcls.hIcon		= nullptr;
+		wndcls.hIcon		= NULL;
 		wndcls.hCursor		= LoadCursor(hInst, IDC_ARROW);
 		wndcls.hbrBackground	= (HBRUSH)(COLOR_INFOBK + 1); 
-		wndcls.lpszMenuName	= nullptr;
+		wndcls.lpszMenuName	= NULL;
 		wndcls.lpszClassName	= JUGA_TOOLTIP_CLASS;
 
 		if (!AfxRegisterClass(&wndcls))	AfxThrowResourceException();
@@ -62,12 +62,12 @@ END_MESSAGE_MAP()
 
 int CToolTip::Create()
 {
-	const DWORD dwStyle = WS_BORDER | WS_POPUP;
-	const DWORD dwExStyle = WS_EX_TOOLWINDOW | WS_EX_TOPMOST;
+	DWORD dwStyle = WS_BORDER | WS_POPUP; 
+	DWORD dwExStyle = WS_EX_TOOLWINDOW | WS_EX_TOPMOST;
 
-	return CreateEx(dwExStyle, JUGA_TOOLTIP_CLASS, nullptr, dwStyle, 
+	return CreateEx(dwExStyle, JUGA_TOOLTIP_CLASS, NULL, dwStyle, 
                     CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
-		            nullptr, nullptr, nullptr );
+		            NULL, NULL, NULL );
 }
 
 int CToolTip::OnCreate(LPCREATESTRUCT lpCreateStruct) 
@@ -92,7 +92,7 @@ void CToolTip::DrawTip(CDC *pDC)
 {
 	CRect		rect;
 	CString		tmpstr;
-	const int	nCount = m_arTitle.GetSize();
+	int	nCount = m_arTitle.GetSize();
 
 	GetClientRect(rect);
 	pDC->FillSolidRect(rect, m_clrBack);	
@@ -127,7 +127,7 @@ CRect CToolTip::SetData(CString sData)
 	m_arTitle.RemoveAll();
 	m_arContent.RemoveAll();
 
-	int	index{};
+	int	index;
 	CString	title, content;
 	for (;!sData.IsEmpty();)
 	{
@@ -158,11 +158,10 @@ CRect CToolTip::MakeSizeWnd()
 	CRect		rcWnd;
 	CRect		rcDraw;
 	CString		tmpstr;
-	const int		nCount = m_arTitle.GetSize();
-	int ii = 0;
+	int		nCount = m_arTitle.GetSize(), ii = 0;
 	int		nMaxWidth = 0;
 	int		nHeight = 0;
-	const int	nGab = 2;
+	int		nGab = 2;
 	CSize		size = CSize(0, 0);
 	
 	GetWindowRect(rcWnd);
@@ -195,7 +194,7 @@ CRect CToolTip::MakeSizeWnd()
 CSize CToolTip::CalWndSize(CString strExam)
 {
 	CSize	csSize;
-	CFont	*oldfont = nullptr;
+	CFont	*oldfont = NULL;
 	CDC*	pDC = GetDC();
 
 	oldfont = pDC->SelectObject(m_font);

@@ -763,7 +763,8 @@ LONG CGridWnd::OnManage(WPARAM wParam, LPARAM lParam)
 	break;
 	case MK_SORTBASE:
 	{
-		BaseSorting();
+		if (!m_bNews)
+			BaseSorting();
 	}
 	break;
 	// END ADD
@@ -933,7 +934,8 @@ void CGridWnd::AddData_Overoper(int nIndex, CString sztmp)
 		bookmark = IH::Parser(sztmp, PTAB);
 	}
 
-	if (!bInt && code.IsEmpty())
+	const int count = _vInters.size();
+	if (!bInt && code.IsEmpty() && (count > nIndex))
 		return;
 
 	auto& pinters = _vInters.at(nIndex);
@@ -996,8 +998,8 @@ void CGridWnd::AddData(int nIndex, CString sztmp)
 		bookmark = IH::Parser(sztmp, PTAB);
 		// END ADD
 	}
-
-	if (!bInt && code.IsEmpty())
+	const int count = _vInters.size();
+	if (!bInt && code.IsEmpty() && (count > nIndex))
 		return;
 
 	auto& pinters = _vInters.at(nIndex);
@@ -1332,7 +1334,7 @@ void CGridWnd::loadcfg()
 	}
 
 	// data kind
-	m_kind = GetPrivateProfileInt(m_section, KEY_DATA, 0, m_fileCFG);
+	m_kind = GetPrivateProfileInt(m_section, KEY_DATA, 134316051, m_fileCFG);
 
 	if (CAST_TREEID(m_kind)->kind == xREMAIN)
 		m_kind = 0;
@@ -1856,6 +1858,9 @@ void CGridWnd::savecfg()
 
 BOOL CGridWnd::IsInterest()
 {
+	if (m_kind == 99999)
+		return TRUE;
+
 	struct _treeID *treeID = (struct _treeID *)&m_kind;
 	if (treeID->kind == xINTEREST)
 		return TRUE;
@@ -2057,7 +2062,6 @@ void CGridWnd::settingFieldBeforeSend(int &sendL, char *sendB)
 BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 {
 	NM_GVITEM *nmgv = (NM_GVITEM *)lParam;
-
 	if (wParam != IDC_GRID)
 		return CBaseWnd::OnNotify(wParam, lParam, pResult);
 
@@ -2178,15 +2182,18 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 				}
 				else
 				{
-					auto &pInter = _vInters.at(nmgv->row - 1);
-					m_grid->SetItemText(nmgv->row, colCODE, pInter->code);
-					DeleteRow(nmgv->row);
-					insertInterest(MAX_LINE - 1);
-					if (m_bAddCnd)
+					if (count > xrow)
 					{
-						saveInterest();
+						auto& pInter = _vInters.at(nmgv->row - 1);
+						m_grid->SetItemText(nmgv->row, colCODE, pInter->code);
+						DeleteRow(nmgv->row);
+						insertInterest(MAX_LINE - 1);
+						if (m_bAddCnd)
+						{
+							saveInterest();
+						}
+						break;
 					}
-					break;
 				}
 			}
 		}
@@ -2403,11 +2410,11 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 	{
 		if (m_grid->m_bOutPos)
 		{
-			DeleteRow(m_drag);
-
 			if (CAST_TREEID(m_kind)->kind == xINTEREST)
+			{
+				DeleteRow(m_drag);
 				m_bEditWork = true;
-
+			}
 			m_grid->m_bOutPos = false;
 		}
 	}
@@ -2469,68 +2476,70 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 		else
 			nIdx = m_drop - 1;
 
-		auto& pinters = _vInters.at(nIdx);
-		if (strlen(pinters->code) != 0)
+		const int nCount = _vInters.size();
+		if (nCount > nIdx)
 		{
-			CWnd *pWnd = (CWnd *)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
-			const int nOver = (int)pWnd->SendMessage(WM_MANAGE, MK_INPUTOVER);
-			int rowcount = 0;
-
-			if (nOver == MO_VISIBLE)
+			auto& pinters = _vInters.at(nIdx);
+			if (strlen(pinters->code) != 0)
 			{
-				pWnd = (CWnd *)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_GROUP));
-				rowcount = ((CGroupWnd *)pWnd)->sumEachGroupCount();
-			}
-			else
-			{
-				rowcount = GetRowValidcount();
+				CWnd* pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
+				const int nOver = (int)pWnd->SendMessage(WM_MANAGE, MK_INPUTOVER);
+				int rowcount = 0;
+
+				if (nOver == MO_VISIBLE)
+				{
+					pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_GROUP));
+					rowcount = ((CGroupWnd*)pWnd)->sumEachGroupCount();
+				}
+				else
+				{
+					rowcount = GetRowValidcount();
+				}
+
+				if (rowcount >= MAX_LINE)
+				{
+
+					Variant(guideCC, IH::idTOstring(IDS_GUIDE4));
+					m_grid->Invalidate(FALSE);
+					break;
+				}
+				else
+				{
+					DeleteRow(MAX_LINE);
+				}
+				// END DEL
+
+				insertInterest(m_drop - 1);
+				insertRow(m_drop);
+				m_drop -= 1;
+				pinters = _vInters.at(m_drop);
 			}
 
-			if (rowcount >= MAX_LINE)
-			{
+			//struct _intersx InterData;
+			//memset(&InterData, 0x20, sizeof(struct _intersx));
 
-				Variant(guideCC, IH::idTOstring(IDS_GUIDE4));
-				m_grid->Invalidate(FALSE);
-				break;
-			}
-			else
-			{
-				DeleteRow(MAX_LINE);
-			}
-			// END DEL
+			pinters->gubn = '0';
+			pinters->code = code;
+			pinters->name = name;
 
-			insertInterest(m_drop - 1);
-			insertRow(m_drop);
-			m_drop -= 1;
-			pinters = _vInters.at(m_drop);
+			//memcpy(pinters, &InterData, sizeof(struct _intersx));
+
+			if (CAST_TREEID(m_kind)->kind == xINTEREST)
+				m_bEditWork = true;
+
+			m_drag = m_drop = -1;
+			m_seldrop = xdrop;
+			sendTransaction();
+			m_pGroupWnd->SendMessage(WM_MANAGE, MK_ENDDRAG);
+
+			CString strINI;
+			strINI.Format("%s\\User\\%s\\userconf.ini", m_root, m_user);
+			const int dragcnt = GetPrivateProfileInt("IB202200", "DRAGCNT", 0, strINI);
+
+			CString cnt;
+			cnt.Format("%d", ((CGroupWnd*)m_pGroupWnd)->GetDragInCount() + dragcnt);
+			WritePrivateProfileString("IB202200", "DRAGCNT", cnt, strINI);
 		}
-
-		//struct _intersx InterData;
-		//memset(&InterData, 0x20, sizeof(struct _intersx));
-
-		pinters->gubn = '0';
-		pinters->code = code;
-		pinters->name = name;
-
-		//memcpy(pinters, &InterData, sizeof(struct _intersx));
-
-		if (CAST_TREEID(m_kind)->kind == xINTEREST)
-			m_bEditWork = true;
-
-		m_drag = m_drop = -1;
-		m_seldrop = xdrop;
-		sendTransaction();
-		m_pGroupWnd->SendMessage(WM_MANAGE, MK_ENDDRAG);
-
-		CString strINI;
-		strINI.Format("%s\\User\\%s\\userconf.ini", m_root, m_user);
-
-		const int dragcnt = GetPrivateProfileInt("IB202200", "DRAGCNT", 0, strINI);
-
-		CString cnt;
-		cnt.Format("%d", ((CGroupWnd *)m_pGroupWnd)->GetDragInCount() + dragcnt);
-
-		WritePrivateProfileString("IB202200", "DRAGCNT", cnt, strINI);
 	}
 
 	break;
@@ -2573,184 +2582,173 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 			xCODE = CintGrid::m_dropdata.GetCode();
 		m_drop = nmgv->row;
 
-		if (pDropData->GetGrid()->m_hWnd == m_grid->m_hWnd)		// 동일한 화면에서 drop
+
+		const int count = _vInters.size();
+
+		if (count >= m_drag && count >= m_drop)
 		{
-			if (m_drop < 0)
-				m_drop = m_grid->GetRowCount() - 1;
-			else if (m_drop == 0)
-				m_drop = 1;
-
-			if (m_drag == m_drop)
-				break;
-			auto& pDrag = _vInters.at(m_drag - 1);
-			auto& pDrop = _vInters.at(m_drop - 1);
-
-			auto pTemp = pDrop;
-			pDrop = pDrag;
-			pDrag = pTemp;
-		}
-		else if (pDropData->GetGrid()->m_hWnd != m_grid->m_hWnd) //(m_drag < 0 && m_drop > 0)	// 다른 화면에서 drop
-		{
-			code = (bNewsDrop) ? xCODE : pGrid->GetItemText(nDGrow, colCODE);
-			name = pGrid->GetItemText(nDGrow, colNAME);
-
-			if (m_drop < 0)
-				m_drop = m_grid->GetRowCount();
-			else if (m_drop == 0)
-				m_drop = 1;
-
-			//종목 중복 등록 허용
-			if (((CGroupWnd *)GetParent())->GetOverLapAction() == FALSE)
+			if (pDropData->GetGrid()->m_hWnd == m_grid->m_hWnd)		// 동일한 화면에서 drop
 			{
-				if (!code.IsEmpty() && IsDuplicateCode(code, m_drop, true))
+				if (m_drop < 0)
+					m_drop = m_grid->GetRowCount() - 1;
+				else if (m_drop == 0)
+					m_drop = 1;
+
+				if (m_drag == m_drop)
+					break;
+
+				auto pDrag = _vInters.at(m_drag - 1);
+				_vInters.erase(_vInters.begin() + m_drag - 1);
+				_vInters.insert(_vInters.begin() + m_drop - 1, pDrag);
+			}
+			else if (pDropData->GetGrid()->m_hWnd != m_grid->m_hWnd) //(m_drag < 0 && m_drop > 0)	// 다른 화면에서 drop
+			{
+				code = (bNewsDrop) ? xCODE : pGrid->GetItemText(nDGrow, colCODE);
+				name = pGrid->GetItemText(nDGrow, colNAME);
+
+				if (m_drop < 0)
+					m_drop = m_grid->GetRowCount();
+				else if (m_drop == 0)
+					m_drop = 1;
+
+
+				if (pDropData->GetGrid()->m_hWnd != m_grid->m_hWnd)
 				{
-					CCodeDuplicate dlg;
-					// dlg 항상 열기 옵션 체크
-					if (dlg.DoModal())
+					//종목 중복 등록 허용
+					if (((CGroupWnd*)GetParent())->GetOverLapAction() == FALSE)
 					{
-						if (dlg.m_bAlert == FALSE)
+						if (!code.IsEmpty() && IsDuplicateCode(code, m_drop, true))
 						{
-							m_grid->Invalidate(FALSE);
-							break;
+							CCodeDuplicate dlg;
+							// dlg 항상 열기 옵션 체크
+							if (dlg.DoModal())
+							{
+								if (dlg.m_bAlert == FALSE)
+								{
+									m_grid->Invalidate(FALSE);
+									break;
+								}
+								else
+								{
+									//파일에 저장
+									((CGroupWnd*)GetParent())->saveOverLap(TRUE);
+								}
+							}
+							else
+							{
+								m_grid->Invalidate(FALSE);
+								break;
+							}
 						}
-						else
-						{
-							//파일에 저장
-							((CGroupWnd *)GetParent())->saveOverLap(TRUE);
-						}
+					}
+				}
+
+				if (m_drop - 2 < 0)
+					nIdx = 0;
+				else
+					nIdx = m_drop - 2;
+
+				const auto& pinters = _vInters.at(nIdx);
+				if (!pinters->code.IsEmpty())
+				{
+					CWnd* pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
+					const int nOver = (int)pWnd->SendMessage(WM_MANAGE, MK_INPUTOVER);
+					int rowcount = 0;
+
+					if (nOver == MO_VISIBLE)
+					{
+						pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_GROUP));
+						rowcount = ((CGroupWnd*)pWnd)->sumEachGroupCount();
 					}
 					else
 					{
+						rowcount = GetRowValidcount();
+					}
+
+					if (rowcount >= MAX_LINE)
+					{
+						Variant(guideCC, IH::idTOstring(IDS_GUIDE4));
 						m_grid->Invalidate(FALSE);
 						break;
 					}
-				}
-			}
-
-			if (m_drop - 2 < 0)
-				nIdx = 0;
-			else
-				nIdx = m_drop - 2;
-
-			const auto& pinters = _vInters.at(nIdx);
-
-			if (!pinters->code.IsEmpty())
-			{
-				CWnd *pWnd = (CWnd *)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
-				const int nOver = (int)pWnd->SendMessage(WM_MANAGE, MK_INPUTOVER);
-				int rowcount = 0;
-
-				if (nOver == MO_VISIBLE)
-				{
-					pWnd = (CWnd *)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_GROUP));
-					rowcount = ((CGroupWnd *)pWnd)->sumEachGroupCount();
-				}
-				else
-				{
-					rowcount = GetRowValidcount();
-				}
-
-				if (rowcount >= MAX_LINE)
-				{
-					Variant(guideCC, IH::idTOstring(IDS_GUIDE4));
-					m_grid->Invalidate(FALSE);
-					break;
-				}
-				else
-				{
-					DeleteRow(MAX_LINE);
-				}
-				// END DEL
-
-				insertInterest(m_drop - 1);
-				insertRow(m_drop);
-				m_drop -= 1;
-			}
-			//그리드에 한줄도 없을 경우 임의로 한줄 추가 생성
-			else
-			{
-				if (nIdx == 0 && m_rowC < 2)
-				{
-					insertRow(m_drop);
-				}
-			}
-
-			auto& pDrop = _vInters.at(m_drop);
-			// 2013.01.22 KSJ 정렬후에는 그리드의 데이터를 가져올 때 반드시 현재 m_inters의 현재의치를 찾아야 한다.
-			const auto& pInterDrag = pDropGrid->GetData(pDropGrid->GetInter(code));
-			pDrop = pInterDrag;
-
-			// ADD PSH 20070918
-			UINT uAttr{};
-			if ('m' == pinters->gubn)
-			{
-				uAttr = m_grid->GetItemAttr(m_drop + 1, colNAME) | GVAT_MARKER;
-				m_grid->SetItemAttr(m_drop + 1, colNAME, uAttr);
-				m_grid->SetItemText(m_drop + 1, colNAME, pinters->name);
-			}
-			else
-			{
-				uAttr = m_grid->GetItemAttr(m_drop + 1, colNAME) & ~GVAT_MARKER;
-				m_grid->SetItemAttr(m_drop + 1, colNAME, uAttr);
-				m_grid->SetItemText(m_drop + 1, colNAME, pinters->name);
-			}
-			// END ADD
-
-			const LPARAM data = pGrid->GetItemData(nDGrow, colSIG);
-			m_grid->SetItemData(xdrop, colSIG, data);
-
-			// index가 하나 차이가 나므로
-			if (pDropGroup->m_hWnd == m_pGroupWnd->m_hWnd)
-			{
-				if (!bNewsDrop)
-					pDropGrid->SendMessage(WM_MANAGE, MAKEWPARAM(MK_DELETEROW, nDGrow));
-			}
-		}
-
-		if (!m_bSorting)
-		{
-			if (CAST_TREEID(m_kind)->kind == xINTEREST)
-			{
-				m_bEditWork = true;
-			}
-		}
-		else
-		{
-			if (m_bMoveCfg && (1 == m_nMoveSave))
-			{
-				RemoveAllBaseInters();
-				m_grid->SortBase();
-				saveInterest();
-			}
-			else if (!m_bMoveCfg)
-			{
-				m_bMoveCfg = m_pToolWnd->SendMessage(WM_MANAGE, MK_GETMOVECFG);
-				m_nMoveSave = m_pToolWnd->SendMessage(WM_MANAGE, MK_GETMOVESAVE);
-
-				// 091013 수정
-				CMoveSetupDlg dlg;
-				dlg.m_nOption = m_nMoveSave;
-				dlg.m_bAlert = m_bMoveCfg;
-
-				// dlg 항상 열기 옵션 체크
-				if (dlg.m_bAlert)
-				{
-					if (1 == dlg.m_nOption)
-					{
-						RemoveAllBaseInters();
-						m_grid->SortBase();
-						saveInterest();
-						m_bEditWork = false;
-					}
 					else
 					{
-						if (CAST_TREEID(m_kind)->kind == xINTEREST)
-							m_bEditWork = true;
+						DeleteRow(MAX_LINE);
 					}
+					// END DEL
+
+					insertInterest(m_drop - 1);
+					insertRow(m_drop);
+					m_drop -= 1;
+				}
+				//그리드에 한줄도 없을 경우 임의로 한줄 추가 생성
+				else
+				{
+					if (nIdx == 0 && m_rowC < 2)
+					{
+						insertRow(m_drop);
+					}
+				}
+
+				auto& pDrop = _vInters.at(m_drop);
+				// 2013.01.22 KSJ 정렬후에는 그리드의 데이터를 가져올 때 반드시 현재 m_inters의 현재의치를 찾아야 한다.
+				const auto& pInterDrag = pDropGrid->GetData(pDropGrid->GetInter(code));
+				pDrop = pInterDrag;
+
+				// ADD PSH 20070918
+				UINT uAttr{};
+				if ('m' == pinters->gubn)
+				{
+					uAttr = m_grid->GetItemAttr(m_drop + 1, colNAME) | GVAT_MARKER;
+					m_grid->SetItemAttr(m_drop + 1, colNAME, uAttr);
+					m_grid->SetItemText(m_drop + 1, colNAME, pinters->name);
 				}
 				else
 				{
-					if (dlg.DoModal())
+					uAttr = m_grid->GetItemAttr(m_drop + 1, colNAME) & ~GVAT_MARKER;
+					m_grid->SetItemAttr(m_drop + 1, colNAME, uAttr);
+					m_grid->SetItemText(m_drop + 1, colNAME, pinters->name);
+				}
+				// END ADD
+
+				const LPARAM data = pGrid->GetItemData(nDGrow, colSIG);
+				m_grid->SetItemData(xdrop, colSIG, data);
+
+				// index가 하나 차이가 나므로
+				if (pDropGroup->m_hWnd == m_pGroupWnd->m_hWnd)
+				{
+					if (!bNewsDrop)
+						pDropGrid->SendMessage(WM_MANAGE, MAKEWPARAM(MK_DELETEROW, nDGrow));
+				}
+			}
+
+			if (!m_bSorting)
+			{
+				if (CAST_TREEID(m_kind)->kind == xINTEREST)
+				{
+					m_bEditWork = true;
+				}
+			}
+			else
+			{
+				if (m_bMoveCfg && (1 == m_nMoveSave))
+				{
+					RemoveAllBaseInters();
+					m_grid->SortBase();
+					saveInterest();
+				}
+				else if (!m_bMoveCfg)
+				{
+					m_bMoveCfg = m_pToolWnd->SendMessage(WM_MANAGE, MK_GETMOVECFG);
+					m_nMoveSave = m_pToolWnd->SendMessage(WM_MANAGE, MK_GETMOVESAVE);
+
+					// 091013 수정
+					CMoveSetupDlg dlg;
+					dlg.m_nOption = m_nMoveSave;
+					dlg.m_bAlert = m_bMoveCfg;
+
+					// dlg 항상 열기 옵션 체크
+					if (dlg.m_bAlert)
 					{
 						if (1 == dlg.m_nOption)
 						{
@@ -2765,17 +2763,35 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 								m_bEditWork = true;
 						}
 					}
+					else
+					{
+						if (dlg.DoModal())
+						{
+							if (1 == dlg.m_nOption)
+							{
+								RemoveAllBaseInters();
+								m_grid->SortBase();
+								saveInterest();
+								m_bEditWork = false;
+							}
+							else
+							{
+								if (CAST_TREEID(m_kind)->kind == xINTEREST)
+									m_bEditWork = true;
+							}
+						}
+					}
+
+					m_pToolWnd->SendMessage(WM_MANAGE, MK_SETMOVECFG, dlg.m_bAlert);
+					m_pToolWnd->SendMessage(WM_MANAGE, MK_SETMOVESAVE, dlg.m_nOption);
 				}
-
-				m_pToolWnd->SendMessage(WM_MANAGE, MK_SETMOVECFG, dlg.m_bAlert);
-				m_pToolWnd->SendMessage(WM_MANAGE, MK_SETMOVESAVE, dlg.m_nOption);
 			}
-		}
 
-		m_drag = m_drop = -1;
-		m_seldrop = xdrop;
-		sendTransaction();
-		m_pGroupWnd->SendMessage(WM_MANAGE, MK_ENDDRAG);
+			m_drag = m_drop = -1;
+			m_seldrop = xdrop;
+			sendTransaction();
+			m_pGroupWnd->SendMessage(WM_MANAGE, MK_ENDDRAG);
+		}
 	}
 	break;
 	case GVNM_SELCHANGED:
@@ -2877,7 +2893,7 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 	}
 
 	case GVNM_TRIGGER:
-	{
+	{		
 		CString code = m_grid->GetItemText(nmgv->row, colCODE);
 		CString string;
 		// if (nmgv->row >= m_grid->GetFixedRowCount() && nmgv->col >= colNAME)
@@ -3211,11 +3227,11 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 		CString strMarker, strMarkerCode;
 		strMarker = m_grid->GetItemText(nmgv->row, colNAME);
 
+		const int nCount = _vInters.size();
 		const int nMarkerRow = nmgv->row - 1;
-
 		strMarkerCode.Format("m%05d", nMarkerRow);
 
-		if (!m_bSorting)
+		if (!m_bSorting && nCount > nMarkerRow)
 		{
 			auto& pInter = _vInters.at(nMarkerRow);
 			pInter->code = strMarkerCode;
@@ -3750,24 +3766,29 @@ void CGridWnd::RbuttonAction(int row)
 		const UINT attr = m_grid->GetItemAttr(row, colNAME) | GVAT_MARKER;
 		m_grid->SetItemAttr(row, colNAME, attr);
 
-		auto& pInter = _vInters.at(row - 1);
 
-		CString strMarker;
-		strMarker.Format("m%05d", row);
+		const int nCount = _vInters.size();
 
-		if (pInter)
+		if (nCount > (row - 1))
 		{
-			pInter->gubn = 'm';
-			pInter->code = strMarker;
-		}
+			auto& pInter = _vInters.at(row - 1);
+			CString strMarker;
+			strMarker.Format("m%05d", row);
 
-		m_grid->SetItemText(row, colCODE, strMarker);
+			if (pInter)
+			{
+				pInter->gubn = 'm';
+				pInter->code = strMarker;
+			}
 
-		m_grid->SetFocusCellEdit(row, colNAME, true);
+			m_grid->SetItemText(row, colCODE, strMarker);
 
-		if (m_bAddCnd)
-		{
-			saveInterest();
+			m_grid->SetFocusCellEdit(row, colNAME, true);
+
+			if (m_bAddCnd)
+			{
+				saveInterest();
+			}
 		}
 	}
 	break;
@@ -4684,12 +4705,15 @@ void CGridWnd::setBookmark(int row)
 
 	m_grid->SetGridFocusLine(FALSE, TRUE);
 
-	auto pInter = _vInters.at(row - 1);
-	pInter->bookmark = '1';
+	const int count = _vInters.size();
+	if (count > (row - 1))
+	{
+		auto pInter = _vInters.at(row - 1);
+		pInter->bookmark = '1';
 
-	m_nBookMarkRow = row - 1;
-	saveInterest(false, -1, true); // 2013.05.14 KSJ 북마크지정할때는 기존 로직과 별개로 동작
-
+		m_nBookMarkRow = row - 1;
+		saveInterest(false, -1, true); // 2013.05.14 KSJ 북마크지정할때는 기존 로직과 별개로 동작
+	}
 	m_grid->Adjust();
 }
 
@@ -4784,14 +4808,17 @@ void CGridWnd::deleteBookmark(int row)
 	}
 
 	m_grid->SetGridFocusLine(FALSE, TRUE);
-
-	//북마크 지정
-	auto& pInter = _vInters.at(row - 1);
-	pInter->bookmark = '0';
-	m_nBookMarkRow = row - 1;
-	saveInterest(false, -1, true); // 2013.05.14 KSJ 북마크지정할때는 기존 로직과 별개로 동작
-	sendTransaction(row - 1);
-
+	const int count = _vInters.size();
+	
+	if (count > (row - 1))
+	{
+		//북마크 지정
+		auto& pInter = _vInters.at(row - 1);
+		pInter->bookmark = '0';
+		m_nBookMarkRow = row - 1;
+		saveInterest(false, -1, true); // 2013.05.14 KSJ 북마크지정할때는 기존 로직과 별개로 동작
+		sendTransaction(row - 1);
+	}
 	m_grid->Adjust();
 }
 
@@ -4812,7 +4839,12 @@ int CGridWnd::insertRow2(int afterRow, int beforeRow, BOOL bInsertInter)
 
 	m_rowC++;
 
+
 	const int ret = m_grid->InsertRow("", afterRow);
+	const int count = _vInters.size();
+
+	if (count <= beforeRow)
+		return ret;
 
 	auto& pInter = _vInters.at(beforeRow);
 
@@ -5906,7 +5938,7 @@ void CGridWnd::parsingOubs(char *datB, int datL)
 					const _gridHdr gridHdr = m_gridHdrX.GetAt(jj);
 					auto& pinters = _vInters.at(ii);
 
-					mCode = CString(pinters->code, sizeof(pinters->code));
+					mCode = pinters->code; 
 					mCode.TrimRight();
 					mCode.TrimLeft();
 					sizeCode = strlen(mCode);
@@ -6585,7 +6617,7 @@ void CGridWnd::parsingOubsOne(char *datB, int datL, int update)
 
 			CString mCode;
 			int sizeCode;
-			mCode = CString(pinters->code, sizeof(pinters->code));
+			mCode = pinters->code;
 			mCode.TrimRight();
 			mCode.TrimLeft();
 			sizeCode = strlen(mCode);
@@ -6721,6 +6753,7 @@ void CGridWnd::parsingOubsOne(char *datB, int datL, int update)
 
 void CGridWnd::InsertNews(CString datB)
 {
+	m_bNews = true;
 	int idx = 0;
 	CString code = _T(""), szTitle = _T(""), symbol = _T(""), entry = _T("");
 
@@ -6794,6 +6827,7 @@ void CGridWnd::InsertNews(CString datB)
 		pinters->code = code;
 		sendTransaction();
 	}
+	m_bNews = false;
 }
 
 // 2012.01.19 KSJ Alertx 추가
@@ -7800,7 +7834,7 @@ void CGridWnd::RTS_parsingAlertx(struct _Ralert *palert)
 
 					auto& pinters = _vInters.at(xrow - 1);
 
-					mCode = CString(pinters->code, sizeof(pinters->code));
+					mCode = pinters->code;
 					mCode.TrimRight();
 					mCode.TrimLeft();
 					sizeCode = strlen(mCode);
@@ -8859,7 +8893,7 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 
 					auto& pinters = _vInters.at(xrow - 1);
 
-					mCode = CString(pinters->code, sizeof(pinters->code));
+					mCode = pinters->code;
 					mCode.TrimRight();
 					mCode.TrimLeft();
 					sizeCode = strlen(mCode);
@@ -9442,28 +9476,31 @@ void CGridWnd::RemoveInters(int nIndex)
 {
 	if (nIndex == -1)
 		return; // 2013.08.07 KSJ -1이면 종료
-
-	auto& pinters = _vInters.at(nIndex);
-	if (pinters->code.GetLength())
+	const int count = _vInters.size();
+	if (count > nIndex)
 	{
-		CString code = pinters->code;
-		// ADD PSH 20070913	2013.06.03 KSJ m_arrBaseInters는 따로 삭제할 필요가 없다.
-		if (!m_bSorting)
+		auto& pinters = _vInters.at(nIndex);
+		if (pinters->code.GetLength())
 		{
+			CString code = pinters->code;
+			// ADD PSH 20070913	2013.06.03 KSJ m_arrBaseInters는 따로 삭제할 필요가 없다.
+			if (!m_bSorting)
+			{
 
-			auto et = std::remove_if(_arrBaseInters.begin(), _arrBaseInters.end(), [&code](auto& item) {
-				if (item && code.CompareNoCase(item->code) == 0)
-					return true;
-				return false;
-			});
+				auto et = std::remove_if(_arrBaseInters.begin(), _arrBaseInters.end(), [&code](auto& item) {
+					if (item && code.CompareNoCase(item->code) == 0)
+						return true;
+					return false;
+				});
 
-			if (et != _arrBaseInters.end())
-				_arrBaseInters.erase(et);
+				if (et != _arrBaseInters.end())
+					_arrBaseInters.erase(et);
+			}
+			m_mapMargin.RemoveKey(pinters->code);
 		}
-		m_mapMargin.RemoveKey(pinters->code);
-	}
 
-	_vInters.erase(_vInters.begin() + nIndex);
+		_vInters.erase(_vInters.begin() + nIndex);
+	}
 	//insertInterest(MAX_LINE - 1);
 }
 
@@ -9578,7 +9615,7 @@ void CGridWnd::OnTimer(UINT nIDEvent)
 
 void CGridWnd::rebuildInterest()
 {
-	std::copy(_vInters.begin(), _vInters.end(), std::back_insert_iterator(_arrBaseInters));
+	std::copy(_vInters.begin(), _vInters.end(), std::back_inserter(_arrBaseInters));
 }
 
 void CGridWnd::Reset(bool bAll)
@@ -10434,22 +10471,24 @@ void CGridWnd::parsingNews(CString datB)
 	if (!code.IsEmpty())
 	{
 		const int ncnt = m_arExist.GetCount();
+		const int total = _vInters.size();
 		int nIndex = 0;
 
 		for (int ii = 0; ii < ncnt; ii++)
 		{
-			nIndex = atoi(m_arExist.GetValue(ii));
-			auto& pInter = _vInters.at(nIndex);
-
-			if (strcmp(pInter->code, (char *)code.operator LPCTSTR()) == 0)
+			nIndex = atoi(m_arExist.GetValue(ii));	
+			if (total > nIndex)
 			{
-				const LPARAM lParam = m_grid->GetItemData(nIndex + 1, colSIG);
-				const WORD low = LOWORD(lParam);
-				constexpr WORD high = 1;
-				m_grid->SetItemData(nIndex + 1, colSIG, MAKELPARAM(low, high)); // KSJ colSIG
-				if (m_bWaveApply)
-					PlayWave();
-				//				break;		-> 종목 중복 등록 허용으로 인해 수정
+				auto& pInter = _vInters.at(nIndex);
+				if (strcmp(pInter->code, (char *)code.operator LPCTSTR()) == 0)
+				{
+					const LPARAM lParam = m_grid->GetItemData(nIndex + 1, colSIG);
+					const WORD low = LOWORD(lParam);
+					constexpr WORD high = 1;
+					m_grid->SetItemData(nIndex + 1, colSIG, MAKELPARAM(low, high)); // KSJ colSIG
+					if (m_bWaveApply)
+						PlayWave();
+				}
 			}
 		}
 	}

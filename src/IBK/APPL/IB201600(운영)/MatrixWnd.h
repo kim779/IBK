@@ -21,7 +21,7 @@ public:
 	int			m_iRows{};
 	int			m_iCols{};
 	BOOL			m_aryMatrix[MATRIX_MAXCOL][MATRIX_MAXROW]{};
-	CBrush			m_bkBrush;
+//	CBrush			m_bkBrush;
 	CString			m_root;
 	CString			m_name;
 	CString			m_user;

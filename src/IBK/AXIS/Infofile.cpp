@@ -119,7 +119,11 @@ BOOL CInfofile::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+#ifdef DF_USE_CPLUS17
 	m_changer = std::make_unique<CControlChanger>(this);
+#else
+	m_changer = new CControlChanger(this);
+#endif
 
 	Init();
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -1466,6 +1470,9 @@ HBRUSH CInfofile::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void CInfofile::OnDestroy() 
 {
 	CDialog::OnDestroy(); 
+#ifndef DF_USE_CPLUS17
+	delete m_changer;	
+#endif
 }
 
 void CInfofile::OnOK() 

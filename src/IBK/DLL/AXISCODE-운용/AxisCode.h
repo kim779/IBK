@@ -131,16 +131,17 @@ public:
 public:
 	CString m_root;
 	CString m_folder;
-	std::vector<HCODEX*> _vETNx;		//hjcode3
-
-	std::vector<std::tuple<char, CString, CString>>	_vETFitem;									   //efcode.dat
-	std::vector<std::tuple<char, char, CString>>	_vETFtema;									       //efcode.dat
-	std::vector<std::tuple<char, char, CString>>	_vETFfore;											    //efcode.dat
-	std::vector<std::tuple<char, CString, CString, CString, char, char>>	_vETFcode;	    //efcode.dat
-	std::map<CString, HCODEX*>			      _mapCODEx;													//hjcode3
-	std::map<CString, std::pair<CString, int>>	      _mapACODE;										//hjcode3
-	std::map<CString, CString>			      _mapNAME;														//hjcode3
-	std::vector<std::tuple<CString, CString, char, char>> _vBond;									//cjcode.dat
+//	std::vector<HCODE*>  _vETN;
+	std::vector<HCODEX*> _vETNx;
+	std::vector<std::tuple<char, CString, CString>>	_vETFitem;
+	std::vector<std::tuple<char, char, CString>>	_vETFtema;
+	std::vector<std::tuple<char, char, CString>>	_vETFfore;
+	std::vector<std::tuple<char, CString, CString, CString, char, char>>	_vETFcode;
+//	std::map<CString, HCODE*>			      _mapCODE;
+	std::map<CString, HCODEX*>			      _mapCODEx;
+	std::map<CString, std::pair<CString, int>>	      _mapACODE;
+	std::map<CString, CString>			      _mapNAME;
+	std::vector<std::tuple<CString, CString, char, char>> _vBond;
 
 private:
 	std::unique_ptr<char[]> m_hcB;

@@ -199,7 +199,39 @@ BOOL CAxisApp::InitInstance()
 	#ifndef _DEBUG
 	if (!m_instance->IsFirstInstance())
 	{
+		//		// 이미 실행된 것이 있으면 해당 프로그램을 활성화 시킴
+		CWnd* wnd = NULL;
+		if (m_regkey == "IBK투자증권MAC")
+			wnd = CWnd::FindWindow(NULL, "IBK hot Trading");
+		else if (m_regkey == "IBKMAC_STAFF")
+			wnd = CWnd::FindWindow(NULL, "[직원]IBK hot Trading");
+		else if (m_regkey == "IBK")
+			wnd = CWnd::FindWindow(NULL, "IBK개발");
+		else if (m_regkey == "IBK_STAFF")
+			wnd = CWnd::FindWindow(NULL, "[직원]IBK개발");
+		else if (m_regkey == "IBK_XECURE")
+			wnd = CWnd::FindWindow(NULL, "IBK hot Trading");
+
+		CString slog;
+		slog.Format("[axis] m_regkey=[%s] wnd=[%x] \r\n ", m_regkey, wnd);
+		OutputDebugString(slog);
 		
+		if (wnd && wnd->GetSafeHwnd())
+		{
+			const int nResult = Axis::MessageBox("HTS가 실행중입니다.  중복 실행하시겠습니까?",MB_YESNO);
+			if(nResult == IDNO)
+			{
+				if (wnd && wnd->GetSafeHwnd())
+				{
+					if(wnd->IsWindowVisible())
+					{
+						wnd->ShowWindow(SW_RESTORE);
+						wnd->SetForegroundWindow();
+					}
+				}
+				return FALSE;
+			}
+		}
 	}
 #endif
 
@@ -266,10 +298,16 @@ BOOL CAxisApp::InitInstance()
 	
 	// create main MDI Frame window
 	CMainFrame* pMainFrame = new CMainFrame;
-	
+	OutputDebugString("[axis]Initinstance 1");
 	if (!pMainFrame->LoadFrame(IDR_MAINFRAME))
+	{
+		CString slog;
+		slog.Format("[axis] LoadFrame fail err=[%d]", GetLastError());
+		OutputDebugString(slog);
+		
 		return FALSE;
-
+	}
+	OutputDebugString("[axis]Initinstance 2");
 	m_pMainWnd = pMainFrame;
 
 	//((CMainFrame*)m_pMainWnd)->UserFileCrypt(FALSE);
@@ -337,8 +375,11 @@ protected:
 	CCpuUse		m_cpu;
 	bool		m_bCpuUse;
 
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr< CControlChanger> m_changer;
-
+#else
+	CControlChanger* m_changer;
+#endif
 protected:
 	void	displayRTS();
 	void	displayCPU();
@@ -381,7 +422,12 @@ END_MESSAGE_MAP()
 BOOL CAboutDlg::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
+
+#ifdef DF_USE_CPLUS17
 	m_changer = std::make_unique<CControlChanger>(this);
+#else
+	m_changer = new CControlChanger(this);
+#endif
 
 	CString	home, file, tmpS, serviceID, siteID;
 	
@@ -457,6 +503,12 @@ BOOL CAboutDlg::OnInitDialog()
 	displayCPU();
 	SetTimer(CHKID, CHKTIME, NULL);
 
+	file.Format("%s\\%s\\axis.ini", home, TABDIR);
+
+	const UINT OnOff = GetPrivateProfileInt("RSCINFO", "show", 0, file);
+	if (OnOff)
+		((CWnd*)GetDlgItem(IDC_RSCINFO))->ShowWindow(SW_SHOW);
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -464,6 +516,10 @@ BOOL CAboutDlg::OnInitDialog()
 void CAboutDlg::OnDestroy()
 {
 	CDialog::OnDestroy();
+
+#ifndef DF_USE_CPLUS17
+	delete m_changer;
+#endif
 }
 
 BOOL CAboutDlg::OnEraseBkgnd(CDC* pDC) 

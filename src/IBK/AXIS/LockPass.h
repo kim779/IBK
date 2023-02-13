@@ -22,8 +22,14 @@ public:
 private:
 	CWnd* m_pParent{};
 
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr<CImgBtn> m_btn_cert{};
 	std::unique_ptr<CImgBtn> m_btn_HTS_Close{};
+#else
+	CImgBtn* m_btn_cert{};
+	CImgBtn* m_btn_HTS_Close{};
+#endif
+
 // Dialog Data
 	//{{AFX_DATA(CLockPass)
 	enum { IDD = IDD_LOCK_PASS };

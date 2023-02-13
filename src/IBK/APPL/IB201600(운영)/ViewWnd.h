@@ -23,7 +23,7 @@ public:
 	std::vector<std::unique_ptr<CSiseWnd>> _vWnd;
 	CArray<CRect, CRect> m_arRect;
 
-	CBrush			m_bkBrush;
+//	CBrush			m_bkBrush;
 	CString			m_root;
 	CString			m_name;
 	CString			m_user;

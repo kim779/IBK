@@ -41,8 +41,8 @@ CMainWnd::CMainWnd(CWnd* pParent, struct _param* pInfo)
 			m_bCtrl = true;
 	}
 
-	m_pGrpWnd = nullptr;
-	m_pCtrlWnd = nullptr;
+	m_pGrpWnd = NULL;
+	m_pCtrlWnd = NULL;
 
 	EnableAutomation();
 }
@@ -131,13 +131,13 @@ int CMainWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	m_pGrpWnd = std::make_unique<CGrpWnd>(m_pParent, this, &m_param);
-	m_pGrpWnd->Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0,0,0,0), this, 0);
+	m_pGrpWnd = new CGrpWnd(m_pParent, this, &m_param);
+	m_pGrpWnd->Create(NULL, NULL, WS_CHILD | WS_VISIBLE, CRect(0,0,0,0), this, 0);
 
 	if (m_bCtrl)
 	{
-		m_pCtrlWnd = std::make_unique<CCtrlWnd>(m_pParent, this);
-		m_pCtrlWnd->Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0,0,0,0), this, 0);
+		m_pCtrlWnd = new CCtrlWnd(m_pParent, this);
+		m_pCtrlWnd->Create(NULL, NULL, WS_CHILD | WS_VISIBLE, CRect(0,0,0,0), this, 0);
 	}
 
 	Resize();
@@ -150,10 +150,14 @@ void CMainWnd::OnDestroy()
 	if (m_pGrpWnd)
 	{
 		m_pGrpWnd->DestroyWindow();
+		delete m_pGrpWnd;
+		m_pGrpWnd = NULL;
 	}
 	if (m_pCtrlWnd)
 	{
 		m_pCtrlWnd->DestroyWindow();
+		delete m_pCtrlWnd;
+		m_pCtrlWnd = NULL;
 	}
 
 	CWnd::OnDestroy();

@@ -853,9 +853,18 @@ void CMapWnd::queryGroupSave(int sendKey, int selType)
 	int gpCnt = 0;
 	CString tmpS;
 	
-	_group	group;
-	_gmid	gmid;
-	_accn	accn;
+	//_group	group;
+	_group*	group;
+	group = new _group;
+	memset(group, ' ', L_group);
+
+	//_gmid	gmid;
+	_gmid* gmid = new _gmid;
+	memset(gmid, ' ', L_gmid);
+
+	//_accn	accn;
+	_accn*	accn = new _accn;
+	memset(accn, ' ', L_accn);
 
 	if (m_sendB)
 	{
@@ -888,13 +897,17 @@ void CMapWnd::queryGroupSave(int sendKey, int selType)
 	//AfxMessageBox(tmp);
 	m_sendB = new char[m_calBufL+1];
 	
-	memset(m_sendB, 0x00, m_calBufL+1);
+	memset(m_sendB, ' ', m_calBufL+1);
 	
-	memset(&gmid, 0x00, L_gmid);
-	
-	gmid.xflg  = '2';				// 저장
-	sprintf(gmid.usrid, "%-12s", m_sStaffNum);	// 사원번호
-	gmid.sflag = '1';				// 모두
+
+	memset(gmid, ' ', L_gmid);
+	gmid->xflg = '2';				// 저장
+	sprintf(gmid->usrid, "%-12s", m_sStaffNum);	// 사원번호
+	gmid->sflag = '1';				// 모두
+	//memset(&gmid, 0x00, L_gmid);
+	//gmid.xflg  = '2';				// 저장
+	//sprintf(gmid.usrid, "%-12s", m_sStaffNum);	// 사원번호
+	//gmid.sflag = '1';				// 모두
 	
 	
 	bool bAccPri = false;
@@ -907,26 +920,35 @@ void CMapWnd::queryGroupSave(int sendKey, int selType)
 	{
 		gpSave = m_arGpSave.GetAt(ii);
 		
-		memset(&group, 0x00 , L_group);
+		//memset(&group, 0x00 , L_group);
+		memset(group, ' ', L_group);
 		if (gpSave->sGroupID.IsEmpty())
-			group.xflg = 'I';	// Insert
+			group->xflg = 'I';	// Insert
+		//	group.xflg = 'I';	// Insert
 		else
-			group.xflg = 'U';	// update
-		//group.xflg = 'I';	// Insert
+			group->xflg = 'U';	// update
+		//	group.xflg = 'U';	// update
+		
 		arAcEditCnt = gpSave->arAcEdit.GetSize();
 		
 		if (arAcEditCnt == 0)
 		{
-			group.xflg = 'D';	// delete : 등록계좌 없으면 delete, 새로 등록한 그룹인 경우는 서버에 저장안함
+			//group.xflg = 'D';	// delete : 등록계좌 없으면 delete, 새로 등록한 그룹인 경우는 서버에 저장안함
+			group->xflg = 'D';	// delete : 등록계좌 없으면 delete, 새로 등록한 그룹인 경우는 서버에 저장안함
 			if (gpSave->sGroupID.IsEmpty())
 				continue;
 		}
 
-		SetString(group.gpid, sizeof(group.gpid), gpSave->sGroupID);
+		SetString(group->gpid, sizeof(group->gpid), gpSave->sGroupID);
+		FormatCopy(group->seqn, "%03d", ++seqn);
+		SetString(group->gnam, sizeof(group->gnam), gpSave->sGrName);
+		FormatCopy(group->nrec, "%04d", arAcEditCnt);
+		memcpy(&m_sendB[pos], group, L_group);
+	/*	SetString(group.gpid, sizeof(group.gpid), gpSave->sGroupID);
 		FormatCopy(&group.seqn, "%03d", ++seqn);
 		SetString(group.gnam, sizeof(group.gnam), gpSave->sGrName);
 		FormatCopy(&group.nrec, "%04d", arAcEditCnt);
-		memcpy(&m_sendB[pos], &group, L_group);
+		memcpy(&m_sendB[pos], &group, L_group);*/
 
 		pos += L_group;
 
@@ -952,13 +974,38 @@ void CMapWnd::queryGroupSave(int sendKey, int selType)
 		for (jj = 0; jj < arAcEditCnt; jj++)
 		{
 			acSave = gpSave->arAcEdit.GetAt(jj);
-			memset(&accn, 0x00, L_accn);
-
+			/*memset(&accn, 0x00, L_accn);
 			sprintf(accn.seqn, "%03d", jj + 1);
-			SetString(accn.accn, sizeof(accn.accn), acSave->sAccntNum);
+			SetString(accn.accn, sizeof(accn.accn), acSave->sAccntNum);*/
+			memset(accn, ' ', L_accn);
+			sprintf(accn->seqn, "%03d", jj + 1);
+			SetString(accn->accn, sizeof(accn->accn), acSave->sAccntNum);
+
 //slog.Format("--- [IB0000A4] [%s][%s]n", accn.accn, acSave->sAccntNum);
 //OutputDebugString(slog);
+
 			if (!m_bCustomer)
+			{
+				passS = getMapPass(acSave->sAccntNum);
+				if (!passS.IsEmpty())
+					SetString(accn->pass, sizeof(accn->pass), passS);
+				else
+					SetString(accn->pass, sizeof(accn->pass), "          ");
+			}
+			else
+				SetString(accn->pass, sizeof(accn->pass), "          ");
+
+			SetString(accn->acnm, sizeof(accn->acnm), acSave->sAccntName);
+			if (acSave->sAllocRate.IsEmpty()) fstr = "0";
+			else	fstr = Format("%.f", atof(acSave->sAllocRate));
+			SetString(accn->rate, sizeof(accn->rate), fstr);
+			SetString(accn->multi, sizeof(accn->multi), acSave->sAllocMulti);
+			SetString(accn->alis, sizeof(accn->alis), acSave->sAccntNick);
+			if (!acSave->sPriAcc.IsEmpty())
+				accn->prea = acSave->sPriAcc.GetAt(0);
+			else
+				accn->prea = ' ';
+			/*if (!m_bCustomer)
 			{
 				passS = getMapPass(acSave->sAccntNum);
 				if (!passS.IsEmpty())
@@ -978,16 +1025,19 @@ void CMapWnd::queryGroupSave(int sendKey, int selType)
 			if (!acSave->sPriAcc.IsEmpty())
 				accn.prea = acSave->sPriAcc.GetAt(0);
 			else
-				accn.prea = ' ';
+				accn.prea = ' ';*/
 
-			memcpy(&m_sendB[pos], &accn, L_accn);
+			//memcpy(&m_sendB[pos], &accn, L_accn);
+			memcpy(&m_sendB[pos], accn, L_accn);
 			pos += L_accn;
 		}
 	}
 	
-	sprintf(gmid.grec, "%04d", gpCnt);		// 총 그룹개수
+	//sprintf(gmid.grec, "%04d", gpCnt);		// 총 그룹개수
+	sprintf(gmid->grec, "%04d", gpCnt);		// 총 그룹개수
 	
-	memcpy(&m_sendB[0], &gmid, L_gmid);
+	//memcpy(&m_sendB[0], &gmid, L_gmid);
+	 memcpy(&m_sendB[0], gmid, L_gmid);
 	//SetFocus();
 	//TRACE("m_calBufL[%d] MAX_SEND[%d]\n", m_calBufL, MAX_SEND);
 	//CString tmp; tmp.Format("%d [%d]", MAX_SEND, m_calBufL);
@@ -1047,7 +1097,8 @@ void CMapWnd::sendTR(CString trC, char *pBytes, int nBytes, char key)
 	memcpy(udat->trc, trC, trC.GetLength());
 	
 	udat->key = key;	
-	udat->stat = US_ENC;
+	udat->stat = US_OOP;
+	//udat->stat = US_ENC;  //test
 
 	CopyMemory(&sndB[L_userTH], pBytes, nBytes);
 
@@ -1160,10 +1211,17 @@ void CMapWnd::queryGroup()
 	deleteAllGpSave();
 	m_mapPass.RemoveAll();
 	
-	_gmid	gmid;
-	gmid.xflg  = '1';				// 조회
-	sprintf(gmid.usrid, "%-12s", m_sStaffNum);
-	sprintf(gmid.grec, "0000");
+	//_gmid	gmid;
+	//gmid.xflg  = '1';				// 조회
+	//sprintf(gmid.usrid, "%-12s", m_sStaffNum);
+	//sprintf(gmid.grec, "0000");
+
+	_gmid*	gmid = new _gmid;
+	memset(gmid, ' ', L_gmid);
+	gmid->xflg = '1';				// 조회
+	sprintf(gmid->usrid, "%-12s", m_sStaffNum);
+	sprintf(gmid->grec, "0000");
+
 	/*
 	switch (m_selType)
 	{
@@ -1178,10 +1236,13 @@ void CMapWnd::queryGroup()
 		break;
 	}
 	*/
-	gmid.sflag = '1';				// 현물 조회
+	//gmid.sflag = '1';
+	gmid->sflag = '1';				// 현물 조회
 	
-	CString sData = CString((char*)&gmid, L_gmid);
-	sendTR(TR_GROUP, (char*)&gmid, L_gmid, SC_ACCLISTBYGROUP);
+	//CString sData = CString((char*)&gmid, L_gmid);
+	CString sData = CString((char*)gmid, L_gmid);
+	//sendTR(TR_GROUP, (char*)&gmid, L_gmid, SC_ACCLISTBYGROUP);
+	sendTR(TR_GROUP, (char*)gmid, L_gmid, SC_ACCLISTBYGROUP);
 	//sendTR(TR_GROUP, m_sendB, pos, sendKey);
 }
 

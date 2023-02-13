@@ -46,7 +46,11 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
 	CBitmap* m_bitmap;
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr < CShapeButton> m_btnClose;
+#else
+	CShapeButton* m_btnClose;
+#endif
 };
 
 //{{AFX_INSERT_LOCATION}}

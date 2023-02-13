@@ -594,21 +594,21 @@ int CGroupWnd::loadGroupCount()
 
 void CGroupWnd::addGridWnd()
 {
-		for ( int ii = m_nGroup-1 ; ii < m_nGroup ; ii++ )
-		{
-			m_GridWnd[ii] = std::make_shared<CGridWnd>(m_pMainWnd, ii);
+	for ( int ii = m_nGroup-1 ; ii < m_nGroup ; ii++ )
+	{
+		m_GridWnd[ii] = std::make_shared<CGridWnd>(m_pMainWnd, ii);
 			
-			m_GridWnd[ii]->m_bWaveApply  = m_bWaveApply;
-			m_GridWnd[ii]->m_strWaveFile = m_strWaveFile;
-			m_GridWnd[ii]->m_bPopupDlg   = m_bPopupDlg;
-			m_GridWnd[ii]->m_bDispCode   = m_bDispCode;
+		m_GridWnd[ii]->m_bWaveApply  = m_bWaveApply;
+		m_GridWnd[ii]->m_strWaveFile = m_strWaveFile;
+		m_GridWnd[ii]->m_bPopupDlg   = m_bPopupDlg;
+		m_GridWnd[ii]->m_bDispCode   = m_bDispCode;
 			
-			m_GridWnd[ii]->Create(nullptr, nullptr, WS_CHILD, CRect(0, 0, 0, 0), this, IDC_GRIDWND + ii);
+		m_GridWnd[ii]->Create(nullptr, nullptr, WS_CHILD, CRect(0, 0, 0, 0), this, IDC_GRIDWND + ii);
 			
-			m_GridWnd[ii]->SetMarketColor(m_bMKClrApply, m_clrKospi, m_clrKosdaq);
-		}
+		m_GridWnd[ii]->SetMarketColor(m_bMKClrApply, m_clrKospi, m_clrKosdaq);
+	}
 
-		m_cntGroup = m_nGroup;
+	m_cntGroup = m_nGroup;
 }
 
 void CGroupWnd::loadfield()
@@ -2675,59 +2675,42 @@ int CGroupWnd::WriteFileSumtoEachGroup(UINT curruntGroup)			// index : 그룹 시작
 	CString strPath(_T("")), strTemp(_T("")), strBook(_T(""));
 	CString strSendData(_T(""));
 
-	//현재 펼쳐져있는 그룹들과 현그룹과 비교하여 같은 그룹인지 확인(제일 앞단에 있는 그룹을 찾는다)
-	int index = 0;
-	for(index=0 ; index<GetGroupCount() ; index++)
+
+	gno = curruntGroup;
+	m_Inters.clear();
+
+	for (int ii = 0; ii < GetGroupCount(); ii++)
 	{
-		nextGroup = m_GridWnd[index]->GetKind();
-
-		if(curruntGroup == nextGroup)
-		{
-			curruntGroup = m_GridWnd[index]->GetKind();
-
-			//일단 첫번째 그룹의 데이터를 파일에 쓴다
-			if (CAST_TREEID(curruntGroup)->kind == xINTEREST)
-				gno = CAST_TREEID(curruntGroup)->value;
-			else
-				return 0;	
-
-			break;
-		}
+		const auto& vInters = m_GridWnd[ii]->m_inters;
+		const int count = m_GridWnd[ii]->GetRowcount();
+		std::copy(vInters.begin(), vInters.begin() + count, std::back_insert_iterator(m_Inters));
 	}
+	saveServer(gno);
 
-//	strPath.Format("%s/%s/%s/portfolio.i%02d", m_root, USRDIR, m_user, gno);
+//	return gno;
+//	int index = 0;
 	strBook.Format("%s/%s/%s/bookmark.i%02d", m_root, USRDIR, m_user, gno);
 
-	char szTemp[10]{};
-	//int nScnt = 0;
-	
-//	strPath += ".tmp";
-	
+	char szTemp[10]{};	
 	struct _inters* pInters{};
-
-//	::DeleteFile(strPath);
-//	CFile	file(strPath, CFile::modeWrite|CFile::modeCreate);
 	
 	::DeleteFile(strBook);
 	CFile	file2(strBook, CFile::modeWrite|CFile::modeCreate);
 	
 	sprintf(szTemp, "%02d", gno);
-	CString strGrouptName = m_GridWnd[index]->GetGroupName(gno);
-
-	curruntGroupCount = m_GridWnd[index]->GetRowcount();
+	CString strGrouptName = m_GridWnd[0]->GetGroupName(gno);
+	curruntGroupCount = m_Inters.size();
 	bool bSetBookMark = false;	//2014.06.05 KSJ 만약에 북마크가 하나도 설정되어 있지 않으면 저장할 필요가 없다.
 
-	for(int ii=0 ; ii<curruntGroupCount ; ii++)
+	for(int ii=0 ; ii< curruntGroupCount ; ii++)
 	{
-		const auto& pInters = m_GridWnd[index]->GetData(ii);
-		if (!pInters->code.IsEmpty() && pInters->name.IsEmpty())
-		{
-			CString strName = m_GridWnd[index]->GetcolName(ii);
-			pInters->name = strName;
-		}
+		const auto& pInters = m_Inters.at(ii);
+		//if (!pInters->code.IsEmpty() && pInters->name.IsEmpty())
+		//{
+		//	CString strName = m_GridWnd[index]->GetcolName(ii);
+		//	pInters->name = strName;
+		//}
 		
-//		file.Write(pInters, sz_inters);
-
 		struct _bookmarkinfo binfo;
 		FillMemory(&binfo, sizeof(_bookmarkinfo), ' ');
 
@@ -2749,60 +2732,119 @@ int CGroupWnd::WriteFileSumtoEachGroup(UINT curruntGroup)			// index : 그룹 시작
 	}
 
 				
-	//같은 그룹일 경우 옆그룹들의 데이터를 파일에 쓰기
-	for(int ii=index+1 ; ii<GetGroupCount() ; ii++)
-	{
-		nextGroup = m_GridWnd[ii]->GetKind();
-
-		if(curruntGroup == nextGroup)
-		{
-			nextGroupCount = m_GridWnd[ii]->GetRowcount();
-	
-			for(int jj=0 ; jj<nextGroupCount ; jj++)
-			{
-				m_GridWnd[ii]->m_bEditWork = FALSE;		//한 섹션만 TRUE, FALSE 담당하면 된다
-
-				const auto& pInters = m_GridWnd[ii]->GetData(jj); 
-
-				if (!pInters->code.IsEmpty() && pInters->name.IsEmpty())
-				{
-					CString strName = m_GridWnd[index]->GetcolName(ii);
-					pInters->name = strName;
-				}
-
-//				file.Write(pInters, sz_inters);
-				
-				struct _bookmarkinfo binfo;
-				FillMemory(&binfo, sizeof(_bookmarkinfo), ' ');
-//				ZeroMemory(&binfo, sizeof(_bookmarkinfo));
-
-				if(pInters->code.IsEmpty())
-				{
-					binfo.bookmark[0] = '0';
-				}
-				else
-				{
-					CopyMemory(binfo.code, pInters->code, min(sizeof(binfo.code), pInters->code.GetLength()));
-					CopyMemory(binfo.name, pInters->name, min(sizeof(binfo.name), pInters->name.GetLength()));
-					binfo.bookmark[0] = pInters->bookmark == '1' ? '1' : '0';		//2015.04.03 KSJ 1이아니면 0으로 해준다.
-
-					if(pInters->bookmark == '1' || pInters->code[0] == 'm')	//2015.05.31 KSJ  책갈피도 bookmark.i 에 저장된다.
-						bSetBookMark = true;
-				}
-				
-				file2.Write(&binfo, sizeof(_bookmarkinfo));
-			}		
-		}
-	}
-
-	file2.Close();
-//	file.Close();
+//	//같은 그룹일 경우 옆그룹들의 데이터를 파일에 쓰기
+//	for(int ii=index+1 ; ii<GetGroupCount() ; ii++)
+//	{
+//		nextGroup = m_GridWnd[ii]->GetKind();
+//
+//		if(curruntGroup == nextGroup)
+//		{
+//			nextGroupCount = m_GridWnd[ii]->GetRowcount();
+//	
+//			for(int jj=0 ; jj<nextGroupCount ; jj++)
+//			{
+//				m_GridWnd[ii]->m_bEditWork = FALSE;		//한 섹션만 TRUE, FALSE 담당하면 된다
+//
+//				const auto& pInters = m_GridWnd[ii]->GetData(jj); 
+//
+//				if (!pInters->code.IsEmpty() && pInters->name.IsEmpty())
+//				{
+//					CString strName = m_GridWnd[index]->GetcolName(ii);
+//					pInters->name = strName;
+//				}
+//
+////				file.Write(pInters, sz_inters);
+//				
+//				struct _bookmarkinfo binfo;
+//				FillMemory(&binfo, sizeof(_bookmarkinfo), ' ');
+////				ZeroMemory(&binfo, sizeof(_bookmarkinfo));
+//
+//				if(pInters->code.IsEmpty())
+//				{
+//					binfo.bookmark[0] = '0';
+//				}
+//				else
+//				{
+//					CopyMemory(binfo.code, pInters->code, min(sizeof(binfo.code), pInters->code.GetLength()));
+//					CopyMemory(binfo.name, pInters->name, min(sizeof(binfo.name), pInters->name.GetLength()));
+//					binfo.bookmark[0] = pInters->bookmark == '1' ? '1' : '0';		//2015.04.03 KSJ 1이아니면 0으로 해준다.
+//
+//					if(pInters->bookmark == '1' || pInters->code[0] == 'm')	//2015.05.31 KSJ  책갈피도 bookmark.i 에 저장된다.
+//						bSetBookMark = true;
+//				}
+//				
+//				file2.Write(&binfo, sizeof(_bookmarkinfo));
+//			}		
+//		}
+//	}
+//
+//	file2.Close();
+////	file.Close();
 
 	//2014.06.05 KSJ 북마크가 지정되어 있지 않으면 저장할 필요가 없어서 삭제한다.
 	if(!bSetBookMark) ::DeleteFile(strBook);
 
 	return gno;
 }
+
+void CGroupWnd::saveServer(int gno)
+{
+	const int nScnt = m_Inters.size();
+
+	std::string buffer;
+	buffer.resize(sz_updn + sz_jinfo * nScnt + 1, ' ');
+
+	struct _updn* updn = (struct _updn*)buffer.data();
+	CopyMemory(updn->uinfo.gubn, "MY", sizeof(updn->uinfo.gubn));
+	updn->uinfo.dirt[0] = 'U';
+	updn->uinfo.cont[0] = 'G';
+
+	CopyMemory(updn->uinfo.nblc, _T("00001"), sizeof(updn->uinfo.nblc));
+	updn->uinfo.retc[0] = 'O';
+
+	CString sNum = AxStd::FORMAT("%02d", gno);
+	CString strGrouptName = m_GridWnd[0]->GetGroupName(gno);
+
+	CopyMemory(updn->ginfo.gnox, sNum, sizeof(updn->ginfo.gnox));
+	CopyMemory(updn->ginfo.gnam, (LPCTSTR)strGrouptName, min(sizeof(updn->ginfo.gnam), strGrouptName.GetLength()));
+
+	sNum.Format("%04d", nScnt);
+	CopyMemory(updn->ginfo.jrec, sNum, sizeof(updn->ginfo.jrec));
+	const gsl::span<struct _jinfo> spanInter((struct _jinfo*)(buffer.data() + sz_updn), nScnt);
+
+	int ii = 0;
+	for_each(spanInter.begin(), spanInter.end(), [&](auto& jinfo) {
+		auto& pInters = m_Inters.at(ii++);
+		if (!pInters->code.IsEmpty())
+		{
+			FillMemory(&jinfo, sz_jinfo, ' ');
+			jinfo.gubn[0] = pInters->gubn > 0 ? pInters->gubn : '0';
+			CopyMemory(jinfo.code, pInters->code, min(sizeof(jinfo.code), pInters->code.GetLength()));
+
+			if (!pInters->xprc.IsEmpty())
+				CopyMemory(jinfo.xprc, pInters->xprc, min(sizeof(jinfo.xprc), pInters->xprc.GetLength()));
+			if (!pInters->xnum.IsEmpty())
+				CopyMemory(jinfo.xnum, pInters->xnum, min(sizeof(jinfo.xnum), pInters->xnum.GetLength()));
+		}
+	});
+
+	char key{};
+	_trkey* trkey = (struct _trkey*)&key;
+	trkey->kind = TRKEY_GRIDSAVE;
+	trkey->group = gno;
+
+	CSendData sData;
+	sData.SetData(trUPDOWN, key, buffer.data(), buffer.size(), "");
+AxStd::_Msg("%s", buffer.data());
+	m_pMainWnd->SendMessage(WM_MANAGE, MK_SENDTR, (LPARAM)&sData);
+	m_pMainWnd->SendMessage(WM_MANAGE, MK_PROCDLL);
+	CString string = "OnPortfolio\tok";
+	m_pViewWnd->SendMessage(WM_USER, MAKEWPARAM(procDLL, 0), (LPARAM)(LPCTSTR)string);
+	//((CMainWnd*)m_pMainWnd)->requestGroup(gno);
+
+}
+
+
 
 CString CGroupWnd::MakePacket(CString& code, CString amount, CString price, CString name, CString bookmark)
 // END MODIFY

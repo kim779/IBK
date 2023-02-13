@@ -81,11 +81,19 @@ void CMapWnd::axlog(LPCTSTR stag, LPCTSTR slog)
 	OutputDebugString(stmp);
 }
 
+UINT AFXAPI CMapWnd::HashDataAXIS(LPCSTR key)
+{
+	UINT nHash = 0;
+	while (*key)
+		nHash = (nHash << 5) + nHash + *key++;
+	return nHash;
+}
+
 BSTR CMapWnd::IDtoSha(LPCTSTR sId) 
 {
 	CString strResult;
 
-	strResult.Format("%08u", HashKey((LPCSTR)sId));
+	strResult.Format("%08u", HashDataAXIS((LPCSTR)sId));
 	return strResult.AllocSysString();
 }
 

@@ -142,9 +142,7 @@ void CProgramDlg::OnSearchp()
 	char	buf[1024];
 	GetWindowsDirectory(buf, sizeof(buf));
 	CFileDialog	dlg(TRUE, "exe", NULL, OFN_OVERWRITEPROMPT, 
-	"角青颇老(*.exe)|*.exe||", NULL);
-	//CFileDialog	dlg(TRUE, "exe", NULL, OFN_OVERWRITEPROMPT,
-	//	"葛电颇老(*.*) | *.* || ", NULL);
+		"角青颇老(*.exe)|*.exe||", NULL);
 	if (dlg.DoModal() != IDOK)	return;
 
 	GetDlgItem(IDC_PNAME)->SetWindowText(dlg.GetFileTitle());

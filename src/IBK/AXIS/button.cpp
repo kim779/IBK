@@ -244,7 +244,11 @@ void Cbutton::InitToolTip()
 {
 	if (m_pToolTip == NULL)
 	{
+#ifdef DF_USE_CPLUS17
 		m_pToolTip = std::make_unique<CToolTipCtrl>();
+#else
+		m_pToolTip = new CToolTipCtrl;
+#endif
 		m_pToolTip->Create(this);
 		m_pToolTip->Activate(FALSE);
 	}
@@ -297,5 +301,8 @@ void Cbutton::OnDestroy()
 	if (m_pToolTip)
 	{
 		m_pToolTip->DestroyWindow();
+#ifndef DF_USE_CPLUS17
+		delete m_pToolTip;
+#endif
 	}
 }

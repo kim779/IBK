@@ -52,12 +52,18 @@ END_MESSAGE_MAP()
 
 CC_BongApp::CC_BongApp()
 {
+	m_pView = NULL;
+	m_pImgCtrl = NULL;
 }
 
 CC_BongApp::~CC_BongApp()
 {
 	if (m_pImgCtrl)
+	{
 		m_pImgCtrl->DeleteImageList();
+		delete m_pImgCtrl;
+		m_pImgCtrl = NULL;
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -117,22 +123,21 @@ bool CC_BongApp::CreateImage()
 	return false;
 }
 
-std::shared_ptr<CImageList> CC_BongApp::getImage(CString path, int Width, int Height, UINT flag, COLORREF crMask)
+CImageList* CC_BongApp::getImage(CString path, int Width, int Height, UINT flag, COLORREF crMask)
 {
-	HBITMAP hbitmap = (HBITMAP) LoadImage(nullptr, path, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	CImageList* pImage = NULL;
+	HBITMAP hbitmap = (HBITMAP) LoadImage(NULL, path, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	if (hbitmap)
 	{
 		CBitmap	bitmap;
 		bitmap.DeleteObject();
 		bitmap.Attach(hbitmap);
-		auto pImage = std::make_shared<CImageList>();
+		pImage = new CImageList();
 		pImage->Create(Width, Height, flag, 0, 1);
 		pImage->Add(&bitmap, crMask);
 		bitmap.DeleteObject();
-
-		return pImage;
-	}	
-	return nullptr;
+	}
+	return pImage;
 }
 
 CFont* CC_BongApp::GetFont(CWnd *pView, int point, CString name, int bold, bool italic)
@@ -159,7 +164,20 @@ CBrush* CC_BongApp::GetBrush(CWnd *pView, COLORREF rColor)
 	return (CBrush*) pView->SendMessage(WM_USER, getBRUSH, rColor);
 }
 
+CImageList* CC_BongApp::GetImage(CWnd *pView, CString path, int Width, int Height, UINT flag, COLORREF crMask)
+{
+	CBitmap *pBitmap = (CBitmap*) pView->SendMessage(WM_USER, getBITMAP, long(path.operator LPCTSTR()));
 
+	CImageList* pImage = NULL;
+	if (pBitmap)
+	{
+		pImage = new CImageList();
+		pImage->Create(Width, Height, flag, 0, 1);
+		pImage->Add(pBitmap, crMask);
+	}
+
+	return pImage;
+}
 
 COLORREF CC_BongApp::GetColor(CWnd *pView, int index)
 {

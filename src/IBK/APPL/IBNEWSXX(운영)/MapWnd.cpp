@@ -500,7 +500,6 @@ void CMapWnd::RenderContent(LPCSTR dat, int len)
 			if (code.IsEmpty()) break;
 
 			CString name = GetName(code);
-			code = code.TrimLeft("A");
 			if (name.IsEmpty()) continue;
 			name.TrimLeft(); name.TrimRight();
 
@@ -512,7 +511,7 @@ void CMapWnd::RenderContent(LPCSTR dat, int len)
 				pos += sprintf(&buff[pos], "<font face=\"±¼¸²Ã¼\"><span style=\"font-size:%dpt;line-height:1.3em\">", m_fontsize);
 				pos += sprintf(&buff[pos], "<b>&nbsp;&nbsp;Á¾¸ñ : ");
 			}
-			pos += sprintf(&buff[pos], "<a style=\"text-decoration:none\" href=\"axis://menu/%s\">%s</a>, ", (LPCSTR)code.TrimLeft("A"), (LPCSTR)name);
+			pos += sprintf(&buff[pos], "<a style=\"text-decoration:none\" href=\"axis://menu/%s\">%s</a>, ", (LPCSTR)code, (LPCSTR)name);
 		}
 		if (bCodeInsert) 
 		{
@@ -773,7 +772,7 @@ void CMapWnd::ConvertLink( string &body )
 		
 		if (m_rest.LookupKey(name.c_str(), key)) continue;
 		if (!m_names.Lookup(name.c_str(), code)) continue;
-		blen = sprintf(buff, "<a style=\"text-decoration:none\" href=\"axis://menu/%s\">%s</a>", (LPCSTR)code.TrimLeft("A"), (LPCSTR)name.c_str());
+		blen = sprintf(buff, "<a style=\"text-decoration:none\" href=\"axis://menu/%s\">%s</a>", (LPCSTR)code, (LPCSTR)name.c_str());
 
 		cbody.resize(0);
 		while(st<ed)

@@ -179,8 +179,8 @@ void CToolWnd::OperInit()
 
 	m_cbArrange = std::make_unique<CComboBox>();
 	m_cbArrange->Create(CBS_DROPDOWNLIST | WS_VSCROLL, CRect(0, 0, 0, 0), this, IDC_CB_ARRANGE);
-	m_cbArrange->SetFont(m_pFont);	 
-
+	m_cbArrange->SetFont(m_pFont);
+	SetWindowTheme(m_cbArrange->GetSafeHwnd(), L"", L"");
 
 	const int ncount = GetPrivateProfileInt(SEC_GROUP, KEY_COUNT, 1, m_fileCFG);
 	if (ncount == 1)
@@ -195,6 +195,7 @@ void CToolWnd::OperInit()
 	m_cbGROUP = std::make_unique<CComboBox>();
 	m_cbGROUP->Create(CBS_DROPDOWNLIST | WS_VSCROLL, CRect(0, 0, 0, 0), this, IDC_CB_GROUP);
 	m_cbGROUP->SetFont(m_pFont);
+	SetWindowTheme(m_cbGROUP->GetSafeHwnd(), L"", L"");
 
 	hBITMAP    = getBitmap(m_fileIMG + "TURN.bmp");
 	hBITMAP_DN = getBitmap(m_fileIMG + "TURN_dn.bmp");
@@ -969,6 +970,10 @@ HBRUSH CToolWnd::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	case IDC_CHECK_PLUSMINUS:
 		pDC->SetBkMode(TRANSPARENT);
 		hbr = *m_pBrush;
+		break;
+	case IDC_CB_ARRANGE:
+		pDC->SetBkColor(RGB(255, 255, 255));
+		break;
 	}
 	return hbr;
 }
@@ -1358,6 +1363,9 @@ void CToolWnd::addGroup(std::vector<std::pair<CString, CString>>& vGroup)
 	UINT gubn = MAKE_TREEID(xINTEREST);
 	struct _treeID* treeID = CAST_TREEID(gubn);
 
+	m_btntab->DeleteAllItems();
+//	m_cbGROUP->ResetContent();
+
 	int ii = 0;
 	for_each(vGroup.begin(), vGroup.end(), [&](auto item) {
 
@@ -1367,7 +1375,6 @@ void CToolWnd::addGroup(std::vector<std::pair<CString, CString>>& vGroup)
 			const int index = m_cbGROUP->AddString(item.first);
 			m_cbGROUP->SetItemData(index, kind);
 			m_btntab->InsertItem(ii++, " " + item.first);
-
 		}
 	});
 

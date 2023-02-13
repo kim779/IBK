@@ -125,8 +125,12 @@ protected:
 	afx_msg	LONG OnMsg(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 protected:
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr <CControlChanger>m_changer;
-
+#else
+	CControlChanger* m_changer;
+#endif
+	
 	void OnAction();
 };
 

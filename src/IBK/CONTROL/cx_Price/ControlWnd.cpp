@@ -50,6 +50,8 @@ CControlWnd::CControlWnd()
 	m_pToolTip = nullptr;
 	m_pPopup = nullptr;
 	m_bDragMode = FALSE;
+
+	m_bNewUnit = FALSE;
 }
 
 CControlWnd::~CControlWnd()
@@ -521,6 +523,9 @@ void CControlWnd::SetParam(_param *pParam)
 	m_sUserID = Variant(userCC, "");
 	m_sRoot = Variant(homeCC, "");
 
+	tmp.Format(_T("%s/tab/axis.ini"), m_sRoot);
+	m_bNewUnit = GetPrivateProfileInt("K2023SyStem", "Newhgunit", 0, tmp);
+
 	CONST	int	offs = m_sImagePath.ReverseFind('\\');
 	if (offs == -1)
 		m_sImagePath = m_sRoot + "\\image\\" + m_sImagePath;
@@ -739,6 +744,7 @@ void CControlWnd::popPrice(CRect rc)
 			m_pPopup->m_nStatus = (m_nKind>=0?m_nKind:m_kind);
 			m_pPopup->m_bKospi = m_bKospi;
 			m_pPopup->m_dCurr = m_dCurr;
+			m_pPopup->m_bNewUnit = m_bNewUnit;
 
 			// 예약주문모드 세팅시, 현재가 기준으로 상/하한가 설정하도록 변경함. 20090824 by lkm
 			if (m_bRsvdMode && IsRsvdKind(m_nKind>=0?m_nKind:m_kind) && m_dshga!=0.0f && m_dhhga!=0.0f)

@@ -65,6 +65,14 @@ void CProfileHook::StopHook()
 	bHook = FALSE;
 }
 
+UINT AFXAPI HashData(LPCSTR key)
+{
+	UINT nHash = 0;
+	while (*key)
+		nHash = (nHash << 5) + nHash + *key++;
+	return nHash;
+}
+
 UINT AFXAPI CProfileHook::HashDataAXIS(LPCSTR key)
 {
 	UINT nHash = 0;
@@ -79,18 +87,18 @@ void CProfileHook::SetInfo(LPCSTR lpHome, LPCSTR lpName)
 	m_sNames.clear();
 	char buff[MAX_PATH];
 	{
-		//	sprintf(buff, "\\%08u\\", HashKey<LPCSTR>(lpName));
-		sprintf(buff, "\\%08u\\", HashDataAXIS((LPCSTR)lpName));
+		//sprintf(buff, "\\%08u\\", HashKey(lpName));
+		sprintf(buff, "\\%08u\\", HashDataAXIS(lpName));
 		m_sHashs.push_back(buff);
-
+		
 		sprintf(buff, "\\%s\\", lpName);
 		m_sNames.push_back(buff);
 	}
 	{
-		//sprintf(buff, "%08u.ini", HashKey<LPCSTR>(lpName));
-		sprintf(buff, "%08u.ini", HashDataAXIS((LPCSTR)lpName));
+	//	sprintf(buff, "%08u.ini", HashKey(lpName));
+		sprintf(buff, "%08u.ini", HashDataAXIS(lpName));
 		m_sHashs.push_back(buff);
-
+		
 		sprintf(buff, "%s.ini", lpName);
 		m_sNames.push_back(buff);
 	}

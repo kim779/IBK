@@ -296,11 +296,11 @@ BOOL WebLinkCtrl::Create(CWnd* parent, _param* param)
 	if (bResult)
 	{
 		m_ctrl = std::make_unique<CWebBrowserCtrl>();
-
 		if (!m_ctrl->Create(_T("WebBrowser2"), WS_VISIBLE | WS_CHILD, CRect(-2, -2, 1, 1), this, constWebBrowserCtrlID))
 			m_ctrl.reset();
-
 		ResizeToFitWindow();
+
+		m_ctrl->SetSilent(TRUE);
 	}
 
 	if (SUCCEEDED(CoInitialize(NULL)))
@@ -319,7 +319,6 @@ BOOL WebLinkCtrl::Create(CWnd* parent, _param* param)
 			m_pIEApp->put_MenuBar(false);
 			m_pIEApp->put_ToolBar(false);
 			m_pIEApp->put_StatusBar(false);
-			
 			// 			SysFreeString(bstrURL);
 			// 			pBrowser2->Release();
 		}
@@ -1147,6 +1146,7 @@ LRESULT WebLinkCtrl::OnUser(WPARAM wParam, LPARAM lParam)
 				m_parent->SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
 				ResizeToFitWindow();
 				*/
+				
 				m_ctrl->Navigate(url, NULL, NULL, NULL, NULL);
 
 				//SetTimer(1, 10, NULL);
@@ -1493,7 +1493,6 @@ LRESULT WebLinkCtrl::OnBrowser( WPARAM wParam, LPARAM lParam )
 			BSTR bstrURL = url.AllocSysString();
 
 			pBrowser2->put_Resizable(TRUE);
-			
 			pBrowser2->put_Width(m_width);
 			pBrowser2->put_Height(m_height);
 
@@ -1506,6 +1505,7 @@ LRESULT WebLinkCtrl::OnBrowser( WPARAM wParam, LPARAM lParam )
 				m_pIEApp->put_MenuBar(false);
 				m_pIEApp->put_ToolBar(false);
 				m_pIEApp->put_StatusBar(false);
+				
 				
 				CRect rc;
 
@@ -1522,6 +1522,7 @@ LRESULT WebLinkCtrl::OnBrowser( WPARAM wParam, LPARAM lParam )
 				//m_pIEApp->get_HWND((long*)&pWB);
 				
 				pBrowser2->get_HWND((long*)&pWB);
+				pBrowser2->put_Silent(VARIANT_TRUE);
 				CWnd *pwnd = CWnd::FromHandle(pWB); 
 
 				//hr = pBrowser2->Navigate(bstrBlank, &vEmpty, &vEmpty, &vEmpty, &vHeader);

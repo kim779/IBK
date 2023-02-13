@@ -1,15 +1,25 @@
+#if !defined(AFX_CTRLWND_H__00580AD2_D315_47B6_882D_E3F7A5094686__INCLUDED_)
+#define AFX_CTRLWND_H__00580AD2_D315_47B6_882D_E3F7A5094686__INCLUDED_
+
+#if _MSC_VER > 1000
 #pragma once
+#endif // _MSC_VER > 1000
+// CtrlWnd.h : header file
+//
+
+/////////////////////////////////////////////////////////////////////////////
+// CCtrlWnd window
 
 #include "afxtempl.h"
 
 class _ctlINFO
 {
 public:
-	bool	pushed{};
+	bool	pushed;
 	CRect	rect;
 	CString text;
-	int	imgdown{};
-	int	imgup{};
+	int	imgdown;
+	int	imgup;
 };
 
 class CCtrlWnd : public CWnd
@@ -70,32 +80,39 @@ private:
 	void	AutoShiftAction();
 
 public:
-	int	m_totalDay{};
-	int	m_dispPos{};
-	int	m_dispEnd{};
-	int	m_dispDay{};
+	int	m_totalDay;
+	int	m_dispPos;
+	int	m_dispEnd;
+	int	m_dispDay;
 
 private:
-	CWnd* m_pView{};
-	CWnd* m_pParent{};
-	std::unique_ptr<class CExScrollBar> m_pScroll;
-	std::unique_ptr<class	CExSlider>  m_pSlider;
-	std::map<int, std::unique_ptr<_ctlINFO>> _mapCont;
+	CWnd	*m_pView;
+	CWnd	*m_pParent;
+	class	CExScrollBar	*m_pScroll;
+	class	CExSlider	*m_pSlider;
+	CMap	<int, int, _ctlINFO*, _ctlINFO*> m_MapCont;
 
 	int	m_ctrlSAVE;
 
-	COLORREF	m_clrBack{};
-	COLORREF	m_clrText{};
-	COLORREF	m_clrForm{};
+	COLORREF	m_clrBack;
+	COLORREF	m_clrText;
+	COLORREF	m_clrForm;
 
-	bool		m_bCtrlEnable{};
-	bool		m_bCapture{};
-	bool		m_bLDown{};
-	int		m_nSlider{};
+	bool		m_bCtrlEnable;
+	bool		m_bCapture;
+	bool		m_bLDown;
+	int		m_nSlider;
 
-	CC_BongApp* m_pApp{};
-	CImageList* m_pCtrlImage{};
+	CC_BongApp	*m_pApp;
+	CImageList	*m_pCtrlImage;
 
-	int			m_TimerID{};
-	int			m_AutoScroll{};
+	int			m_TimerID;
+	int			m_AutoScroll;
 };
+
+/////////////////////////////////////////////////////////////////////////////
+
+//{{AFX_INSERT_LOCATION}}
+// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#endif // !defined(AFX_CTRLWND_H__00580AD2_D315_47B6_882D_E3F7A5094686__INCLUDED_)

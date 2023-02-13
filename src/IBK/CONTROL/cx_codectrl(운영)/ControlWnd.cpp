@@ -196,6 +196,7 @@ long CControlWnd::OnMessage(WPARAM wParam, LPARAM lParam)
 			// 急拱, 可记, 林侥 备盒秦辑 贸府...
 			CString str = CString(exth->data);
 			str.TrimRight();
+			length = str.GetLength();
 
 			if (m_nGubn == GU_FCODE && length != 8)
 				return 0;

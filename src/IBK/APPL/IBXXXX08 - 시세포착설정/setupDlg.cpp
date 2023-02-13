@@ -176,6 +176,7 @@ BOOL CSetupDlg::OnInitDialog()
 	else
 		SetWindowText("시세포착설정[수정]");
 	
+
 	m_sImgDir.Format("%s\\image\\", m_root);
 	m_clrBk = GetIndexColor(CLRBG);
 	m_clrWriteBk = GetIndexColor(181);
@@ -183,6 +184,9 @@ BOOL CSetupDlg::OnInitDialog()
 	m_br.CreateSolidBrush(m_clrRoundBk);
 
 	initControl();
+	m_spinMsga.SetRoot(m_root);
+	m_spinMdga.SetRoot(m_root);
+	m_spinCurr.SetRoot(m_root);
 	return TRUE; 
 }
 

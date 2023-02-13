@@ -78,9 +78,9 @@ BOOL CFOGridCtrl::Create(const RECT& rect, CWnd* parent, UINT nID, DWORD dwStyle
 	//SetNoScrollBar(TRUE);
 	BOOL bRet = CGridCtrl::Create(rect, parent, nID, dwStyle, dwExStyle);
 	
-CString slog;
-slog.Format("[3006]_rowheight [%d] ", m_iRowHeight);
-OutputDebugString(slog);
+// CString slog;
+// slog.Format("[3006]_rowheight [%d] ", m_iRowHeight);
+// OutputDebugString(slog);
 
 	EnableTitleTips(FALSE);
 	SetColumnResize(FALSE);
@@ -367,7 +367,7 @@ CString slog;
 	{
 		if      (*st>psd->gjga) fgCol = GetIndexColor(94);
 		else if (*st<psd->gjga) fgCol = GetIndexColor(95);
-		else               fgCol = RGB(0, 0, 0);
+		else                    fgCol = RGB(0, 0, 0);
 
 		if (*st>=psd->jega && *st<=psd->koga) bgCol = m_crYellowBk;
 		else                                  bgCol = CLR_DEFAULT/*RGB(0xFF, 0xFF, 0xFF)*/;
@@ -439,9 +439,15 @@ CString slog;
 
 		SetItemFgColour(row, IDX_RATE, fgCol);
 
-		double rate = (*st-psd->gjga) / (double)psd->gjga;
-		if (rate>0) rate += DOUBLE_PREFIX;
+		double rate{};
+		if (psd->gjga != 0)
+			rate = (*st - psd->gjga) / (double)psd->gjga;
+		else
+			rate = 0;
+
+		if (rate>0)      rate += DOUBLE_PREFIX;
 		else if (rate<0) rate -= DOUBLE_PREFIX;
+		
 		rate *= 10000.0;
 		SetItemText(row, IDX_RATE, Int2Str((int)rate) );
 
@@ -498,8 +504,8 @@ CString slog;
 
 	SetCurrToCenter();
 
-slog.Format("[3006]_RTS  -------[SetData] m_nSigaRow = [%d]   m_nKogaRow = [%d]   m_nJegaRow = [%d]  -------\n",m_nSigaRow, m_nKogaRow, m_nJegaRow);
-OutputDebugString(slog);
+//slog.Format("[3006]_RTS  -------[SetData] m_nSigaRow = [%d]   m_nKogaRow = [%d]   m_nJegaRow = [%d]  -------\n",m_nSigaRow, m_nKogaRow, m_nJegaRow);
+//OutputDebugString(slog);
 }
 
 
@@ -857,11 +863,11 @@ void CFOGridCtrl::SetRealData( DWORD* data )
 ////////////////////////////////////////////////////////////
 			
 			CString sRjega, sRgoga;
-			sRjega.Format("%c", data[31]);
+			sRjega = (char*)data[31];
 			sRjega.Replace("+", "");
 			sRjega.Replace("-", "");
 			
-			sRgoga.Format("%c", data[30]);
+			sRgoga = (char*)data[30];
 			sRgoga.Replace("+", "");
 			sRgoga.Replace("-", "");
 		
@@ -915,7 +921,7 @@ void CFOGridCtrl::SetRealData( DWORD* data )
 			if(data[31])   //저가
 			{
 				CString sRjega;
-				sRjega.Format("%c", data[31]);
+				sRjega = (char*)data[31];
 				sRjega.Replace("+", "");
 				sRjega.Replace("-", "");
 
@@ -927,8 +933,8 @@ void CFOGridCtrl::SetRealData( DWORD* data )
 					if(irow != m_nJegaRow)
 					{
 						
-CString slog;
-slog.Format("[3006]_RTS 저가변동 sRsiga = [%s], val = [%d], irow = [%d] , m_nJegaRow= [%d]\n", sRjega, val, irow, m_nJegaRow);
+//CString slog;
+//slog.Format("[3006]_RTS 저가변동 sRsiga = [%s], val = [%d], irow = [%d] , m_nJegaRow= [%d]\n", sRjega, val, irow, m_nJegaRow);
 //OutputDebugString(slog);
 						if(m_nJegaRow < 0)
 						{
@@ -973,7 +979,7 @@ slog.Format("[3006]_RTS 저가변동 sRsiga = [%s], val = [%d], irow = [%d] , m_nJeg
 			if(data[30])   //고가
 			{
 				CString sRkoga;
-				sRkoga.Format("%c", data[30]);
+				sRkoga = (char*)data[30];
 				sRkoga.Replace("+", "");
 				sRkoga.Replace("-", "");
 				
@@ -984,8 +990,8 @@ slog.Format("[3006]_RTS 저가변동 sRsiga = [%s], val = [%d], irow = [%d] , m_nJeg
 					int irow = pos->second;
 					if(irow != m_nKogaRow)
 					{
-CString slog;
-slog.Format("[3006]_RTS 고가변동 sRsiga = [%s], val = [%d], irow = [%d] , m_nJegaRow= [%d]\n", sRkoga, val, irow, m_nKogaRow);
+//CString slog;
+//slog.Format("[3006]_RTS 고가변동 sRsiga = [%s], val = [%d], irow = [%d] , m_nJegaRow= [%d]\n", sRkoga, val, irow, m_nKogaRow);
 //OutputDebugString(slog);
 						if(m_nKogaRow < 0)
 						{
@@ -1031,7 +1037,7 @@ slog.Format("[3006]_RTS 고가변동 sRsiga = [%s], val = [%d], irow = [%d] , m_nJeg
 			if(data[29])   //시가
 			{
 				CString sRsiga;
-				sRsiga.Format("%c", data[29]);
+				sRsiga = (char*)data[29];
 				sRsiga.Replace("+", "");
 				sRsiga.Replace("-", "");
 				
@@ -1040,8 +1046,8 @@ slog.Format("[3006]_RTS 고가변동 sRsiga = [%s], val = [%d], irow = [%d] , m_nJeg
 				if (pos!=m_mapHogaRow.end())
 				{
 					int irow = pos->second;
-CString slog;
-slog.Format("[3006]_RTS 시가변동1 sRsiga = [%s], val = [%d], irow = [%d] , m_nSigaRow= [%d]\n", sRsiga, val, irow, m_nSigaRow);
+//CString slog;
+//slog.Format("[3006]_RTS 시가변동1 sRsiga = [%s], val = [%d], irow = [%d] , m_nSigaRow= [%d]\n", sRsiga, val, irow, m_nSigaRow);
 //OutputDebugString(slog);
 					
 
@@ -1497,9 +1503,9 @@ LRESULT CFOGridCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	if(message == WM_KEYUP || message == WM_SYSKEYUP)
 	{
 
-CString slog;
-slog.Format("[3006]clickorder CFOGridCtrl WindowProc [%d]\n", wParam);
-OutputDebugString(slog);
+//CString slog;
+//slog.Format("[3006]clickorder CFOGridCtrl WindowProc [%d]\n", wParam);
+//OutputDebugString(slog);
 
 		if(wParam == VK_F7)  //매도 미체결 일괄취소
 			GetParent()->GetParent()->SendMessage(WM_APP_SIG, WP_MADO_ALL_CANCEL, 0);

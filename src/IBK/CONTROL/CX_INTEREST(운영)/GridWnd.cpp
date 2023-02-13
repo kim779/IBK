@@ -201,10 +201,10 @@ HBITMAP CGridWnd::getBitmap(CString path)
 
 void CGridWnd::OperInit()
 {
-	m_pView = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_VIEW));
+	m_pView     = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_VIEW));
 	m_pGroupWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_GROUP));
-	m_pToolWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
-	m_pTreeWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TREE));
+	m_pToolWnd  = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
+	m_pTreeWnd  = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TREE));
 
 	//HBITMAP	hBITMAP, hBITMAP_DN, hBITMAP_HV;
 
@@ -948,6 +948,9 @@ void CGridWnd::RecvOper(int kind, CRecvData* rdata)
 void CGridWnd::RecvOper2(int kind, CRecvData* rdata)
 {
 	struct _extTHx* ex = (struct _extTHx*)rdata->m_lParam;
+
+	if (ex->size <= 0)
+		return;
 
 	if(m_SendKey == TRKEY_GRIDNEW)
 	{
@@ -3473,7 +3476,7 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 			m_grid->m_bOutPos = false;
 
 			CDropData*	pDropData = &CintGrid::m_dropdata;	// drop information
-			CintGrid*	pGrid = pDropData->GetGrid();	// drag grid
+			CintGrid*	pGrid = pDropData->GetGrid();	        // drag grid
 			if (pGrid == nullptr)
 				break;
 
@@ -3505,238 +3508,145 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 			m_drop = nmgv->row;
 
 			m_selectRow	= m_drop;
-			const CWnd*	pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
+			const CWnd* pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
 			const int pageNumber = pWnd->SendMessage(WM_MANAGE, MK_GETVIEWPAGE);
 
 			if (pDropData->GetGrid()->m_hWnd == m_grid->m_hWnd) // m_drag > 0 && m_drop > 0)		// 동일한 화면에서 drop
 			{
-				if ( m_drop < 0 ) m_drop = m_grid->GetRowCount()-1;
-				else if ( m_drop == 0 ) m_drop = 1;
+				if (m_drop < 0)
+					m_drop = m_grid->GetRowCount() - 1;
+				else if (m_drop == 0)
+					m_drop = 1;
 
 				if (m_drag == m_drop)
 					break;
-				bool	bUp = false;
-				bool	bEmpty = false;
-				LPARAM	lDrag = 0;
-				lDrag = m_grid->GetItemData(m_drag, colSIG);
+
 				auto pDrag = m_inters.at(m_drag - 1);
-
-				if (m_drag > m_drop)
-					bUp = true;
-
-				auto pTemp = m_inters.at(m_drop - 1);
-
-				// pTemp :: drop
-				// pDrag :: drag
-				if (pTemp->code.IsEmpty())
-					bEmpty = true;
-
-				// ADD PSH 20070914
-				UINT uAttr{};
-				// END ADD
-
-				if (bEmpty)
-				{
-					*pTemp = *pDrag;
-					m_grid->SetItemData(m_drop, colSIG, lDrag);
-					pDrag->empty();
-					m_grid->SetItemData(m_drag, colSIG, 0);
-
-					if(bUp)
-					{
-						CString beforeStr = m_recomArray.GetAt(m_drag-1);
-						m_recomArray.SetAt(m_drag-1,"");
-						m_recomArray.SetAt(m_drop-1,beforeStr);
-					}
-					else
-					{
-						CString beforeStr = m_recomArray.GetAt(m_drag-1);
-						m_recomArray.SetAt(m_drag-1,"");
-						m_recomArray.SetAt(m_drop-1,beforeStr);
-					}
-				}
-				else
-				{
-					if (bUp)
-					{
-						insertInterest(m_drop - 1);
-						insertRow2(m_drop, m_drag);    //이동 이전의 값을 이용해서 북마크 칠해야할지 결정
-
-						m_drag++;
-						// ADD PSH 20070914
-						uAttr = m_grid->GetItemAttr(m_drag, colNAME);
-						m_grid->SetItemAttr(m_drop, colNAME, uAttr);
-
-						if (GVAT_MARKER & uAttr)
-						{
-							m_grid->SetItemText(m_drop, colNAME, pDrag->name);
-						}
-
-						// END ADD
-						DeleteRow(m_drag);
-						pTemp = m_inters.at(m_drop - 1);
-
-						CString beforeStr = m_recomArray.GetAt(m_drag-2);
-						m_recomArray.RemoveAt(m_drag-2);
-						m_recomArray.InsertAt(m_drop-1,beforeStr);
-					}
-					else
-					{
-						m_drop++;
-
-						insertInterest(m_drop - 1);
-						insertRow2(m_drop, m_drag);    //이동 이전의 값을 이용해서 북마크 칠해야할지 결정
-
-						// ADD PSH 20070914
-						uAttr = m_grid->GetItemAttr(m_drag, colNAME);
-						m_grid->SetItemAttr(m_drop, colNAME, uAttr);
-
-						if (GVAT_MARKER & uAttr)
-						{
-							m_grid->SetItemText(m_drop, colNAME, pDrag->name);
-						}
-
-						// END ADD
-						pTemp = m_inters.at(m_drop - 1);
-
-						CString beforeStr = m_recomArray.GetAt(m_drag-1);
-						m_recomArray.RemoveAt(m_drag-1);
-						m_recomArray.InsertAt(m_drop-2,beforeStr);
-					}
-					//memcpy(pTemp, &dragInter, sizeof(struct _inters));
-					*pTemp = *pDrag;
-					m_grid->SetItemData(m_drop, colSIG, lDrag);
-
-					if (!bUp)
-						DeleteRow(m_drag);
-				}
+				m_inters.erase(m_inters.begin() + m_drag - 1);
+				m_inters.insert(m_inters.begin() + m_drop - 1, pDrag);
 			}
 			else if (pDropData->GetGrid()->m_hWnd != m_grid->m_hWnd)//(m_drag < 0 && m_drop > 0)	// 다른 화면에서 drop
-			{
-
+			{	
+			
+				return 0;
+				
 				code = (bNewsDrop) ? xCODE : pGrid->GetItemText(nDGrow, colCODE);
 				name = pGrid->GetItemText(nDGrow, colNAME);
 
-				if ( m_drop < 0 ) m_drop = m_grid->GetRowCount();
-				else if ( m_drop == 0 ) m_drop = 1;
+				if (m_drop < 0)
+					m_drop = m_grid->GetRowCount();
+				else if (m_drop == 0)
+					m_drop = 1;
 
-				if ( m_drop - 2 < 0 )
+
+				if (pDropData->GetGrid()->m_hWnd != m_grid->m_hWnd)
+				{
+					//종목 중복 등록 허용
+					if (((CGroupWnd*)GetParent())->GetOverLapAction() == FALSE)
+					{
+						if (!code.IsEmpty() && IsDuplicateCode(code, m_drop, true))
+						{
+							CCodeDuplicate dlg;
+							// dlg 항상 열기 옵션 체크
+							if (dlg.DoModal())
+							{
+								if (dlg.m_bAlert == FALSE)
+								{
+									m_grid->Invalidate(FALSE);
+									break;
+								}
+								else
+								{
+									//파일에 저장
+									((CGroupWnd*)GetParent())->saveOverLap(TRUE);
+								}
+							}
+							else
+							{
+								m_grid->Invalidate(FALSE);
+								break;
+							}
+						}
+					}
+				}
+
+				if (m_drop - 2 < 0)
 					nIdx = 0;
 				else
-					nIdx  = m_drop - 2 ;
+					nIdx = m_drop - 2;
 
-				auto pinters = m_inters.at(nIdx);
-//				_inters* pinters = m_inters.GetAt(m_drop - 1);
+				const auto& pinters = m_inters.at(nIdx);
 				if (!pinters->code.IsEmpty())
 				{
-//					pinters = m_inters.GetAt(m_inters.GetUpperBound());
-//					if (strlen(pinters->code) > 0)
+					CWnd* pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
+					const int nOver = (int)pWnd->SendMessage(WM_MANAGE, MK_INPUTOVER);
+					int rowcount = 0;
 
-					const CWnd*	pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
-					const int	nOver = (int)pWnd->SendMessage(WM_MANAGE, MK_INPUTOVER);
+					if (nOver == MO_VISIBLE)
+					{
+						pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_GROUP));
+						rowcount = ((CGroupWnd*)pWnd)->sumEachGroupCount();
+					}
+					else
+					{
+						rowcount = GetRowcount();
+					}
 
-// 					if(nOver == MO_VISIBLE)
-// 					{
-// 						rowcount = GetRowcountVisibleMode();
-// 					}
-// 					else
-// 					{
-// 						rowcount = GetRowcount();
-// 					}
-//
-// 					if(rowcount >= MAX_LINE)
-// 					{
-// 						Variant(guideCC, IH::idTOstring(IDS_GUIDE4));
-// 						m_grid->Invalidate(FALSE);
-// 						break;
-// 					}
-// 					else
-// 					{
-// 						DeleteRow(MAX_LINE);
-// 					}
-
+					if (rowcount >= MAX_LINE)
+					{
+						Variant(guideCC, IH::idTOstring(IDS_GUIDE4));
+						m_grid->Invalidate(FALSE);
+						break;
+					}
+					else
+					{
+						DeleteRow(MAX_LINE);
+					}
 					// END DEL
 
-					if ( m_drop - 1 < 0 )
-						insertInterest(m_drop);
-					else
-						insertInterest(m_drop - 1);
-
+					insertInterest(m_drop - 1);
 					insertRow(m_drop);
-
 					m_drop -= 1;
-					pinters = m_inters.at(m_drop);
 				}
 				//그리드에 한줄도 없을 경우 임의로 한줄 추가 생성
 				else
 				{
-					if(nIdx == 0 && m_rowC < 2)
+					if (nIdx == 0 && m_rowC < 2)
 					{
 						insertRow(m_drop);
 					}
 				}
 
-				const auto pInterDrag = pDropGrid->GetData(nDGrow - 1);
-				//memcpy(pinters, pInterDrag, sizeof(struct _inters));
-				*pinters = *pInterDrag;
+				auto& pDrop = m_inters.at(m_drop);
+				// 2013.01.22 KSJ 정렬후에는 그리드의 데이터를 가져올 때 반드시 현재 m_inters의 현재의치를 찾아야 한다.
+				const auto& pInterDrag = pDropGrid->GetData(pDropGrid->GetInter(code));
+				pDrop = pInterDrag;
 
 				// ADD PSH 20070918
 				UINT uAttr{};
-				if (BOOK_MARK == pinters->gubn)
+				if ('m' == pinters->gubn)
 				{
-					uAttr = m_grid->GetItemAttr(m_drop+1, colNAME) | GVAT_MARKER;
-					m_grid->SetItemAttr(m_drop+1, colNAME, uAttr);
-					m_grid->SetItemText(m_drop+1, colNAME, pinters->name);
+					uAttr = m_grid->GetItemAttr(m_drop + 1, colNAME) | GVAT_MARKER;
+					m_grid->SetItemAttr(m_drop + 1, colNAME, uAttr);
+					m_grid->SetItemText(m_drop + 1, colNAME, pinters->name);
 				}
 				else
 				{
-					uAttr = m_grid->GetItemAttr(m_drop+1, colNAME) & ~GVAT_MARKER;
-					m_grid->SetItemAttr(m_drop+1, colNAME, uAttr);
-					m_grid->SetItemText(m_drop+1, colNAME, pinters->name);
+					uAttr = m_grid->GetItemAttr(m_drop + 1, colNAME) & ~GVAT_MARKER;
+					m_grid->SetItemAttr(m_drop + 1, colNAME, uAttr);
+					m_grid->SetItemText(m_drop + 1, colNAME, pinters->name);
 				}
 				// END ADD
 
-				const LPARAM	data = pGrid->GetItemData(nDGrow, colSIG);
+				const LPARAM data = pGrid->GetItemData(nDGrow, colSIG);
 				m_grid->SetItemData(xdrop, colSIG, data);
 
 				// index가 하나 차이가 나므로
 				if (pDropGroup->m_hWnd == m_pGroupWnd->m_hWnd)
 				{
 					if (!bNewsDrop)
-					{
-						pDropGrid->SendMessage(WM_MANAGE, MAKEWPARAM(MK_DELETEROW, nDGrow));	//드래그한라인
-						pDropGrid->SendMessage(WM_MANAGE, MAKEWPARAM(MK_INSERTROW, pDropGrid->GetRowcount()+1));
-
-						const  auto& pInter = pDropGrid->GetData(1);			//드랍된 그리드 첫번째 내용
-						CString moveCode = (CString)pInter->code;			//그 코드
-
-						m_grid->SetItemText(pDropGrid->GetRowcount()+1, colCODE, moveCode);
-
-//						DeleteRow(1);		//첫 줄 삭제
-
-
-						// ADD PSH 20070918
-						UINT uAttr{};
-						if (BOOK_MARK == pinters->gubn)
-						{
-							uAttr = pGrid->GetItemAttr(pDropGrid->GetRowcount()+1, colNAME) | GVAT_MARKER;
-							pGrid->SetItemAttr(pDropGrid->GetRowcount()+1, colNAME, uAttr);
-							pGrid->SetItemText(pDropGrid->GetRowcount()+1, colNAME, pinters->name);
-						}
-						else
-						{
-							uAttr = pGrid->GetItemAttr(pDropGrid->GetRowcount()+1, colNAME) & ~GVAT_MARKER;
-							pGrid->SetItemAttr(pDropGrid->GetRowcount()+1, colNAME, uAttr);
-							pGrid->SetItemText(pDropGrid->GetRowcount()+1, colNAME, pinters->name);
-						}
-						// END ADD
-
-						const LPARAM	data = pGrid->GetItemData(nDGrow, colSIG);
-						m_grid->SetItemData(xdrop, colSIG, data);
-					}
+						pDropGrid->SendMessage(WM_MANAGE, MAKEWPARAM(MK_DELETEROW, nDGrow));
 				}
-
-//				pDropGrid->SendMessage(WM_MANAGE, MAKEWPARAM(MK_SAVE, nDGrow), GVNM_ENDDRAG);
 			}
 
 			if (!m_bSorting)
@@ -4539,9 +4449,10 @@ void CGridWnd::RbuttonAction(int row)
 		const int	dataidx = CAST_TREEID(m_kind)->kind;
 
 		const CWnd* pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
-		const int ret = pWnd->SendMessage(WM_MANAGE, MK_GETARRANGE);
+		//const int ret = pWnd->SendMessage(WM_MANAGE, MK_GETARRANGE);
 		const int nOver = (int)pWnd->SendMessage(WM_MANAGE, MK_INPUTOVER);
 
+		const int ret = m_kind;
 		if (dataidx != xISSUE  && ret == 0)
 		{
 			if(((CMainWnd*)m_pMainWnd)->m_bRemain == FALSE && nOver == MO_SELECT)
@@ -6646,7 +6557,6 @@ void CGridWnd::parsingOubs(char* datB, int datL, int mode)
 	CString strTime = ((CMainWnd*)m_pMainWnd)->GetMarketTime();
 	CString strTemp;
 
-
 	if(!strTime.IsEmpty())
 	{
 		strTime.Trim();
@@ -7909,7 +7819,7 @@ void CGridWnd::parsingOubsOne(char* datB, int datL, int mode, int update)
 
 			CString mCode;
 			int sizeCode;
-			mCode = CString(pinters->code, sizeof(pinters->code));
+			mCode = pinters->code;
 			mCode.TrimRight(); mCode.TrimLeft();
 			sizeCode = strlen(mCode);
 
@@ -8958,39 +8868,39 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 
 				//전일거래대비율 실시간 계산
 				CString str2027, str2403;
-				double int2027 = 0;
-				double int2403 = 0;
-				double int2321 = 0;
+				//double int2027 = 0;
+				//double int2403 = 0;
+				//double int2321 = 0;
 
-				if(data[27])
-				{
-					str2027 = (char*)data[27];
+				//if(data[27])
+				//{
+				//	str2027 = (char*)data[27];
 
-					int2027 = atoi(str2027);
-					// for(int i=0 ; i<150 ; i++)
-					// {
-					// 	//종목번호로 매칭해서 데이터를 보여준다
-					// 	if(strCode == m_iYDayVol[i][JMCODE])
-					// 	{
-					// 		int2321 = atoi(m_iYDayVol[i][YDAYVOLUMN]);
-					// 	}
-					// }
+				//	int2027 = atoi(str2027);
+				//	// for(int i=0 ; i<150 ; i++)
+				//	// {
+				//	// 	//종목번호로 매칭해서 데이터를 보여준다
+				//	// 	if(strCode == m_iYDayVol[i][JMCODE])
+				//	// 	{
+				//	// 		int2321 = atoi(m_iYDayVol[i][YDAYVOLUMN]);
+				//	// 	}
+				//	// }
 
-					if(int2321 != 0)
-					{
-						int2403 = (int2027 / int2321) * 100;
-					}
-					else
-					{
-						int2403 = 0;
-					}
+				//	if(int2321 != 0)
+				//	{
+				//		int2403 = (int2027 / int2321) * 100;
+				//	}
+				//	else
+				//	{
+				//		int2403 = 0;
+				//	}
 
-					if(!bExpect && m_yDayVolField >= 0)
-					{
-						entry.Format("%.2f", int2403);
-						m_grid->SetItemText(xrow, m_yDayVolField, entry);
-					}
-				}
+				//	if(!bExpect && m_yDayVolField >= 0)
+				//	{
+				//		entry.Format("%.2f", int2403);
+				//		m_grid->SetItemText(xrow, m_yDayVolField, entry);
+				//	}
+				//}
 
 				if (ii == colCURR)
 				{
@@ -9969,14 +9879,205 @@ void CGridWnd::sendtoMutiHoga()
 
 void CGridWnd::saveInterestVisible(BOOL bVisible, int gno)
 {
-	
+	//파일의 내용을 읽어와서 서버에 저장한다.
+//	CSendData sData;
+//	CString strPath(_T("")), strTemp(_T("")), strBook(_T(""));
+//	CString strSendData(_T("")),strImsiData(_T(""));
+//
+//	strPath.Format("%s/%s/%s/portfolio.i%02d", m_root, USRDIR, m_user, gno);
+//	strBook.Format("%s/%s/%s/bookmark.i%02d", m_root, USRDIR, m_user, gno);
+//
+//	CString strOrgFile = strPath;
+//
+//	char szTemp[10]{};
+////	int nScnt = 0;
+//
+//	strPath += ".tmp";
+//	struct _inters* pInters{};
+//
+//	if (!ExistFile(gno))
+//	{
+//		return;
+//	}
+//
+//	UINT	readL{};
+//	bool  endfile = false;
+////	bool  isFile = false;
+//
+//	CFile	fileH;
+//
+//	CFileFind find;
+//	if(!find.FindFile(strOrgFile+".org"))
+//	{
+//		CopyFile(strOrgFile,strOrgFile+".org",FALSE);
+//	}
+//
+//	fileH.Open(strPath, CFile::modeRead);
+//
+//// 	::DeleteFile(strOrgFile);
+//// 	CFile	file(strOrgFile, CFile::modeWrite|CFile::modeCreate);
+//
+//	if(!find.FindFile(strBook+".org"))
+//		CopyFile(strBook,strBook+".org",FALSE);
+//	//북마크만 따로 파일로 관리 <임시>
+//	::DeleteFile(strBook);
+//	CFile	file2(strBook, CFile::modeWrite|CFile::modeCreate);
+//
+//	struct _updn updn;
+//
+//	FillMemory(&updn, sizeof(_updn), ' ');
+//	ZeroMemory(&updn, sizeof(_updn));
+//
+//	CopyMemory(&updn.uinfo.gubn, "MY", sizeof(updn.uinfo.gubn));
+//	updn.uinfo.dirt[0] = 'U';
+//	updn.uinfo.cont[0] = 'G';
+//	CopyMemory(updn.uinfo.nblc, _T("00001"), sizeof(updn.uinfo.nblc));
+////	updn.uinfo.retc[0] = 'O';
+//	updn.uinfo.retc[0] = 'U';
+//
+//	sprintf(szTemp, "%02d", gno);
+//	CString strGrouptName = GetGroupName(gno);
+//	CString strGno = szTemp;
+//
+//	CopyMemory(updn.ginfo.gnox, szTemp, sizeof(updn.ginfo.gnox));
+//	CopyMemory(updn.ginfo.gnam, (LPCTSTR)strGrouptName, min(sizeof(updn.ginfo.gnam), strGrouptName.GetLength()));
+//
+//	const int fileSize = gsl::narrow_cast<int>(fileH.GetLength());
+//	const UINT newSize = sizeof(_inters);
+//
+//	const int nrec = fileSize/newSize;
+//	sprintf(szTemp, "%04d", nrec + 1);
+//
+//	CopyMemory(updn.ginfo.jrec, szTemp, sizeof(updn.ginfo.jrec));
+//
+//	strSendData = CString((char*)&updn, sizeof(_updn));
+//	strImsiData.Format("%2s%c%c%80s%5s%c%40s%2s%-20s%-4s","MY",'U','G'," ","00001",'O'," ",strGno,updn.ginfo.gnam,szTemp);
+//
+//	CString strJinfo;
+//	bool bSetBookMark = false;	//2014.06.05 KSJ 만약에 북마크가 하나도 설정되어 있지 않으면 저장할 필요가 없다.
+//
+//	for (int i = 0; i < MAX_LINE; i++)
+//	{
+//		pInters = (_inters *) new char[sz_inters];
+//		ZeroMemory(pInters, sz_inters);
+//
+//		struct _jinfo jinfo;
+//		ZeroMemory(&jinfo, sizeof(_jinfo));
+//		FillMemory(&jinfo, sizeof(_jinfo), ' ');
+//
+//		if(!endfile)
+//		{
+//			readL = fileH.Read(pInters, sz_inters);
+//
+//			if (readL < sz_inters)
+//				endfile = true;
+//		}
+//
+//		jinfo.gubn[0] = pInters->gubn[0];
+//
+//		if(strlen(pInters->code) == 0)
+//		{
+//			CopyMemory(jinfo.code, "            ", sizeof(jinfo.code));
+//			CopyMemory(jinfo.xprc, "          ", sizeof(jinfo.xprc));
+//			CopyMemory(jinfo.xnum, "          ", sizeof(jinfo.xnum));
+//		}
+//		else if(jinfo.gubn[0] == BOOK_MARK)
+//		{
+//			CString sBookmark, stmp;
+//			sBookmark.Format("m%05d", i);
+//			stmp.Format("%s", pInters->code);
+//			stmp.TrimRight();
+//			if(sBookmark != stmp)
+//			{
+//				memset(pInters->code, 0x00, sizeof(pInters->code));
+//				CopyMemory(pInters->code, (LPSTR)(LPCTSTR)sBookmark, sBookmark.GetLength());
+//			}
+//
+//			CopyMemory(jinfo.code, (LPSTR)(LPCTSTR)sBookmark, sBookmark.GetLength());
+//			CopyMemory(jinfo.xprc, strlen(pInters->xprc) > 0 ? pInters->xprc:"          ", sizeof(jinfo.xprc));	//2015.04.08 KSJ Cstring에 넣기때문에 널값이 들어가면 안됨.
+//			CopyMemory(jinfo.xnum, strlen(pInters->xnum) > 0 ? pInters->xnum:"          ", sizeof(jinfo.xnum)); //2015.04.08 KSJ Cstring에 넣기때문에 널값이 들어가면 안됨.
+//
+//			stmp.Format("%s", pInters->name);
+//			stmp.TrimRight();
+//			CopyMemory(jinfo.xprc, (LPSTR)(LPCTSTR)stmp, stmp.GetLength());
+//		}
+//		else
+//		{
+//			CopyMemory(jinfo.code, pInters->code, sizeof(jinfo.code));
+//			CopyMemory(jinfo.xprc, strlen(pInters->xprc) > 0 ? pInters->xprc:"          ", sizeof(jinfo.xprc));	//2015.04.08 KSJ Cstring에 넣기때문에 널값이 들어가면 안됨.
+//			CopyMemory(jinfo.xnum, strlen(pInters->xnum) > 0 ? pInters->xnum:"          ", sizeof(jinfo.xnum)); //2015.04.08 KSJ Cstring에 넣기때문에 널값이 들어가면 안됨.
+//		}
+//
+//		strSendData += CString((char*)&jinfo, sizeof(_jinfo));
+//
+//		strJinfo.Format("%-33s",CString((char*)&jinfo, sizeof(_jinfo)));
+//
+//		strImsiData += strJinfo;
+//
+//		//file.Write(pInters, sz_inters);
+//
+//		//북마크만 따로 파일로 관리
+//		struct _bookmarkinfo binfo;
+//		//		FillMemory(&binfo, sizeof(_bookmarkinfo), ' ');
+//		ZeroMemory(&binfo, sizeof(_bookmarkinfo));
+//
+//		if(strlen(pInters->code) == 0)
+//		{
+//			CopyMemory(binfo.code, "            ", sizeof(binfo.code));
+//			FillMemory(binfo.name, sizeof(binfo.name), 0x20);
+//			binfo.bookmark[0] = '0';
+//		}
+//		else
+//		{
+//			CopyMemory(binfo.code, pInters->code, sizeof(binfo.code));
+//			CopyMemory(binfo.name, pInters->name, sizeof(binfo.name));
+//			binfo.bookmark[0] = pInters->bookmark[0] == '1' ? '1':'0';//2015.04.03 KSJ 1이아니면 0으로 해준다.
+//
+//  			if(pInters->bookmark[0] == '1' || pInters->code[0] == 'm')	//2015.05.31 KSJ  책갈피도 bookmark.i 에 저장된다.
+//				bSetBookMark = true;
+//		}
+//
+//		file2.Write(&binfo, sizeof(_bookmarkinfo));
+//	}
+//	fileH.Close();
+//	file2.Close();
+//	//file.Close();
+//
+//	//2014.06.05 KSJ 북마크가 지정되어 있지 않으면 저장할 필요가 없어서 삭제한다.
+//	if(!bSetBookMark) ::DeleteFile(strBook);
+//
+//	char	key{};
+//	_trkey* trkey = (struct _trkey*)&key;
+////	_trkey* trkey = (struct _trkey*)&((CGroupWnd*)m_pGroupWnd)->m_pTrkey;
+//
+//	m_SendKey = TRKEY_GRIDNEW;
+//	trkey->group = m_nIndex;
+//
+//	if(bVisible == false)
+//	{
+//		sData.SetData(trUPDOWN, key, (LPSTR)(LPCTSTR)strSendData, strSendData.GetLength(), "");
+//		m_pMainWnd->SendMessage(WM_MANAGE, MK_SENDTR, (LPARAM)&sData);
+//		m_pMainWnd->SendMessage(WM_MANAGE, MK_PROCDLL);
+//
+//		CString string = "OnPortfolio\tok";
+//		m_pViewWnd->SendMessage(WM_USER, MAKEWPARAM(procDLL, 0), (LPARAM)(LPCTSTR) string);
+//	}
+//	else
+//	{
+//		CString string;
+//		string.Format("%s%c%s,%s,%s,%s,%s,%d","SetTrData",P_TAB,((CMainWnd*)m_pMainWnd)->m_mapName,((CMainWnd*)m_pMainWnd)->m_sMapHandle,strOrgFile,strBook,strImsiData,strImsiData.GetLength());
+//		m_pViewWnd->SendMessage(WM_USER, MAKEWPARAM(procDLL, 0), (LPARAM)(LPCTSTR) string);
+//	}
+//
+//// 	CString string = "OnPortfolio\tok";
+//// 	m_pViewWnd->SendMessage(WM_USER, MAKEWPARAM(procDLL, 0), (LPARAM)(LPCTSTR) string);
+////	m_bEditWork = TRUE;
+//
+//	OnAllsave();
 }
 
 void CGridWnd::saveInterestInverse(BOOL bVisible, bool btmp, int gno)
 {
-	CString slog;
-	slog.Format("\r\n----------------saveInterestInverse gno=[%d]----------------------\r\n" , gno);
-	OutputDebugString(slog);
 	if (gno < 0)
 	{
 		if (CAST_TREEID(m_kind)->kind == xINTEREST)
@@ -9985,20 +10086,13 @@ void CGridWnd::saveInterestInverse(BOOL bVisible, bool btmp, int gno)
 			return;
 	}
 
-	CWnd*	pTreeWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
-	const int	nOver = (int)pTreeWnd->SendMessage(WM_MANAGE, MK_INPUTOVER);
 
-	//분할로 보기모드일 경우
-	if(nOver != MO_VISIBLE)
-	{
-		//분할로 보여지고 있는 그룹 저장하기
+	
 
-		const int gno = ((CGroupWnd*)m_pGroupWnd)->WriteFileSumtoEachGroup(m_kind);
 
-		//서버에 올리기
-		saveInterestVisible(bVisible,gno);
-		return;
-	}
+
+	return;
+
 
 	CSendData sData;
 	CString strPath(_T("")), strTemp(_T("")), strBook(_T(""));
@@ -10052,7 +10146,7 @@ void CGridWnd::saveInterestInverse(BOOL bVisible, bool btmp, int gno)
 	updn.uinfo.dirt[0] = 'U';
 	updn.uinfo.cont[0] = 'G';
 	CopyMemory(updn.uinfo.nblc, _T("00001"), sizeof(updn.uinfo.nblc));
-    updn.uinfo.retc[0] = 'O';
+	updn.uinfo.retc[0] = 'O';
 
 	sprintf(szTemp, "%02d", gno);
 //	CString strGrouptName = GetGroupName(gno);
@@ -10163,67 +10257,7 @@ void CGridWnd::saveBookmark(BOOL bVisible, int gno)
 
 }
 
-void CGridWnd::saveServer(int gno)
-{
-CString slog;
-slog.Format("\r\n----------------saveServer gno[%d]---------------------\r\n", gno);
-OutputDebugString(slog);
-	const int nScnt = GetRowcount();
 
-	std::string buffer;
-	buffer.resize(sz_updn + sz_jinfo * nScnt + 1, ' ');
-
-	struct _updn* updn = (struct _updn*)buffer.data();
-	CopyMemory(updn->uinfo.gubn, "MY", sizeof(updn->uinfo.gubn));
-	updn->uinfo.dirt[0] = 'U';
-	updn->uinfo.cont[0] = 'G';
-
-	CopyMemory(updn->uinfo.nblc, _T("00001"), sizeof(updn->uinfo.nblc));
-	updn->uinfo.retc[0] = 'O';
-
-	CString sNum = AxStd::FORMAT("%02d", gno);
-	CString strGrouptName = GetGroupName(gno);
-
-	CopyMemory(updn->ginfo.gnox, sNum, sizeof(updn->ginfo.gnox));
-	CopyMemory(updn->ginfo.gnam, (LPCTSTR)strGrouptName, min(sizeof(updn->ginfo.gnam), strGrouptName.GetLength()));
-
-	sNum.Format("%04d", nScnt);
-	CopyMemory(updn->ginfo.jrec, sNum, sizeof(updn->ginfo.jrec));
-
-	const gsl::span<struct _jinfo> spanInter((struct _jinfo*)(buffer.data() + sz_updn), nScnt);
-
-	int ii = 0;
-	for_each(spanInter.begin(), spanInter.end(), [&](auto& jinfo) {
-		auto& pInters = m_inters.at(ii++);
-		if (!pInters->code.IsEmpty())
-		{
-			FillMemory(&jinfo, sz_jinfo, ' ');
-			jinfo.gubn[0] = pInters->gubn > 0 ? pInters->gubn : '0';
-			CopyMemory(jinfo.code, pInters->code, min(sizeof(jinfo.code), pInters->code.GetLength()));
-
-			if (!pInters->xprc.IsEmpty())
-				CopyMemory(jinfo.xprc, pInters->xprc, min(sizeof(jinfo.xprc), pInters->xprc.GetLength()));
-			if (!pInters->xnum.IsEmpty())
-				CopyMemory(jinfo.xnum, pInters->xnum, min(sizeof(jinfo.xnum), pInters->xnum.GetLength()));
-		}
-	});
-
-	char key{};
-	_trkey* trkey = (struct _trkey*)&key;
-	trkey->kind = TRKEY_GRIDSAVE;
-	trkey->group = gno;
-
-	CSendData sData;
-	sData.SetData(trUPDOWN, key, buffer.data(), buffer.size(), "");
-	m_pMainWnd->SendMessage(WM_MANAGE, MK_SENDTR, (LPARAM)&sData);
-	m_pMainWnd->SendMessage(WM_MANAGE, MK_PROCDLL);
-
-//	if (CAST_TREEID(m_kind)->kind == xINTEREST)
-	m_bEditWork = true;
-
-	CString string = "OnPortfolio\tok";
-	m_pViewWnd->SendMessage(WM_USER, MAKEWPARAM(procDLL, 0), (LPARAM)(LPCTSTR)string);
-}
 
 
 void CGridWnd::saveInterest(BOOL bVisible, bool btmp, int gno, bool bBookMark)
@@ -10234,62 +10268,59 @@ void CGridWnd::saveInterest(BOOL bVisible, bool btmp, int gno, bool bBookMark)
 	if (gno <= 0)
 		return;
 
-	saveServer(gno);
+	((CGroupWnd*)m_pGroupWnd)->WriteFileSumtoEachGroup(gno);
+	//saveServer(gno);
+
+	//CSendData sData;
+	//CString strBook(_T(""));
+	//CString strSendData(_T(""));
+	//CString strImsiData(_T(""));
+
+	//strBook.Format("%s/%s/%s/bookmark.i%02d", m_root, USRDIR, m_user, gno);
+
+	//const int nScnt = GetRowcount();
 
 
+	//CFileFind find;
+	//if(!find.FindFile(strBook+".org"))
+	//	CopyFile(strBook,strBook+".org",FALSE);
+	////북마크만 따로 파일로 관리 <임시>
+	//::DeleteFile(strBook);
+	//CFile	file2(strBook, CFile::modeWrite|CFile::modeCreate);
 
+	//CString strJinfo;
+	//bool bSetBookMark = false;	//2014.06.05 KSJ 만약에 북마크가 하나도 설정되어 있지 않으면 저장할 필요가 없다.
+	//for (int i = 0; i < nScnt; i++)
+	//{
+	//	auto& pInters = m_inters.at(i);
 
-	CSendData sData;
-	CString strBook(_T(""));
-	CString strSendData(_T(""));
-	CString strImsiData(_T(""));
+	//	//북마크만 따로 파일로 관리
+	//	struct _bookmarkinfo binfo;
+	//	FillMemory(&binfo, sizeof(_bookmarkinfo), ' ');
+	//	if(pInters->code.IsEmpty())
+	//	{
+	//		binfo.bookmark[0] = '0';
+	//	}
+	//	else
+	//	{
+	//		binfo.gubn[0] = pInters->gubn;
+	//		CopyMemory(binfo.code, pInters->code, sizeof(binfo.code));
+	//		CopyMemory(binfo.name, pInters->name, sizeof(binfo.name));
+	//		binfo.bookmark[0] = pInters->bookmark == '1' ? '1':'0';//2015.04.03 KSJ 1이아니면 0으로 해준다.
+	//		if(pInters->gubn == ROW_MARK || pInters->code[0] == 'm')	//2015.05.31 KSJ  책갈피도 bookmark.i 에 저장된다.
+	//			bSetBookMark = true;
+	//	}
+	//	file2.Write(&binfo, sizeof(_bookmarkinfo));
+	//}
+	//file2.Close();
 
-	strBook.Format("%s/%s/%s/bookmark.i%02d", m_root, USRDIR, m_user, gno);
+	////2014.06.05 KSJ 북마크가 지정되어 있지 않으면 저장할 필요가 없어서 삭제한다.
+	//if(!bSetBookMark)	::DeleteFile(strBook);
 
-	const int nScnt = GetRowcount();
-
-
-
-	CFileFind find;
-	if(!find.FindFile(strBook+".org"))
-		CopyFile(strBook,strBook+".org",FALSE);
-	//북마크만 따로 파일로 관리 <임시>
-	::DeleteFile(strBook);
-	CFile	file2(strBook, CFile::modeWrite|CFile::modeCreate);
-
-	CString strJinfo;
-	bool bSetBookMark = false;	//2014.06.05 KSJ 만약에 북마크가 하나도 설정되어 있지 않으면 저장할 필요가 없다.
-	for (int i = 0; i < nScnt; i++)
-	{
-		auto& pInters = m_inters.at(i);
-
-		//북마크만 따로 파일로 관리
-		struct _bookmarkinfo binfo;
-		FillMemory(&binfo, sizeof(_bookmarkinfo), ' ');
-		if(pInters->code.IsEmpty())
-		{
-			binfo.bookmark[0] = '0';
-		}
-		else
-		{
-			binfo.gubn[0] = pInters->gubn;
-			CopyMemory(binfo.code, pInters->code, sizeof(binfo.code));
-			CopyMemory(binfo.name, pInters->name, sizeof(binfo.name));
-			binfo.bookmark[0] = pInters->bookmark == '1' ? '1':'0';//2015.04.03 KSJ 1이아니면 0으로 해준다.
-			if(pInters->gubn == ROW_MARK || pInters->code[0] == 'm')	//2015.05.31 KSJ  책갈피도 bookmark.i 에 저장된다.
-				bSetBookMark = true;
-		}
-		file2.Write(&binfo, sizeof(_bookmarkinfo));
-	}
-	file2.Close();
-
-	//2014.06.05 KSJ 북마크가 지정되어 있지 않으면 저장할 필요가 없어서 삭제한다.
-	if(!bSetBookMark)	::DeleteFile(strBook);
-
-	if(bVisible == false)
-	{
-		m_pMainWnd->SendMessage(WM_MANAGE, MK_PROCDLL);
-	}
+	//if(bVisible == false)
+	//{
+	//	m_pMainWnd->SendMessage(WM_MANAGE, MK_PROCDLL);
+	//}
 }
 
 CString MakePacket(CString& code, CString amount, CString price, CString name)
@@ -10426,6 +10457,7 @@ int CGridWnd::GetRowcount()
 	for (i = maxRow ; i >= 0; i--)
 	{
 		auto& pInters = m_inters.at(i);
+		pInters->code.Trim();
 		if (!pInters->code.IsEmpty())
 			break;
 	}
@@ -12369,10 +12401,6 @@ void CGridWnd::SetFontSize(int size)
 
 void CGridWnd::uploadOK()
 {
-	CString slog;
-	slog.Format("\r\n----------------uploadOK ----------------------\r\n");
-	OutputDebugString(slog);
-
 	int	sendL = 0;
 	char	sendB[16 * 1024]{}, tempB[32]{};
 	//	char	strUinfo[500];

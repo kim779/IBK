@@ -54,25 +54,6 @@ void CAxBrowser::Dump(CDumpContext& dc) const
 
 #endif //_DEBUG
 
-void CAxBrowser::OnBeforeNavigate2(LPCTSTR lpszURL, DWORD nFlags, LPCTSTR lpszTargetFrameName, CByteArray& baPostedData, LPCTSTR lpszHeaders, gsl::not_null<BOOL*> pbCancel) 
-{
-	const CWnd *pWnd = GetParent();
-	LPCSTR stURL = "axis://menu/";
-	CString mapn, url = lpszURL;
-
-	if (url.Find(stURL)!=-1 && pWnd)
-	{
-		url.Replace(stURL, "");
-		if (url.GetLength()==7) 
-			url = url.Right(6);
-		mapn.Format("IB200100 /t/S/d1301\t%s\n", (LPCSTR)url);
-		pWnd->SendMessage(WX_EVT_MAPN, NULL, (LPARAM)(LPCSTR)mapn);
-		*pbCancel = TRUE;
-	}
-
-	CHtmlView::OnBeforeNavigate2(lpszURL, nFlags,	lpszTargetFrameName, baPostedData, lpszHeaders, pbCancel);
-}
-
 void CAxBrowser::NavigateFromMemory( LPCSTR dat, int len )
 {
 	if (dat==NULL) return;
@@ -135,4 +116,24 @@ void CAxBrowser::NavigateFromStream( IStream *pStream )
 	
 	if (pPersistStreamInit) pPersistStreamInit->Release();
 	if (pHtmlDoc) pHtmlDoc->Release();
+}
+
+
+void CAxBrowser::OnBeforeNavigate2(LPCTSTR lpszURL, DWORD nFlags, LPCTSTR lpszTargetFrameName, CByteArray& baPostedData, LPCTSTR lpszHeaders, BOOL* pbCancel)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	const CWnd* pWnd = GetParent();
+	LPCSTR stURL = "axis://menu/";
+	CString mapn, url = lpszURL;
+
+	if (url.Find(stURL) != -1 && pWnd)
+	{
+		url.Replace(stURL, "");
+		if (url.GetLength() == 7)
+			url = url.Right(6);
+		mapn.Format("IB200100 /t/S/d1301\t%s\n", (LPCSTR)url);
+		pWnd->SendMessage(WX_EVT_MAPN, NULL, (LPARAM)(LPCSTR)mapn);
+		*pbCancel = TRUE;
+	}
+//	CHtmlView::OnBeforeNavigate2(lpszURL, nFlags, lpszTargetFrameName, baPostedData, lpszHeaders, pbCancel);
 }

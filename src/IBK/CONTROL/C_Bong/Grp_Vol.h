@@ -1,7 +1,13 @@
 // Grp_Vol.h: interface for the CGrp_Vol class.
 //
 //////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_GRP_VOL_H__F4C1336A_742A_42C8_B8C6_6692C8B364B7__INCLUDED_)
+#define AFX_GRP_VOL_H__F4C1336A_742A_42C8_B8C6_6692C8B364B7__INCLUDED_
+
+#if _MSC_VER > 1000
 #pragma once
+#endif // _MSC_VER > 1000
 
 #include "Grp_Base.h"
 
@@ -22,3 +28,5 @@ public:
 	CBrush	*m_brUp, *m_brDown;
 	CPen	*m_penUp, *m_penDown;
 };
+
+#endif // !defined(AFX_GRP_VOL_H__F4C1336A_742A_42C8_B8C6_6692C8B364B7__INCLUDED_)

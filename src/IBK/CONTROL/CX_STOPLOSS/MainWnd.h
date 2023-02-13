@@ -65,6 +65,7 @@ private:
 	CString		m_sMapHandle;
 	CString		m_szName;
 	CStringArray	m_arLog;
+	BOOL		m_bNewUnit;	// 2023 호가단위개선
 
 private:
 	void	SendTR(CString name, CString data, BYTE type, int key);
@@ -75,6 +76,11 @@ private:
 	void	SendLog(CString sData);
 	void	SendLogOnce();
 	BOOL	RemoveCondition(CString keys);
+	int	checkDelta(int spVal, int icodetype);
+	int	checkDelta(int spVal, int iCodeType, bool bPlus);
+	int	getTickPrice(int price, int tick, int codetype, int iplus);
+	int	getTickValue(int price, int tick, int codetype);
+	int	getPrice(int price, int codetype, int iroundup = 0/*올림*/);
 
 // Overrides
 	// ClassWizard generated virtual function overrides

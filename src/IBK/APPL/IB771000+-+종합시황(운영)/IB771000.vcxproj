@@ -164,7 +164,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <OutputFile>../../../dev/IB771000.DLL</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/IB771000.DLL</OutputFile>
       <ImportLibrary>.\Debug\IB771000.lib</ImportLibrary>
       <AdditionalDependencies>msimg32.lib;../../control/fx_misc/debug/fx_misc.lib;imm32.lib;winmm.lib;../../dll/sm/Debug/axissm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\IB771000.def</ModuleDefinitionFile>

@@ -478,7 +478,6 @@ void CPage1::ExceptionMsg()
  
 BOOL CPage1::OnSetActive() 
 {
-AxStd::_Msg("OnSetActive");
 	m_activePage = true;
 
 	if (m_activePage && m_activegno != -1)
@@ -3004,7 +3003,7 @@ void CPage1::savingInterest(int gno)
 			{
 				CopyMemory(bInfo->code, pinter->code, 12);	
 				if (pinter->code[0] == 'm')
-					CopyMemory(bInfo->name, pinter->name, min(sizeof(pinter->name), sizeof(bInfo->name)));
+					CopyMemory(bInfo->name, pinter->name, min(pinter->name.GetLength(), sizeof(bInfo->name)));
 				bInfo->bookmark[0] = pinter->bookmark == '1' ? '1':'0';	//2015.04.03 KSJ 1이아니면 0으로 해준다.
 			}
 			
@@ -4853,75 +4852,35 @@ void CPage1::AppendItem(CString sCodes)
 
 //종목 넣기
 void CPage1::insertList2(CString sCodes)
-{
-	CString	gname;
-	if (m_activegno == -1)
-	{
-// 		GuideMsg("선택된 그룹이 없습니다. 새그룹을 등록하세요", false);
-		return;
-	}
-	
+{	
 	m_bIsEdit = TRUE;
 	m_bFirstDuplicateNO = false;		//2012.04.02 KSJ 처음에 디폴트로..
 
-	int	nitem{};
-	CString	code, name, sCode;
+	_vAddInter.clear();
+	std::vector<CString> vCodes;
+	AxStd::SplitSub(vCodes, sCodes, "\t");
 
-	do 
+	CString name;
+	for (auto code : vCodes)
 	{
-		sCode.Empty();
-
-		sCode = parseX(sCodes, "\t");
-
-		//2012.04.04 KSJ 종목코드가 0이면 항상 동화약품이 들어감.
-		if(sCode.GetLength() < 6)
-			break;
-		//KSJ
-		
-		nitem = findMatchIndex(sCode, 0);	//code
-		
-		if(nitem == -1)
+		if (code.GetLength() < 6)
 			return;
-		
-		code = m_list1.GetItemText(nitem, 0);
+
+		code.TrimLeft("A");
+		code.Trim();
+		const int nitem = findMatchIndex(code, 0);
+		if (nitem == -1)
+			return;
+
 		name = m_list1.GetItemText(nitem, 1);
+		const int gubn = m_tree.GetItemData(m_tree.GetSelectedItem());
 
-		if (existCodeInList2(code))
-		{	
-			//		GuideMsg("동일한 종목이 관심그룹 내에 존재합니다.");
-			continue;
-		}
-		
-		if (m_list2.GetItemCount() >= maxJONGMOK)
-		{
-			//		GuideMsg(idTOstring(IDS_GUIDE1));
-			// 		MessageBox("최대 100 종목만 등록 가능 합니다.", "IBK투자증권", MB_OK);
-			break;
-		}
-		
-		int gubn = m_tree.GetItemData(m_tree.GetSelectedItem());
-		
-		CString temp;
-		
-		if(gubn < 100000 && gubn > 10000)
-		{
-			temp.Format("%05d", gubn);
-			temp = temp.Mid(0,2);
-			gubn = atoi(temp);
-		}
-		else if(gubn >= 100000)
-		{
-			temp.Format("%06d", gubn);
-			temp = temp.Mid(0,2);
-			gubn = atoi(temp);
-		}
-		
-		const int position = m_list2.GetItemCount();
-		AppendItemToList2(position, gubn, code, name);
-		
-		selcMark(&m_list2, position);
-
-	} while (!code.IsEmpty());	
+		auto pinter = _vAddInter.emplace_back(std::make_shared<_intersx>());
+		pinter->gubn = (char)gubn;
+		pinter->code = code;
+		pinter->name = name;
+		pinter->bookmark = '0';
+	}
 }
 
 //새그룹 생성
@@ -6202,6 +6161,14 @@ void CPage1::setManageGroup(char* datB)
 		group[2] = CString(item.ogrs, 2).Trim();
 		group[3] = CString(item.gnam, 30).Trim();
 	});
+
+	if (nCount == 0)
+	{
+		auto& group = m_manageGroup.at(0);
+		group[0].Empty();
+		group[2].Empty();
+		group[3].Empty();
+	}
 }
 
 void CPage1::traceManageGroup()
@@ -7077,7 +7044,7 @@ void CPage1::OnGetdispinfoList2(NMHDR* pNMHDR, LRESULT* pResult)
 					lstrcpy(pItem->pszText, item->code);
 				break;
 			case 1:
-				lstrcpy(pItem->pszText, item->name);
+				lstrcpy(pItem->pszText, item->name.Trim());
 				break;
 			}
 		}
@@ -7143,12 +7110,10 @@ void  _intersx::copy(void* item)
 
 void CPage1::receiveOub(int key, CString data)
 {
-XMSG();
 	switch (key)
 	{
 	case dnGROUPLIST:
 		{
-AxStd::_Msg("[%s]", data);
 			int cnt = atoi(data.Left(4));
 			data = data.Mid(4);
 			const gsl::span<_glistex> groupList((_glistex*)data.GetString(), cnt);
@@ -7172,9 +7137,11 @@ AxStd::_Msg("[%s]", data);
 		{
 			m_inters.clear();
 			const CString skey = data.Left(2);
-			const CString sGroupName = data.Mid(2, 20);
-			const CString sCount = data.Mid(22, 4);
-			
+			if (atoi(skey) < 0 || data.GetLength() < 20)
+				return;
+
+			const CString sGroupName = data.Mid(2, 20).Trim();
+			const CString sCount = data.Mid(22, 4);			
 			data = data.Mid(26);
 
 			const gsl::span<_jinfo> codelist((_jinfo*)data.GetString(), min(atoi(sCount), 100));
@@ -7184,8 +7151,56 @@ AxStd::_Msg("[%s]", data);
 				inter->name = GetCodeName(inter->code);
 			});
 
+
+			CString	fileBook = AxStd::FORMAT("%s/%s/%s/bookmark.i%s", m_root, USRDIR, m_name, skey);
+			CFileFind find;
+
+			if (find.FindFile(fileBook))
+			{
+				CFile	fileB(fileBook, CFile::modeRead);
+				if (fileB.m_hFile != CFile::hFileNull)
+				{
+					CString bookbuffer;
+					const size_t size = gsl::narrow<size_t>(fileB.GetLength());
+
+					if (size == fileB.Read(bookbuffer.GetBuffer(size + 1), size))
+					{
+						bookbuffer.ReleaseBuffer();
+						const gsl::span<_bookmarkinfo> booklist((_bookmarkinfo*)bookbuffer.GetString(), size / sizeof(_bookmarkinfo));
+
+						int ii = 0;
+						for (const auto& item : booklist)
+						{
+							if (item.code[0] == 'm')
+							{
+								if (ii < (int)m_inters.size())
+								{
+									auto inter = m_inters.at(ii);
+									if (inter->code[0] == 'm')
+										inter->name = CString(item.name, 32).Trim();
+								}
+							}
+							ii++;
+						}
+					}
+					fileB.Close();
+				}
+			}
+			
+			if (_vAddInter.size() > 0)
+				m_inters.insert(m_inters.end(), _vAddInter.begin(), _vAddInter.end());
+
+			if (m_inters.size() > 100)
+				m_inters.resize(100);
+
 			m_list2.SetItemCountEx(m_inters.size());
 			m_list2.Invalidate();
+
+			if (_vAddInter.size() > 0)
+			{
+				selcMark(&m_list2, m_inters.size() - 1);
+				_vAddInter.clear();
+			}
 			
 			updateList2sum();
 		}

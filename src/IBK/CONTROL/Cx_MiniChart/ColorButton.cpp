@@ -204,7 +204,7 @@ void CColorButton::DrawButtonText(CDC *DC, CRect R, const char *Buf, COLORREF Te
 
 		DC->Polyline(pPt, 10);
 	}
-
+	cpen.DeleteObject();
 	DC->SelectObject(sPen);
 }
 

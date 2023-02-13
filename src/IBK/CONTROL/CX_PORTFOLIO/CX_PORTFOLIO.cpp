@@ -126,9 +126,10 @@ UINT AFXAPI HashData(LPCSTR key)
 #include "CDlgInter.h"
 #include "CInterWnd.h"
 
-__declspec(dllexport) CString WINAPI axReadGroup(char* sRoot, char* sUser)
+__declspec(dllexport) CString WINAPI axReadGroup(long wnd, char* sUser)
 {
-	CInterWnd* pwnd = new CInterWnd(sRoot, sUser);
+	CString str;
+	/*CInterWnd* pwnd = new CInterWnd(sRoot, sUser);
 	if (!pwnd->Create(NULL, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, CRect(0, 0, 0, 0), nullptr, 100))
 	{
 		TRACE("CPortfolio Create Failed\n");
@@ -166,9 +167,12 @@ __declspec(dllexport) CString WINAPI axReadGroup(char* sRoot, char* sUser)
 
 	CString strHwnd;
 	strHwnd.Format("%d", nullptr);
-	::SendMessage(hWnd, WM_INTERMSG, MAKEWPARAM(MMSG_SEARCH_INTERGROUP, 0), (LPARAM)strHwnd.operator LPCSTR());
-	//CDlgInter dlg(m_pMainFrame);
-	//dlg.DoModal();
+	::SendMessage(hWnd, WM_INTERMSG, MAKEWPARAM(MMSG_SEARCH_INTERGROUP, 0), (LPARAM)strHwnd.operator LPCSTR());*/
+	CDlgInter dlg((CWnd*)wnd, sUser);
+	if (dlg.DoModal() == IDOK)
+	{
+		TRACE("!231");
+	}
 	/*CDlgInter dlg(nullptr, sRoot);
 	
 	if (dlg.DoModal() == IDOK)

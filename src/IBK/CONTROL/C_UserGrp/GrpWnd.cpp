@@ -483,8 +483,6 @@ void CGrpWnd::RealTimeData(struct _alertR* alert)
 	}
 }
 
-
-
 bool CGrpWnd::RealTimeBasic(CString sCode, DWORD* data)
 {
 	CString	sVal, sTime = "";
@@ -494,8 +492,11 @@ bool CGrpWnd::RealTimeBasic(CString sCode, DWORD* data)
 		if (sTime.IsEmpty())
 			return false;
 	}
-		else
-			return false;
+	else
+		return false;
+
+	if (sTime == "000000")
+		sTime = "120000";
 
 	bool	bChange = false;
 	bool	bInsert = true;
@@ -716,11 +717,11 @@ void CGrpWnd::DrawGraph(CDC *pDC)
 		}
 	}
 
-	//for (int ii = 0; ii < m_GrpCnt; ii++)
-	//{
-	//	if(m_pGrpInfo[ii]->m_bHide == FALSE)
-	//		m_pGrpInfo[ii]->DrawName(pDC);
-	//}
+	for (int ii = 0; ii < m_GrpCnt; ii++)
+	{
+		if(m_pGrpInfo[ii]->m_bHide == FALSE)
+			m_pGrpInfo[ii]->DrawName(pDC);
+	}
 
 	DrawEmpty(pDC, false);
 	m_pCrossLine->DrawCrossLine(pDC);

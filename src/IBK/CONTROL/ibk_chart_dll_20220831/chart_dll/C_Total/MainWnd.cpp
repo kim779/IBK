@@ -1055,12 +1055,18 @@ int CMainWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_strDay.Format("%04d%02d%02d", time.GetYear(), time.GetMonth(), time.GetDay());
 
 	m_pFont = m_pApp->GetFont(m_pwndView, m_iFPoint, m_strFName);
-
 	if (!m_pApp->m_hGMainLib)
 		m_pApp->m_hGMainLib = LoadLibrary("axisGMain.dll");
+
+	if (!m_pApp->m_hGMainLib)
+		m_pApp->m_hGMainLib = LoadLibraryEx("axisGMain.dll", NULL, LOAD_WITH_ALTERED_SEARCH_PATH);		
+
 	if (!m_pApp->m_hGMainLib)
 	{
-		AfxGetMainWnd()->MessageBox("axisGMain.dll LoadLibrary error", COMPANYNAME);
+		DWORD err = GetLastError();
+		CString sErr;
+		sErr.Format("axisGMain.dll LoadLibrary error [%d]", err);
+		AfxGetMainWnd()->MessageBox(sErr, COMPANYNAME);
 		return -1;
 	}
 

@@ -114,7 +114,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/CX_ACCOUNT.DLL</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/CX_ACCOUNT.DLL</OutputFile>
       <ImportLibrary>.\Debug\CX_ACCOUNT.lib</ImportLibrary>
       <ModuleDefinitionFile>.\CX_Account.def</ModuleDefinitionFile>
     </Link>

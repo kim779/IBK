@@ -295,7 +295,7 @@ BOOL CToolWnd::OnCommand(WPARAM wParam, LPARAM lParam)
 // 			SendTree(index);			
 		}
 		break;
-	case IDC_CB_GROUP:
+	case IDC_CB_GROUP://m_btntab->m_cbGroup replace
 		if (HIWORD(wParam) == CBN_SELCHANGE)
 		{
 			const int	nIndex = m_cbGROUP.GetCurSel();

@@ -78,8 +78,8 @@
 #include <windef.h>
 #define COMPILE_MULTIMON_STUBS
 #include "multimon.h"
-#include <Tlhelp32.h>		// processï¿½ï¿½ï¿½
-//#include <WinAble.h>  //vc2019 ï¿½Ö¼ï¿½
+#include <Tlhelp32.h>		// process»ç¿ë
+//#include <WinAble.h>  //vc2019 ÁÖ¼®
 #include <afxinet.h>
 #include <uxtheme.h>
 #include <comutil.h>
@@ -116,9 +116,9 @@ static CMainFrame* m_pMain = NULL;
 #pragma	comment(lib, "SUiPre.lib")
 
 //** macho begin 2008-03-20
-#define CALLCENTER1		"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : 1588-0030, 1544-0050"
-#define CALLCENTER2		"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : 1544-0050, 1588-0030"
-#define CALLCENTER3		"  ï¿½Ø¿ï¿½ï¿½Ö½ï¿½ : 02-6915-2900"
+#define CALLCENTER1		"°í°´¼¾ÅÍ : 1588-0030 , 1544-0050"
+#define CALLCENTER2		"°í°´¼¾ÅÍ : 1544-0050 , 1588-0030"
+#define CALLCENTER3		"  ÇØ¿ÜÁÖ½Ä : 02-6915-2900"
 #define IBK_HOME_URL	"www.ibks.com"
 #define IDC_BTN_LOGO    12345
 #define SDIHEIGHT	91//84->89
@@ -135,17 +135,17 @@ static CMainFrame* m_pMain = NULL;
 
 #define CNT_MAXPB 10
 
-const char* CBTN_CLOSE	= "Ã¢ï¿½Ý±ï¿½";
-const char* CBTN_MAX	= "ï¿½Ö´ï¿½È­";
-const char* CBTN_MIN	= "ï¿½Ö¼ï¿½È­";
-const char* CBTN_RESTORE= "Ã¢ï¿½ï¿½ï¿½ï¿½";
+const char* CBTN_CLOSE	= "Ã¢´Ý±â";
+const char* CBTN_MAX	= "ÃÖ´ëÈ­";
+const char* CBTN_MIN	= "ÃÖ¼ÒÈ­";
+const char* CBTN_RESTORE= "Ã¢º¹¿ø";
 
-//64 bit ï¿½ï¿½ï¿½ï¿½
+//64 bit ±¸ºÐ
 typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 
 LPFN_ISWOW64PROCESS fnIsWow64Process;
 
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//°£ÆíÀÎÁõ
 //#define DF_SIMPLEAUTH 1
 #pragma warning (disable : 4477)
 
@@ -232,7 +232,7 @@ BOOL DeleteDirectory( LPCTSTR lpDirPath )
 	CString szRoot = _T("");
 	CFileFind find;
 	
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ È®ï¿½ï¿½ ï¿½Ë»ï¿½
+	// Æú´õ°¡ Á¸Àç ÇÏ´Â Áö È®ÀÎ °Ë»ç
 	bRval = find.FindFile( lpDirPath );
 	
 	if( bRval == FALSE )
@@ -356,20 +356,20 @@ int __stdcall STSDKEX_EventCallback(long lCode, void* pParam, long lParamSize)
 					TRACE(_T("[STSDKEX_PB_Callback] STSDKEX_PB_CALLBACK_ABNORMAL_MEMORY_ACCESS(#%ld,'%s')\n"),  
 						phpf->ulPID, A2T(phpf->szProcessName));
 				}
-				AfxMessageBox(_T("ï¿½Þ¸ð¸®¿ï¿½ ï¿½ã°¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ãµï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½."));
+				AfxMessageBox(_T("¸Þ¸ð¸®¿¡ Çã°¡µÇÁö ¾ÊÀº Á¢±ÙÀ» ½ÃµµÇß½À´Ï´Ù."));
 				
-				// ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½
+				// ÇÁ·Î±×·¥ Á¾·á ÄÚµå
 				//theApp.quitApplication();
 			}
 			break;
 		case STSDKEX_PB_CALLBACK_REMOTE_DETECT:
 			{
-				AfxMessageBox(_T("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½."));
+				AfxMessageBox(_T("¿ø°Ý Á¢±ÙÀ» °¨ÁöÇÏ¿´½À´Ï´Ù."));
 			}
 			break;
 		case STSDKEX_PB_CALLBACK_REMOTE_BLOCKD:
 			{
-				AfxMessageBox(_T("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½."));
+				AfxMessageBox(_T("¿ø°Ý Á¢±ÙÀ» Â÷´ÜÇÏ¿´½À´Ï´Ù."));
 			}
 			break;
 
@@ -458,7 +458,7 @@ int __stdcall STSDKEX_EventCallback(long lCode, void* pParam, long lParamSize)
 		default :
 			{
 				CString strMsg;
-				strMsg.Format(_T("ï¿½ï¿½Å·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½É¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½(lCode=0x%08x)"), lCode);
+				strMsg.Format(_T("ÇØÅ·¹æÁö ±â´É¿¡ ¹®Á¦°¡ ¹ß»ýÇß½À´Ï´Ù(lCode=0x%08x)"), lCode);
 				OutputDebugString(strMsg);
 			}
 			break;
@@ -484,7 +484,6 @@ BOOL CALLBACK MyInfoEnumProc(HMONITOR hMonitor,  HDC hdcMonitor, LPRECT lprcMoni
 
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
-	CString slog;
 	if (nCode == HC_ACTION)
 	{
 		const MSG*	msg = (MSG *) lParam;
@@ -515,10 +514,6 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 		switch (msg->message)
 		{
 		case WM_KEYDOWN:
-
-//slog.Format("\r\n ---------------------------------KeyboardProc  [%d] ----------------------------\r\n", msg->wParam);
-//OutputDebugString(slog);
-
 			if (msg->wParam == VK_RETURN)
 			{
 				if (!(msg->lParam & 0x1000000))	// center enter key
@@ -534,8 +529,8 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 			}
 			if (msg->wParam == VK_F8/*byte('P')*/ && (GetKeyState(VK_CONTROL) & 0x8000))
 			{
-				//m_pMain->update_ticker(0,"S0000	047	1	014	506727	048	20100527	301	 	015	ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½ï¿½Ç¥ `ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ±ï¿½ï¿½ï¿½` ï¿½ï¿½ï¿½ï¿½                                                                                 	016	20100527110009    273724	041	13	042	9	044	173339	022	 	045	ï¿½Î¹ï¿½/ï¿½ï¿½ï¿½ï¿½	046	ï¿½ì·²	");
-				//ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ð¾ï¿½ï¿½
+				//m_pMain->update_ticker(0,"S0000	047	1	014	506727	048	20100527	301	 	015	À±Èí ÇÑ¹é ´ëÇ¥ `ÀÌ´ÞÀÇ ±â´ÉÇÑ±¹ÀÎ` ¼±Á¤                                                                                 	016	20100527110009    273724	041	13	042	9	044	173339	022	 	045	ÀÎ¹°/µ¿Á¤	046	Çì·²	");
+				//ÆùÆÐµåÀåºñ¿¡ ºñ¹Ð¹øÈ£ ÀÐ¾î¿È
 				if(!Axis::isCustomer)
 				{	
 					//m_pMain->ReadPhonePad(0);
@@ -660,7 +655,7 @@ bool axiscall(int msg, WPARAM wParam, LPARAM lParam)
 	case AXI_SETALL:			m_pMain->childAll((char *) lParam);	break;
 	case AXI_GETMAPNUM:			m_pMain->GetDispN((char *) lParam);	break;
 	case AXI_APPENDALLMAP:		m_pMain->AppendAllMap();		break;
-	case AXI_SENDTICKINFO:		m_pMain->sendTicInfo();			break;		// lwj 2007.09.10 Æ¼Ä¿ ï¿½ï¿½ï¿½ï¿½È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	case AXI_SENDTICKINFO:		m_pMain->sendTicInfo();			break;		// lwj 2007.09.10 Æ¼Ä¿ ÀçÁ¶È¸¸¦ À§ÇØ
 	case AXI_INPUTSCREENNO:		return m_pMain->InputScreenNo((char *)lParam) ? true : false;
 	case AXI_EDITUSERTOOL:		m_pMain->EditTool();			break;
 	case AXI_TICKSETUP:			m_pMain->SetTicker();			break;
@@ -671,12 +666,12 @@ bool axiscall(int msg, WPARAM wParam, LPARAM lParam)
 	case AXI_STOPLOSS:			m_pMain->StopLoss();			break;
 	case AXI_FOSTOPLOSS:		m_pMain->FOStopLoss();			break;
 	case AXI_HELPCOM:			m_pMain->RunHelpCom();			break;
-	case AXI_REPORT:			m_pMain->ErrReport("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ö½Å°ï¿½");	break;
+	case AXI_REPORT:			m_pMain->ErrReport("»ç¿ëÀÚ Àå¾Ö½Å°í");	break;
 	case AXI_CLOSECHILD:
-		if (lParam) // ï¿½ï¿½ï¿½ï¿½Ã¢ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¢ ï¿½Ý±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+		if (lParam) // ¼±ÅÃÃ¢ Á¦¿Ü ¸ðµçÃ¢ ´Ý±âÀÎ °æ¿ì
 		{
 			m_pMain->Setfocus_Child(wParam); 
-			m_pMain->m_mapHelper->closeAllWithoutThis();  //** ï¿½ï¿½ï¿½ï¿½Ã¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Ã¢ ï¿½Ý±ï¿½.
+			m_pMain->m_mapHelper->closeAllWithoutThis();  //** ¼±ÅÃÃ¢À» Á¦¿ÜÇÑ ¸ðµç Ã¢ ´Ý±â.
 		}
 		else
 		{
@@ -721,8 +716,12 @@ CMainFrame::CMainFrame()
 {
 	m_pMain				= (CMainFrame *) 0;
 	m_resourceHelper	= ResourceHelper();
+#ifdef DF_USE_CPLUS17
 	m_mapHelper = std::make_unique<CMapHelper>(this);
-
+#else
+	m_mapHelper			= new CMapHelper(this);
+	m_logodlg = NULL;
+#endif
 	m_axConnect = NULL;
 	m_axConnectOld = NULL;
 	
@@ -748,7 +747,7 @@ CMainFrame::CMainFrame()
 	//loadingUPcode();
 	//loadingELWcode();
 	
-	// ï¿½Ù¸ï¿½IDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, 20060117
+	// ´Ù¸¥ID·Î ÀçÁ¢¼Ó, 20060117
 	m_bReconnect = false;
 
 	m_hMRadar	= NULL;
@@ -804,9 +803,15 @@ CMainFrame::CMainFrame()
 	const int	position= m_axis->GetProfileInt(ENVIRONMENT, CHILDPOS, 0);
 
 	m_regkey	= ((CAxisApp*)m_axis)->m_regkey;
+#ifdef DF_USE_CPLUS17
 	m_axMisc = std::make_unique<CAxMisc>(Axis::home, m_regkey);
 	m_axGuide = std::make_unique<CAxGuide>(LOWORD(position), Axis::home);
-
+#else
+	m_axMisc	= new CAxMisc(Axis::home, m_regkey);
+	m_axGuide = new CAxGuide(LOWORD(position), Axis::home);
+	m_logodlg   = NULL;
+#endif
+	
 	m_MClient	= new CMDIClient(axiscall);
 	m_wizard	= NULL;
 	m_tMenu		= NULL;
@@ -924,7 +929,7 @@ CMainFrame::CMainFrame()
 
 	m_mapPBWnd.RemoveAll();
 
-	m_ShowSlide = 1;   //ï¿½Ë¾ï¿½ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ 0 ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½, 1 ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	m_ShowSlide = 1;   //ÃË¾ØÅäÅ© ½½¶óÀÌµå 0 ½½¶óÀÌµå ¾Èº¸¿©ÁÜ, 1 ½½¶óÀÌµå º¸¿©ÁÜ
 
 	m_viewHist = NULL;
 
@@ -971,7 +976,7 @@ void CMainFrame::SetPCData()
 
 	typedef char* (*GetPCDATA)();
 	HMODULE hModule = LoadLibrary(file);
-	CString sGetMAc, sGetPCData_4, sGetPCData_13, sPhyMac;   //ï¿½ï¿½ï¿½Ö¼ï¿½, ï¿½Ïµï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½, MAC ï¿½ï¿½ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½
+	CString sGetMAc, sGetPCData_4, sGetPCData_13, sPhyMac;   //¸ÆÁÖ¼Ò, ÇÏµåµð½ºÅ© Á¤º¸½Äº°ÀÚ, MAC Á¤º¸½Äº°ÀÚ
 	if (hModule)
 	{
 		GetPCDATA func = (GetPCDATA)GetProcAddress(hModule, "axGetPCDATA");
@@ -1003,9 +1008,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CMDIFrameWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
 	::DeleteFile(Axis::home + "\\exe\\axis.log");
-	WriteLog("CMainFrame  OnCreate");
+	m_slog.Format("OnCreate regkey=[%s]", m_regkey);
+	WriteLog(m_slog);
 	InitMapHK();
-	GetLocalIP();
+	WriteLog("CMainFrame  InitMapHK");
+
+
 	CString fname;
 	fname = Axis::home + "\\exe\\BLDINFO.INI";
 	CFileFind finder;
@@ -1020,14 +1028,21 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	Axis::mainWnd  = this;
 	Axis::SetSkin(GetSkinName());
 
-	m_reportCaption.Format("ï¿½ï¿½Ö½Å°ï¿½ 119 for %s", m_regkey);	
+	m_reportCaption.Format("Àå¾Ö½Å°í 119 for %s", m_regkey);	
 	GetClassName(m_hWnd, m_classN, sizeof(m_classN));
 
 	GetWindowPlacement(&m_switchpl);
 
+#ifdef DF_USE_CPLUS17
 	m_tip = std::make_unique<CTTip>(this);
 	if (!m_tip->Create(NULL, "CTTip", WS_CHILD | WS_BORDER, CRect(0, 0, 0, 0), GetDesktopWindow(), (int)m_tip.get()))
 	{
+#else
+	m_tip = new CTTip(this);
+	if (!m_tip->Create(NULL, "CTTip", WS_CHILD | WS_BORDER, CRect(0, 0, 0, 0), GetDesktopWindow(), (int)m_tip))
+	{
+		delete m_tip;
+#endif
 		m_tip = NULL;
 	}
 	else	
@@ -1038,48 +1053,50 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	AfxInitRichEdit();
 	MakeExpectSymbolTable();
 	
-	const int result = Initialize();  
+	const int result = Initialize();
 
 	ResourceHelper()->LoadIcon();
 	SetIcon(ResourceHelper()->GetIcon(), TRUE);
 
-#ifdef USE_AHNLAB_SECUREBROWSER
-
-	CString filename;
-	filename.Format("%s\\%s\\%s", Axis::home, "exe", "NOAOS.TXT");
-	FILE* fp;
-	fopen_s(&fp, filename, "rb");
-
-	int nInternalMember;
-
-	nInternalMember = 0;
-
-	if (fp)
-	{
-		nInternalMember = 1;
-		m_bNoProtect = TRUE;
-		fclose(fp);
-	}
-	else
-	{
-		GetLocalIP();
-
-		if(isIPInRange(m_ipAddr,"172.17.0.0") || isIPInRange(m_ipAddr,"172.20.0.0"))
-		{
-			nInternalMember = 1;
-			m_bNoProtect = TRUE;   
-		}
-	}
-
-	if(nInternalMember == 1)
-	{
-		AfxGetApp()->WriteProfileInt(INFORMATION, "AOS", 0);
-		AfxGetApp()->WriteProfileInt(INFORMATION, "PCFirewall", 0);
-	}
-#endif
+//#ifdef USE_AHNLAB_SECUREBROWSER
+//
+//	CString filename;
+//	filename.Format("%s\\%s\\%s", Axis::home, "exe", "NOAOS.TXT");
+//	FILE* fp;
+//	fopen_s(&fp, filename, "rb");
+//
+//	int nInternalMember;
+//
+//	nInternalMember = 0;
+//
+//	if (fp)
+//	{
+//		nInternalMember = 1;
+//		m_bNoProtect = TRUE;
+//		fclose(fp);
+//	}
+//	else
+//	{
+//		GetLocalIP();
+//
+//		if(isIPInRange(m_ipAddr,"172.17.0.0") || isIPInRange(m_ipAddr,"172.20.0.0"))
+//		{
+//			nInternalMember = 1;
+//			m_bNoProtect = TRUE;   
+//		}
+//	}
+//
+//	if(nInternalMember == 1)
+//	{
+//		AfxGetApp()->WriteProfileInt(INFORMATION, "AOS", 0);
+//		AfxGetApp()->WriteProfileInt(INFORMATION, "PCFirewall", 0);
+//	}
+//#endif
 
 	GetASTxInstall();
 	LoadNoTwoPOP_NoSaveLast();
+	m_slog.Format("[axis] oncreatend result=[%d]", result);
+	OutputDebugString(m_slog);
 	return result;
 }
 
@@ -1281,8 +1298,11 @@ void CMainFrame::deleteAllHistory()
 void CMainFrame::HideHistoryBar()
 {
 	const BOOL visible = FALSE;
-
+#ifdef DF_USE_CPLUS17
 	ShowControlBar(m_bar3.get(), visible, FALSE);
+#else
+	ShowControlBar(m_bar3, visible, FALSE);
+#endif
 	saveToolStatus();
 	SetSDIChangeHeight();
 }
@@ -1324,10 +1344,28 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 				case 'f':
 				case 'F':
 					{
+					if (GetKeyState(VK_CONTROL) & 0x8000)
+					{
+						if (GetKeyState(VK_SHIFT) & 0x8000)
+						{
+							CString	Path;
+							Path.Format("%s\\%s\\ACCNTDEPT.INI", Axis::home, "tab");
+
+							char readB[1024];
+							int readL;
+							readL = GetPrivateProfileString("ACCNTDEPT", "DEPT", "811", readB, sizeof(readB), Path);
+							CString tDept(readB, readL);
+							tDept.TrimLeft(); tDept.TrimRight();
+
+							if (m_dept == tDept)
+								ShowControlBar(m_TotalAcc, TRUE, FALSE);
+						}
+					}
+					
 				/*	CString str, title;
 					str= "901	00110012107	902	devilswo \
 						904	29 \
-						996	11	988	Ã¼ï¿½ï¿½	923	14420233	906	ï¿½×½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½	922	3	905	0	997	HTS	912	ï¿½Åµï¿½	907	A005930	908	ï¿½ï¼ºï¿½ï¿½ï¿½ï¿½                                	992	453	931	1	916	72100	909	1	910	0	921	0	975	   0	924 - ï¿½ï¿½ï¿½Ý¸Åµï¿½	925	ï¿½ï¿½ï¿½å°¡	926	KSE	993	00	911	00	994		995	0	933	0	999	1	974	0	984	10	023 - 55500";
+						996	11	988	Ã¼°á	923	14420233	906	Å×½ºÆ®°èÁÂ	922	3	905	0	997	HTS	912	¸Åµµ	907	A005930	908	»ï¼ºÀüÀÚ                                	992	453	931	1	916	72100	909	1	910	0	921	0	975	   0	924 - Çö±Ý¸Åµµ	925	½ÃÀå°¡	926	KSE	993	00	911	00	994		995	0	933	0	999	1	974	0	984	10	023 - 55500";
 					ConclusionNotice(str, title);*/
 					//RunHelpCom();
 					//	m_axMisc->RunVers(verRETRY, Axis::userID, m_pass, m_cpass);
@@ -1602,14 +1640,14 @@ void CMainFrame::ShowToolTip(int nIndex, CPoint pt)
 
 	switch (nIndex)
 	{
-	case MIDX_HOME:	tipS =  _T("È¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");		break;
-	case MIDX_FULL:	tipS =  _T("ï¿½ï¿½Ã¼È­ï¿½ï¿½");		break;
-	case MIDX_DUAL:	tipS =  _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");	break;
+	case MIDX_HOME:	tipS =  _T("È¨ÆäÀÌÁö");		break;
+	case MIDX_FULL:	tipS =  _T("ÀüÃ¼È­¸é");		break;
+	case MIDX_DUAL:	tipS =  _T("µà¾ó¸ð´ÏÅÍ");	break;
 	default:
 		if (nIndex >= MIDX_VS1 && nIndex <= MIDX_VS6)
 		{
 			const int index = nIndex - MIDX_VS1;
-			tipS.Format("ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ %d(ALT+%d)", index + 1, index + 1);
+			tipS.Format("°¡»óÈ­¸é %d(ALT+%d)", index + 1, index + 1);
 			tipS += GetScreenList(index);
 		}
 		else
@@ -1732,41 +1770,78 @@ void CMainFrame::DrawFrame()
 
 		if (m_tMenu)
 		{
+#ifdef DF_USE_CPLUS17
 			SideDraw(&dc, rc, wrc.TopLeft(), m_tMenu.get(), Axis::GetBitmap("MENUBACK"));
+#else
+			SideDraw(&dc, rc, wrc.TopLeft(), m_tMenu, Axis::GetBitmap("MENUBACK"));		
+#endif
 		}
 
 		if (m_bar1 && m_bar1->IsWindowVisible())
 		{
+#ifdef DF_USE_CPLUS17
 			SideDraw(&dc, rc, wrc.TopLeft(), m_bar1.get(), Axis::GetBitmap("Band"));
+#else
+			SideDraw(&dc, rc, wrc.TopLeft(), m_bar1, Axis::GetBitmap("Band"));
+#endif
 		}
 
 		if (m_tInfo3 && m_tInfo3->IsWindowVisible())
 		{
+#ifdef DF_USE_CPLUS17
 			SideDraw(&dc, rc, wrc.TopLeft(), m_tInfo3.get(), Axis::GetBitmap("BAR_BG"), TRUE);
+#else
+			SideDraw(&dc, rc, wrc.TopLeft(), m_tInfo3, Axis::GetBitmap("BAR_BG"), TRUE);
+#endif
 		}
 
 		if (m_bar2 && m_bar2->IsWindowVisible())
 		{
+#ifdef DF_USE_CPLUS17
 			if (m_bar2->GetBarStyle() & CBRS_ALIGN_TOP)
 				SideDraw(&dc, rc, wrc.TopLeft(), m_bar2.get(), Axis::GetSkinBitmap("BAR_BG"), TRUE);
 			else
-				SideDraw(&dc, rc, wrc.TopLeft(), m_bar2.get(), Axis::GetSkinBitmap("ï¿½Ï´ï¿½_BAR_BG"), TRUE);
+				SideDraw(&dc, rc, wrc.TopLeft(), m_bar2.get(), Axis::GetSkinBitmap("ÇÏ´Ü_BAR_BG"), TRUE);
+#else
+			if( m_bar2->GetBarStyle() & CBRS_ALIGN_TOP )
+				SideDraw(&dc, rc, wrc.TopLeft(), m_bar2, Axis::GetSkinBitmap("BAR_BG"), TRUE);
+			else
+				SideDraw(&dc, rc, wrc.TopLeft(), m_bar2, Axis::GetSkinBitmap("ÇÏ´Ü_BAR_BG"), TRUE);
+#endif
 		}
 
 		if (m_bar3 && m_bar3->IsWindowVisible())
 		{
+#ifdef DF_USE_CPLUS17
 			if (m_bar3->GetBarStyle() & CBRS_ALIGN_TOP)
 				SideDraw(&dc, rc, wrc.TopLeft(), m_bar3.get(), Axis::GetSkinBitmap("BAR_BG"), TRUE);
 			else
-				SideDraw(&dc, rc, wrc.TopLeft(), m_bar3.get(), Axis::GetSkinBitmap("ï¿½Ï´ï¿½_BAR_BG"), TRUE);
+				SideDraw(&dc, rc, wrc.TopLeft(), m_bar3.get(), Axis::GetSkinBitmap("ÇÏ´Ü_BAR_BG"), TRUE);
+#else
+			if( m_bar3->GetBarStyle() & CBRS_ALIGN_TOP )
+				SideDraw(&dc, rc, wrc.TopLeft(), m_bar3, Axis::GetSkinBitmap("BAR_BG"), TRUE);
+			else
+				SideDraw(&dc, rc, wrc.TopLeft(), m_bar3, Axis::GetSkinBitmap("ÇÏ´Ü_BAR_BG"), TRUE);
+#endif
 		}
 
 		if (m_tInfo2 && m_tInfo2->IsWindowVisible())
+		{
+#ifdef DF_USE_CPLUS17
 			SideDraw(&dc, rc, wrc.TopLeft(), m_tInfo2.get(), m_tInfo2->GetBackImage(), TRUE);
-
+#else
+			SideDraw(&dc, rc, wrc.TopLeft(), m_tInfo2, m_tInfo2->GetBackImage(), TRUE);
+#endif
+		}
 		if (m_tInfo1 && m_tInfo1->IsWindowVisible())
+		{
+#ifdef DF_USE_CPLUS17
 			SideDraw(&dc, rc, wrc.TopLeft(), m_tInfo1.get(), m_tInfo1->GetBackImage(), TRUE);
-
+#else
+			SideDraw(&dc, rc, wrc.TopLeft(), m_tInfo1, m_tInfo1->GetBackImage(), TRUE);
+#endif
+		}
+		
 		drawTitle(&dc);
 	}
 	
@@ -1854,7 +1929,7 @@ bool CMainFrame::runCommand(int comm, LPARAM lParam)
 			ShowControlBar(m_TotalAcc, visible, FALSE);
 		}
 		break;
-	case ID_CLEARCHART:	ClearGex();	break;		// ï¿½ï¿½Æ®ï¿½Ê±ï¿½È­ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ 2011.03.02 by LKM
+	case ID_CLEARCHART:	ClearGex();	break;		// Â÷Æ®ÃÊ±âÈ­±â´É Ãß°¡ 2011.03.02 by LKM
 	case ID_ESCAPEWINODW: 
 		{
 			m_mapHelper->closeChild();	
@@ -1933,8 +2008,11 @@ bool CMainFrame::runCommand(int comm, LPARAM lParam)
 		break;
 	case ID_APP_TRSEARCH:
 		{
-
-		    CTrSearch	dlg(m_tMenu.get(), axiscall);
+#ifdef DF_USE_CPLUS17
+		CTrSearch	dlg(m_tMenu.get(), axiscall);
+#else
+			CTrSearch	dlg(m_tMenu, axiscall);
+#endif
 			dlg.setPos(m_bar1->GetPos(1));
 			if (dlg.DoModal() == IDOK)
 				m_mapHelper->ChangeChild(dlg.getTR());
@@ -2002,38 +2080,53 @@ bool CMainFrame::runCommand(int comm, LPARAM lParam)
 			}
 		}
 		break;
-	case ID_APP_CONNECT:	// 2007.07.05 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	case ID_APP_CONNECT:	// 2007.07.05 µ¿½ÃÁ¢¼Ó
 		m_mapHelper->ChangeChild(MAPN_MULTICONNECT);
 		break;
 	case ID_VIEW_DB1:
 		visible = !(m_bar1->GetStyle() & WS_VISIBLE);
-		ShowControlBar(m_bar1.get(), visible, FALSE);	
+#ifdef DF_USE_CPLUS17
+		ShowControlBar(m_bar1.get(), visible, FALSE);
+#else
+		ShowControlBar(m_bar1, visible, FALSE);
+#endif			
 		saveToolStatus();
 
 		ChangeLogo();	
 		break;
 	case ID_VIEW_SCLIST:
 		visible = !(m_bar2->GetStyle() & WS_VISIBLE);
-
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_bar2.get(), visible, FALSE);
 		if (visible && (m_bar0->GetStyle() & WS_VISIBLE))
 			ShowControlBar(m_bar0.get(), TRUE, FALSE);
-
+#else
+		ShowControlBar(m_bar2, visible, FALSE);
+		if (visible && (m_bar0->GetStyle() & WS_VISIBLE))
+			ShowControlBar(m_bar0, TRUE, FALSE);
+#endif
+		
 		saveToolStatus();
 		SetSDIChangeHeight();
 		
 		break;
 	case ID_VIEW_TICKER1:
 		visible = !(m_tInfo1->GetStyle() & WS_VISIBLE);
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_tInfo1.get(), visible, FALSE);
-
+#else
+		ShowControlBar(m_tInfo1, visible, FALSE);
+#endif
 		saveToolStatus();
 		SetSDIChangeHeight();
 		break;
 	case ID_VIEW_TICKER2:
 		visible = !(m_tInfo2->GetStyle() & WS_VISIBLE);
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_tInfo2.get(), visible, FALSE);
-
+#else
+		ShowControlBar(m_tInfo2, visible, FALSE);
+#endif
 		saveToolStatus();
 		SetSDIChangeHeight();
 		break;
@@ -2041,23 +2134,33 @@ bool CMainFrame::runCommand(int comm, LPARAM lParam)
 		if (!m_tInfo3)
 			break;
 		visible = !(m_tInfo3->GetStyle() & WS_VISIBLE);
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_tInfo3.get(), visible, FALSE);
-
+#else
+		ShowControlBar(m_tInfo3, visible, FALSE);
+#endif
 		saveToolStatus();
 		SetSDIChangeHeight();
 		break;
 	case ID_VIEW_HISTORY:
 		{
 			visible = !(m_bar3->GetStyle() & WS_VISIBLE);
+#ifdef DF_USE_CPLUS17
 			ShowControlBar(m_bar3.get(), visible, FALSE);
-
+#else
+			ShowControlBar(m_bar3, visible, FALSE);
+#endif
 			saveToolStatus();
 			SetSDIChangeHeight();
 		}
 		break;
 	case ID_VIEW_JCONTROL:
 		visible = !(m_bar0->GetStyle() & WS_VISIBLE);
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_bar0.get(), visible, FALSE);
+#else
+		ShowControlBar(m_bar0, visible, FALSE);
+#endif
 
 		break;
 	case ID_VIEW_ACCTOOL:
@@ -2266,7 +2369,7 @@ void CMainFrame::OnClose()
 	OutputDebugString("MAIN ONCLOSE\n");
 	const char* noticeMapName = "IB780100";
 	CProfile pout(pkUserConfig);
-	const CWnd* wnd = FindWindow(NULL,"ï¿½Ç½Ã°ï¿½ï¿½Ø¿ï¿½ï¿½ï¿½ï¿½ï¿½");
+	const CWnd* wnd = FindWindow(NULL,"½Ç½Ã°£ÇØ¿ÜÁö¼ö");
 	if (wnd)
 	{
 		pout.Write(noticeMapName, "OnLoad", 1);
@@ -2295,7 +2398,7 @@ void CMainFrame::OnClose()
 // 				CString s;
 // 				s.Format("INTEREST CLOSE COUNT [%d]\n",m_nInterest);
 // 				OutputDebugString(s);
-// 	// 			if (IDOK != MessageBox("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. \nï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï½Ã°Ú½ï¿½ï¿½Ï±ï¿½?", "ï¿½ï¿½ï¿½ï¿½È®ï¿½ï¿½", MB_OKCANCEL | MB_ICONQUESTION))
+// 	// 			if (IDOK != MessageBox("ÀúÀåµÇÁö ¾ÊÀº °ü½ÉÁ¾¸ñÀÌ ÀÖÀ¾´Ï´Ù. \nÁ¤¸» Á¾·áÇÏ½Ã°Ú½À´Ï±î?", "Á¾·áÈ®ÀÎ", MB_OKCANCEL | MB_ICONQUESTION))
 // 	// 				return;
 // 
 // 				m_bExit = false;
@@ -2306,7 +2409,7 @@ void CMainFrame::OnClose()
 // 			}
 			saveExitMap();
 			SendScrap();
-//			SendConfig(0);   //khs ï¿½ì¼±ï¿½ï¿½ï¿½ï¿½
+//			SendConfig(0);   //khs ¿ì¼±º¸·ù
 //			SendConfig(1);
 
 			if(m_top10 != nullptr && m_top10->GetSafeHwnd())
@@ -2333,7 +2436,7 @@ void CMainFrame::OnClose()
 			CString s;
 			s.Format("INTEREST CLOSE COUNT [%d]\n",m_nInterest);
 			OutputDebugString(s);
-// 			if (IDOK != MessageBox("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. \nï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï½Ã°Ú½ï¿½ï¿½Ï±ï¿½?", "ï¿½ï¿½ï¿½ï¿½È®ï¿½ï¿½", MB_OKCANCEL | MB_ICONQUESTION))
+// 			if (IDOK != MessageBox("ÀúÀåµÇÁö ¾ÊÀº °ü½ÉÁ¾¸ñÀÌ ÀÖÀ¾´Ï´Ù. \nÁ¤¸» Á¾·áÇÏ½Ã°Ú½À´Ï±î?", "Á¾·áÈ®ÀÎ", MB_OKCANCEL | MB_ICONQUESTION))
 // 				return;
 
 			m_bExit = false;
@@ -2374,7 +2477,7 @@ void CMainFrame::OnClose()
 	saveToolStatus();
 	save_history();
 
-	// 2010.09.03 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ Report by warship
+	// 2010.09.03 ¿­¾ú´ø È­¸é¸ñ·Ï Report by warship
 	save_scr_counter();
 	scr_counter_report();
 
@@ -2402,7 +2505,7 @@ void CMainFrame::OnClose()
 			child->SendMessage(WM_CLOSE);
 	}
 
-	//ï¿½ï¿½ï¿½ï¿½Å©È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½ - dkkim 2015.01.02
+	//À¥¸µÅ©È­¸é ºê¶ó¿ìÁ® Á¾·áµÇ°Ô ¼öÁ¤ - dkkim 2015.01.02
 	for (int jj = 0; jj < m_arWEB.GetSize(); jj++)
 	{
  		HWND hwnd = m_arWEB.GetAt(jj);
@@ -2435,7 +2538,7 @@ void CMainFrame::OnClose()
 		m_wizard->InvokeHelper(DI_DETACH, DISPATCH_METHOD, VT_EMPTY,
 				(void *)NULL, (BYTE *)(VTS_I4), (short) KEY_CODE);
 	}
-	//dkkim 2018.11.12 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//dkkim 2018.11.12 ±â´ÉÁ¦¿Ü
 //	CString strFile;
 // 	strFile.Format("%s\\tab\\RSCMONITOR.ini", Axis::home); 
 // 	
@@ -2497,7 +2600,7 @@ void CMainFrame::OnClose()
 
 	KillTimer(TM_PRNIMG);
 
-	//ID ï¿½ï¿½È£È­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//ID ¾ÏÈ£È­ ·¹Áö½ºÆ®¸® ÀúÀå
 // 	CString encID = EncryptAES(Axis::userID);
 // 
 // 	if (AfxGetApp())
@@ -2516,7 +2619,7 @@ void CMainFrame::OnClose()
 // 			AfxGetApp()->WriteProfileString(WORKSTATION, SIGNONID, encSignOn);
 // 	}
 
-	// WINE ï¿½ï¿½ï¿½ï¿½
+	// WINE Á¾·á
 // 	if(m_winechartHwnd)
 // 		::SendMessage(m_winechartHwnd,  WM_IBK_CLOSE, 0, 0);
 // 	
@@ -2538,11 +2641,11 @@ void CMainFrame::OnClose()
 	
 	if(osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 2)
 	{
-		// os ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 8 ï¿½ï¿½ï¿½ï¿½
+		// os À©µµ¿ì 8 Àû¿ë
 	}
 	else
 	{
-		// os ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 7 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+		// os À©µµ¿ì 7 ÀÌÇÏ Àû¿ë 
 		if (m_hMNews) 
 		{
 			FreeLibrary(m_hMNews);
@@ -2556,7 +2659,7 @@ void CMainFrame::OnClose()
 		}
 	}
 
-	//ï¿½Ê¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 2018.10.18
+	//ÇÊ¿ä¾ø´Â ÆÄÀÏ »èÁ¦ 2018.10.18
 	if(!Axis::devMode)
 	{
 		char*	control[] = { "AXISCHASER.EXE","AXISBUILDER.EXE", "IBKSCONNECTORPTS.OCX", NULL };
@@ -2630,7 +2733,7 @@ void CMainFrame::UserFileCrypt(bool bFlag)
 void CMainFrame::CloseWebHandle()
 {
 	OutputDebugString("$MAIN CLOSEWEBHANDLE\n");
-	//ï¿½ï¿½ï¿½ï¿½Å©È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½ - dkkim 2015.01.02
+	//À¥¸µÅ©È­¸é ºê¶ó¿ìÁ® Á¾·áµÇ°Ô ¼öÁ¤ - dkkim 2015.01.02
 	for (int jj = 0; jj < m_arWEB.GetSize(); jj++)
 	{
 		HWND hwnd = m_arWEB.GetAt(jj);
@@ -2697,7 +2800,7 @@ LONG CMainFrame::OnAXIS(WPARAM wParam, LPARAM lParam)
 
 			if (!getConnectInfo(tmps, value)) 
 			{
-				Axis::MessageBox(this, "ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½", MB_ICONINFORMATION);
+				Axis::MessageBox(this, "¼³Ä¡Á¤º¸¸¦ È®ÀÎÇÏ¼¼¿ä", MB_ICONINFORMATION);
 				return 0;
 			}
 			strcpy_s(wb, 128, tmps);
@@ -2716,9 +2819,8 @@ WriteLog(m_slog);
 			CString file, usnm = Axis::user;
 			file.Format("%s\\%s\\%s\\%s.ini", Axis::home, USRDIR, usnm, usnm); 
 
-			if ((m_ip == "172.16.202.106") || (m_ip == "172.16.205.20") || (m_ip == "211.255.204.134")|| (m_ip == "211.255.204.19") || 
-				m_ip=="172.16.205.30" || m_ip=="211.255.204.136" || m_ip=="211.255.204.85" || 
-				m_ip=="172.16.202.150" || m_ip=="172.16.202.171" || m_ip == "172.16.202.130" || m_ip == "211.255.204.134" )
+			if ((m_ip == "172.16.202.106") || (m_ip == "172.16.205.20") || (m_ip == "211.255.204.134")|| (m_ip == "211.255.204.19") ||  ( m_ip == "211.255.204.104") ||
+				m_ip=="172.16.205.30" || m_ip=="211.255.204.136" || m_ip=="211.255.204.85" || m_ip=="172.16.202.150" || m_ip=="172.16.202.171" || m_ip == "172.16.202.130")
 			{
 				Axis::devMode = TRUE;
 
@@ -2743,7 +2845,7 @@ WriteLog(m_slog);
 			tmps.Empty();
 
 		
-			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° Å¬ï¿½ï¿½ï¿½Ã¿ï¿½. ï¿½ï¿½ï¿½Ò½ï¿½ ï¿½Ù¿î¿©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+			// ¿¬°á ¹öÆ° Å¬¸¯½Ã¿¡. ¸®¼Ò½º ´Ù¿î¿©ºÎ °áÁ¤.
 			if (AfxGetApp())
 			{
 				if (AfxGetApp()->GetProfileInt(WORKSTATION, "GetAllResource", 0))
@@ -2803,8 +2905,8 @@ WriteLog(m_slog);
 			const int cy = m_axis->GetProfileInt(INFORMATION, "win_cy", 0);
 
 
-			const int x1 = GetSystemMetrics(SM_XVIRTUALSCREEN);  //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½Â¿ì°¡ ï¿½Ú¹Ù³ï¿½ï¿½ï¿½ï¿½Ì´ï¿½
-			const int y1 = GetSystemMetrics(SM_YVIRTUALSCREEN);  //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½Ú¹Ù³ï¿½ï¿½ï¿½ï¿½Ì´ï¿½
+			const int x1 = GetSystemMetrics(SM_XVIRTUALSCREEN);  //¼­ºê ¸ð´ÏÅÍ°¡ À½¼öÀÌ¸é ÁÂ¿ì°¡ µÚ¹Ù³¤°ÍÀÌ´Ù
+			const int y1 = GetSystemMetrics(SM_YVIRTUALSCREEN);  //¼­ºê ¸ð´ÏÅÍ°¡ À½¼öÀÌ¸é À§¾Æ·¡°¡ µÚ¹Ù³¤°ÍÀÌ´Ù
 			
 			const int iFull_width = GetSystemMetrics(SM_CXVIRTUALSCREEN);
 			const int iFull_height = GetSystemMetrics(SM_CYVIRTUALSCREEN);
@@ -2813,7 +2915,7 @@ WriteLog(m_slog);
 slog.Format("[MIAN_MONITOR] x=[%d] y=[%d] x1=[%d] y1=[%d] iFull_width=[%d] iFull_height=[%d]\n", x, y, x1, y1, iFull_width, iFull_height);
 //OutputDebugString(slog);
 			
-			const int iuse = m_axis->GetProfileInt(INFORMATION, "NoPosition", 1);  //ï¿½Úµï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0
+			const int iuse = m_axis->GetProfileInt(INFORMATION, "NoPosition", 1);  //ÀÚµ¿À§Ä¡ÁöÁ¤ ±â´ÉÀ» ¾È¾²°í ½ÍÀ»¶§´Â 0
 			if(iuse)
 			{
 				if(x < 0  && y < 0 )
@@ -2873,6 +2975,9 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 
 				if (m_axConnect)
 				{
+#ifndef DF_USE_CPLUS17
+					delete m_axConnect;
+#endif
 					m_axConnect = NULL;
 				}
 			}
@@ -2888,6 +2993,9 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 				
 				if (m_axConnectOld)
 				{
+#ifndef DF_USE_CPLUS17
+					delete m_axConnectOld;
+#endif
 					m_axConnectOld = NULL;
 				}
 			}
@@ -2902,7 +3010,7 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 			
 			if (m_bdnInterest)
 				dnloadAction();
-			//ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¿ï¿½Îµï¿½ ï¿½ÈµÇ°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½ï¿½ï¿½
+			//ÃÊ±â °ü½ÉÁ¾¸ñ ´Ù¿î·Îµå ¾ÈµÇ°Ô ¼öÁ¤½Ã ¾Æ·¡ ÁÖ¼®Á¦°Å
 			//SetTimer(TM_DNINTEREST, 1000, NULL);
 	
 		 	WriteLog("OnAxis-axAXIS - Step 5");
@@ -2924,7 +3032,7 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 
 			m_tInfo1->RedrawWindow();
 
-			// 2010.06.01 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ && ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½
+			// 2010.06.01 º¸¾ÈÇÁ·Î±×·¥ÀÌ ¸ðµÎ ÇØÁ¦µÇ¾úÀ» °æ¿ì && °í°´ÀÏ°æ¿ì
 			const BOOL pcAOS = AfxGetApp()->GetProfileInt(INFORMATION, "AOS", 1);
 			const BOOL pcFirewall = AfxGetApp()->GetProfileInt(INFORMATION, "PCFirewall", 0);
 			const BOOL pcKeyProtect = AfxGetApp()->GetProfileInt(ENVIRONMENT, "KeyProtect", 0);
@@ -2935,25 +3043,25 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 
 			WriteLog("OnAxis-axAXIS - Step 10");
 
-			// 2010.06.01 ï¿½ï¿½ï¿½ï¿½ï¿½ OSï¿½ï¿½ Reportï¿½Ñ´ï¿½.
-			// 2012.02.13 ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.BY DUKKI
+			// 2010.06.01 »ç¿ëÀÚ OS¸¦ ReportÇÑ´Ù.
+			// 2012.02.13 ¹ÚÇöÃ¶°úÀå Á¦°Å Áö½Ã.BY DUKKI
 			//os_report();
 
 			WriteLog("OnAxis-axAXIS - Step 11");
 
-			// 2010.09.03 ï¿½ï¿½ï¿½ï¿½ Ethernet Cardï¿½ï¿½ MACï¿½ï¿½ Report ï¿½Ñ´ï¿½.
+			// 2010.09.03 Á¢¼Ó Ethernet CardÀÇ MACÀ» Report ÇÑ´Ù.
 			//mac_report();
 
-			// 2010.09.27 ï¿½ï¿½ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½Counter ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½Ñ´ï¿½.
-			// 2012.03.22 ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.BY DUKKI
+			// 2010.09.27 Á¢¼Ó½Ã ±âÁ¸ È­¸éCounter Á¤º¸¸¦ ·ÎµùÇÑ´Ù.
+			// 2012.03.22 ¹ÚÇöÃ¶°úÀå Á¦°Å Áö½Ã.BY DUKKI
 			load_scr_counter();
 
-			// 2010.07.21 ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ Hotkey ï¿½Îµï¿½
+			// 2010.07.21 ¼û±èÃ³¸® Hotkey ·Îµù
 			LoadHotkeySetting();
 
 			WriteLog("OnAxis-axAXIS - Step 12");
 
-			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
+			// °øÁö»çÇ× Ã¼Å©
 			//sendTR("PIHONOTI", "Y", 1, US_PASS, 'l');
 
 			WriteLog("OnAxis-axAXIS - Step 13");
@@ -2961,7 +3069,7 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 			CreateHistoryBar();
 			
 			CString strFile;
-			//7805 ï¿½Ë¾ï¿½ 
+			//7805 ÆË¾÷ 
 			strFile.Format("%s\\tab\\NOTICECOOKIE.ini", Axis::home); 
 			
 			char buff[1024];
@@ -2997,7 +3105,7 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 		
 					readL =	GetPrivateProfileString("7805","FROM","",readB,sizeof(readB),strFile);
 
-					if(readL == 0)  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½
+					if(readL == 0)  //ÆÄÀÏÀÌ ¾ø°Å³ª µ¥ÀÌÅÍ¸¦ ¸øÀÐÀ¸¸é ±×³É ¶ç¿î´Ù
 					{
 						SetTimer(TM_POPUP_JISU, 7000, NULL);
 						m_bInit = FALSE;
@@ -3009,7 +3117,7 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 					
 					readL =	GetPrivateProfileString("7805","TO","",readB,sizeof(readB),strFile);
 
-					if(readL == 0)  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½
+					if(readL == 0)  //ÆÄÀÏÀÌ ¾ø°Å³ª µ¥ÀÌÅÍ¸¦ ¸øÀÐÀ¸¸é ±×³É ¶ç¿î´Ù
 					{
 						SetTimer(TM_POPUP_JISU, 7000, NULL);
 						m_bInit = FALSE;
@@ -3026,7 +3134,7 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 				}
 			}
 			////////////////////////////////////////////////
-			//dkkim 2018.11.12 AXSOCKï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.ï¿½Æ·ï¿½ ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ AXSOCKï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½.
+			//dkkim 2018.11.12 AXSOCKÀÇ ¿øº¹À¸·Î ±â´É Á¦¿Ü.¾Æ·¡ ±â´É È°¼ºÈ­¸¦ À§ÇØ¼­´Â AXSOCKÀÇ ±â´ÉÀÌ ÇÊ¿äÇÔ.
 // 			strFile.Format("%s\\tab\\RSCMONITOR.ini", Axis::home); 
 // 			
 // 			int nUse = GetPrivateProfileInt("RSCMONITOR","CPU",0,strFile);
@@ -3199,7 +3307,7 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 			{
 			default:	break;
 			case 0x96:	break;
-			case 0x97:	displayMsgBox("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¸ï¿½", tmps);	break;
+			case 0x97:	displayMsgBox("ÀÌÁßÁ¢¼Ó ¾Ë¸²", tmps);	break;
 			}
 		}
 		break;
@@ -3215,8 +3323,11 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 			{
 			case 0:
 				{
+#ifdef DF_USE_CPLUS17
 					CLink	dlg(m_tMenu.get(), (char*)lParam);
-
+#else
+					CLink	dlg(m_tMenu, (char *)lParam);
+#endif
 					if (dlg.DoModal() == IDOK)
 					{
 					}
@@ -3232,11 +3343,11 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 		{
 			switch (HIWORD(wParam))
 			{
-			case 0 :	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			case 0 :	// ¾ÆÀÌÇÇÁ¤º¸
 				return (LONG)(char*)(const char*)m_ip;
-			case 1 :	// ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½È£
+			case 1 :	// °¡»óÈ­¸é ¹øÈ£
 				return (LONG)m_vsN;
-			case 2 :	// ï¿½ï¿½ï¿½Ìºê·¯ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½
+			case 2 :	// ¶óÀÌºê·¯¸® ÀÎ½ºÅÏ½º
 				if (m_hMRadar == NULL)
 				{
 					m_hMRadar = LoadLibrary("MRTick.dll");					
@@ -3250,7 +3361,7 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 		ShowMngInfo(Format("%s\t%d\t%s\t%d\t%s\t%s\t", 
 					MNG_FLAG, NO_CHECK+1, MNG_KIND, HIWORD(wParam), MNG_MSG, (char*)lParam));
 		break;	
-	case axFixedFrame:	// ï¿½ï¿½ï¿½ï¿½È£ fixedï¿½É¼ï¿½
+	case axFixedFrame:	// ÀÌÀÎÈ£ fixed¿É¼Ç
 		{
 			key = HIWORD(wParam);
 			const CSize	size(LOWORD(lParam), HIWORD(lParam));
@@ -3311,7 +3422,7 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 		}
 		break;
 	case axRTSQueue:	// 20070621
-		// RTS ï¿½×½ï¿½Æ®
+		// RTS Å×½ºÆ®
 		{
 			long	rc = 0;
 			m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_I4, (void *)&rc,
@@ -3339,7 +3450,11 @@ slog.Format("[MIAN_MONITOR] iFull_width[%d] < x[%d]  or  iFull_height[%d] < y[%d
 			BOOL	visible = FALSE;
 
 			visible = !(m_bar1->GetStyle() & WS_VISIBLE);
+#ifdef DF_USE_CPLUS17
 			ShowControlBar(m_bar1.get(), visible, FALSE);
+#else
+			ShowControlBar(m_bar1, visible, FALSE);
+#endif			
 			saveToolStatus();
 			
 			ChangeLogo();
@@ -3474,7 +3589,12 @@ LONG CMainFrame::OnInterMsg(WPARAM wParam, LPARAM lParam)
 	CString stmp;
 	switch (LOWORD(wParam))
 	{
-		case MMSG_SEARCH_INTERGROUP:		//ï¿½ï¿½ï¿½É±×·ï¿½ ï¿½ï¿½È¸ axiscp::SetTickinfo
+		case MMSG_TIME_INVESTTUJA:
+		{
+			sendTicInfo();
+		}
+		break;
+		case MMSG_SEARCH_INTERGROUP:		//°ü½É±×·ì Á¶È¸ axiscp::SetTickinfo
 		{
 				stmp.Format("%s", (char*)lParam);
 				m_hInter = (HWND)atoi(stmp);
@@ -3533,22 +3653,22 @@ LONG CMainFrame::OnInterMsg(WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	//	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//	case MMSG_INTER_NEWGROUP:			//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½×·ï¿½ ï¿½ï¿½ï¿½
-	//	case MMSG_INTER_DBBACKUP:				//ï¿½ï¿½ï¿½ï¿½DBï¿½ï¿½ï¿½
-	//	case MMSG_SEARCH_GROUPCODE:      //ï¿½ï¿½ï¿½É±×·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ ï¿½ï¿½È¸   [main->hidden]
-	//	case MMSG_SEARCH_INTERGROUP:		//ï¿½ï¿½ï¿½É±×·ï¿½ ï¿½ï¿½È¸  [main->hidden]
-	//	case MMSG_INTER_GROUPCODESAVE:   //ï¿½ï¿½ï¿½É±×·ï¿½ï¿½ï¿½ï¿½ï¿½  [main->hidden]
+	//	case MMSG_INTER_NEWGROUP:			//°ü½É »õ±×·ì µî·Ï
+	//	case MMSG_INTER_DBBACKUP:				//°ü½ÉDB¹é¾÷
+	//	case MMSG_SEARCH_GROUPCODE:      //°ü½É±×·ì Á¾¸ñÄÚµå Á¶È¸   [main->hidden]
+	//	case MMSG_SEARCH_INTERGROUP:		//°ü½É±×·ì Á¶È¸  [main->hidden]
+	//	case MMSG_INTER_GROUPCODESAVE:   //°ü½É±×·ìÀúÀå  [main->hidden]
 	//	{
 	//		::SendMessage(m_hInter, WM_MSG_MAINTOMAP, wParam, lParam);
 	//	}
 	//	break;
 	//	
 	//	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//	case MMSG_RET_INTER_NEWGROUP:						 //ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»È­ï¿½é¿¡ï¿½ï¿½  < hidden->main>
-	//	case MMSG_RET_SEARCH_GROUPCODE:				//ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½É±×·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»È­ï¿½é¿¡ï¿½ï¿½  < hidden->main>
-	//	case MMSG_RET_INTER_DBBACKUP:						//DBï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»È­ï¿½é¿¡ï¿½ï¿½  < hidden->main>
-	//	case MMSG_RET_SEARCH_INTERGROUP:				//ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½É±×·ï¿½ ï¿½ï¿½È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»È­ï¿½é¿¡ï¿½ï¿½  < hidden->main>
-	//	case 	MMSG_RET_INTER_GROUPCODESAVE:          //ï¿½ï¿½ï¿½É±×·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»È­ï¿½é¿¡
+	//	case MMSG_RET_INTER_NEWGROUP:						 //¼ûÀº È­¸éÀÌ  »õ±×·ìµî·ÏÇÑ °á°ú¸¦ ¿äÃ»È­¸é¿¡°Ô  < hidden->main>
+	//	case MMSG_RET_SEARCH_GROUPCODE:				//¼ûÀº È­¸éÀÌ  °ü½É±×·ì Á¾¸ñ Á¶È¸ÇÑ °á°ú¸¦ ¿äÃ»È­¸é¿¡°Ô  < hidden->main>
+	//	case MMSG_RET_INTER_DBBACKUP:						//DB¹é¾÷ °á°ú¸¦ ¿äÃ»È­¸é¿¡°Ô  < hidden->main>
+	//	case MMSG_RET_SEARCH_INTERGROUP:				//¼ûÀº È­¸éÀÌ  °ü½É±×·ì Á¶È¸ÇÑ °á°ú¸¦ ¿äÃ»È­¸é¿¡°Ô  < hidden->main>
+	//	case 	MMSG_RET_INTER_GROUPCODESAVE:          //°ü½É±×·ìÀúÀå°á°ú¸¦ ¿äÃ»È­¸é¿¡
 	//	{  
 	//		HWND hwnd{};
 	//		hwnd = (HWND)HIWORD(wParam);
@@ -3565,8 +3685,6 @@ LONG CMainFrame::OnUSER(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(wParam))
 	{
-		case MMSG_CREATEWIZARD:
-			return CreateWizard();
 		case MMSG_GETPASSWORD:
 			return (LRESULT)(LPCTSTR)GetUserPassword();
 		case MMSG_GETCERTPASSWORD:
@@ -3718,15 +3836,15 @@ void CMainFrame::onFireLog(int type, WPARAM wParam, LPARAM lParam)
 
 				}
 				break;
-			case 0x02:  //ï¿½ï¿½Å¶ï¿½ê·¹ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½
+			case 0x02:  //¼­Å¶ºê·¹ÀÌÅ© °ü·Ã
 			{
 
 			}
 			break;
-			case 0x96: // ï¿½ï¿½Þ°ï¿½ï¿½ï¿½ -> ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¿ï¿½Îµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä¿ï¿½)! 2010.07.21 by LKM
+			case 0x96: // ±ä±Þ°øÁö -> ±ä±Þ °­Á¦ ´Ù¿î·Îµå·Î º¯°æ(Æ÷¸ËÀº ÃßÈÄ¿¡)! 2010.07.21 by LKM
 
 				break;
-			case 0x97: // ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½..............
+			case 0x97: // Áßº¹»ç¿ëÀÚ..............
 
 				break;
 			case 0x99:
@@ -3735,21 +3853,21 @@ void CMainFrame::onFireLog(int type, WPARAM wParam, LPARAM lParam)
 				{
 					switch (str.GetAt(0))
 					{
-					case '$':  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
+					case '$':  // ÀçÁ¢¼Ó ¿©ºÎ¸¦ ¹¯Áö ¾Ê°í Á¾·á
 
 						break;
-					case '!':      //ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+					case '!':      //¹öÀüÃ³¸®°ü·Ã
 					{
 
 					}
 					break;
-					case '#':       //ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+					case '#':       //¹öÀüÃ³¸®°ü·Ã
 					{
 						str = str.Mid(1);
 
 					}
 					break;
-					default:  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å´
+					default:  // ÀçÁ¢¼Ó ¿©ºÎ¸¦ ¹¯°í, ÀçÁ¢¼Ó/Á¾·á ½ÃÅ´
 					{
 
 					}
@@ -3759,7 +3877,7 @@ void CMainFrame::onFireLog(int type, WPARAM wParam, LPARAM lParam)
 
 				PostMessage(WM_CLOSE);
 				break;
-			case 0x98:  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			case 0x98:  //ÀÌÁßÁ¢¼Ó
 			{
 
 				PostMessage(WM_CLOSE);
@@ -3854,7 +3972,7 @@ void CMainFrame::onFireLog(int type, WPARAM wParam, LPARAM lParam)
 				m_slog += "FEV_ERROR  axOPENSIGN";
 				if (lParam && m_axConnect)
 				{
-					// ï¿½ï¿½ï¿½ï¿½ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
+					// Á÷¿ø Áßº¹Á¢¼ÓÀÏ °æ¿ì.
 					CString msg((const char*)lParam);
 					if (msg.GetLength() > 4 && atoi(msg.Left(4)) == 3192)
 					{
@@ -3865,7 +3983,7 @@ void CMainFrame::onFireLog(int type, WPARAM wParam, LPARAM lParam)
 
 
 					{
-						// 2011.08.02 ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½È½ï¿½ï¿½Ç¥ï¿½â¸¦ï¿½ï¿½ï¿½Ø¼ï¿½)
+						// 2011.08.02 ºñ¹Ð¹øÈ£ ¿À·ùÀÏ °æ¿ì ¾ÕÀÇ ½Ã°£À» ¾ø¾Ú(¿À·ùÈ½¼öÇ¥±â¸¦À§ÇØ¼­)
 						CString emsg = (char*)lParam;
 						int ecod = atoi(emsg.Left(4));
 						do {
@@ -3996,12 +4114,12 @@ int CMainFrame::OnFireRec(int type, WPARAM wParam, LPARAM lParam)
 			if(m_bUseNewLogin)
 			{
 				if (m_axConnect && IsWindow(m_axConnect->m_hWnd))
-					m_axConnect->SetGuide(_T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½."));
+					m_axConnect->SetGuide(_T("¼­¹ö¿Í ¿¬°áµÇ¾ú½À´Ï´Ù."));
 			}
 			else
 			{
 				if (m_axConnectOld && IsWindow(m_axConnectOld->m_hWnd))
-					m_axConnectOld->SetGuide(_T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½."));
+					m_axConnectOld->SetGuide(_T("¼­¹ö¿Í ¿¬°áµÇ¾ú½À´Ï´Ù."));
 			}
 			str = m_axis->GetProfileString(INFORMATION, "Port");
 			WriteLog("CMainFrame::OnFireRec FEV_OPEN Port=[%s]", str);
@@ -4071,7 +4189,7 @@ WriteLog("CMainFrame::OnFireRec FEV_RUN  lParame EXIST [%s]\n", str);
 
 					WriteLog("CMainFrame::OnFireRec FEV_RUN  lParame RunVers [%s]\n", str);
 
-					Sleep(700);
+					Sleep(700);  //test2019
 				}
 				m_axConnect->EndDialog(IDCANCEL);
 			}
@@ -4081,7 +4199,7 @@ WriteLog("CMainFrame::OnFireRec FEV_RUN  lParame EXIST [%s]\n", str);
 				{
 					m_axMisc->GetGuide(AE_EUPDATE, str);
 					m_axConnectOld->SetGuide(str);
-					Sleep(700);
+					Sleep(700); //test2019
 				}
 				m_axConnectOld->EndDialog(IDCANCEL);
 			}
@@ -4091,9 +4209,9 @@ WriteLog("CMainFrame::OnFireRec FEV_RUN  lParame EXIST [%s]\n", str);
 		{
 			WriteLog("CMainFrame::OnFireRec (lparam null )     FEV_RUN\n");
 			SetForegroundWindow();
-			// ï¿½ï¿½ï¿½á¼º ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ 
+			// ¹«°á¼º °ËÁõ ÇÁ·Î¼¼½º 
 			//signOn();
-			// ï¿½ï¿½ï¿½á¼º ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ã»
+			// ¹«°á¼º ÆÄÀÏ¸®½ºÆ® ¿äÃ»
 			QueryPihoitgyList();
 		}
 		break;
@@ -4154,7 +4272,7 @@ WriteLog("CMainFrame::OnFireRec FEV_RUN  lParame EXIST [%s]\n", str);
 		case runAXIS:
 			{
 				WriteLog("CMainFrame::OnFireRec  FEV_AXIS  runAXIS\n");
-				// ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½Î½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
+				// ÀÎÁõ ·Î±×ÀÎ½Ã »ç¿ëÀÚ ¾ÆÀÌµð ¼³Á¤
 				if(m_bCertLogin)
 				{
 					m_bEnca = true;
@@ -4188,7 +4306,7 @@ WriteLog("CMainFrame::OnFireRec FEV_RUN  lParame EXIST [%s]\n", str);
 				CheckNewsSetting();
 				ConfigFrame();
 
-				//ï¿½ï¿½ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(Ã³ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ö°ï¿½ ï¿½ß°ï¿½
+				//È÷½ºÅä¸® ÆÄÀÏÀÌ ¾øÀ»¶§(Ã³À½ ¼³Ä¡½Ã) ±â¾÷ÀºÇà µðÆúÆ®¼¼ÆÃ ÇØÁÖ°Ô Ãß°¡
 				CString file;
 				file.Format("%s\\%s\\%s\\%s", Axis::home, USRDIR, Axis::user, AXISUSER);
 				
@@ -4221,7 +4339,7 @@ WriteLog("CMainFrame::OnFireRec FEV_RUN  lParame EXIST [%s]\n", str);
 				{
 					m_step = axDONE;
 
-					//AXISTICKER.INIï¿½ï¿½ï¿½ï¿½ BAR_02 ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ 4(ï¿½Ú½ï¿½ï¿½Úºï¿½Ã³)ï¿½ï¿½ï¿½ï¿½ 3(ï¿½Ú½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+					//AXISTICKER.INI¿¡¼­ BAR_02 µðÆúÆ®¸¦ 4(ÄÚ½º´Úº¥Ã³)¿¡¼­ 3(ÄÚ½º´Ú)À¸·Î º¯°æ
 					// 2016.12.08 dkkim
 // 					CProfile profile(pkAxisTicker);
 // 					
@@ -4255,7 +4373,7 @@ WriteLog("CMainFrame::OnFireRec FEV_RUN  lParame EXIST [%s]\n", str);
 // 								profile.Write(section,"000",4);
 // 						}
 // 					}
-					// ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ======================================================
+					// ÄÚ½º´Ú º¯°æ ======================================================
 
 					GetLocalTime(&m_connectT);
 					convertIndex();
@@ -4343,7 +4461,7 @@ WriteLog("CMainFrame::OnFireRec FEV_RUN  lParame EXIST [%s]\n", str);
 		case dialogPAN:	// type : HIWORD(wParam), data  : lParam
 			str = (char *) lParam;
 			WriteLog("CMainFrame::OnFireRect  dialogPAN [%s] ", str);
-// 			s.Format("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : [%s] [%d]\n",str,HIWORD(wParam));
+// 			s.Format("ÀÌÁßÁ¢¼Ó : [%s] [%d]\n",str,HIWORD(wParam));
 // 			OutputDebugString(s);
 			switch (HIWORD(wParam))
 			{
@@ -4367,27 +4485,27 @@ WriteLog("CMainFrame::OnFireRec FEV_RUN  lParame EXIST [%s]\n", str);
 					}
 				}
 				break;
-			case 0x02:  //ï¿½ï¿½Å¶ï¿½ê·¹ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½
+			case 0x02:  //¼­Å¶ºê·¹ÀÌÅ© °ü·Ã
 				{
 					/*
-					if(m_mngInfo)  //ï¿½Ì±ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½ï¿½ï¿½ Ã¼Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½Òµï¿½...
+					if(m_mngInfo)  //ÀÌ±¸ºÐÀÚ´Â È®ÀÎÀ» ÇØº¸ÀÚ Ã¼Å©¿©ºÎ »ó°ü¾øÀÌ ÇØ¾ßÇÒµí...
 					{
 CString slog;
 slog.Format("[cb] 0x02 receive %s\n" , str);
 OutputDebugString(slog);
-						//ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-						//1 ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½
-						//2 ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½
-						//3 ï¿½Ú½ï¿½ï¿½ï¿½, ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½
+						//³»·ÁÁÖ´Â ¸Þ½ÃÁö¸¦ º¸°í ±¸ºÐÀ» ÇÏÀÚ
+						//1 ÄÚ½ºÇÇ ¹ßµ¿
+						//2 ÄÚ½º´Ú ¹ßµ¿
+						//3 ÄÚ½ºÇÇ, ÄÚ½º´Ú ¹ßµ¿
 						//ParseRTSMessage((LPSTR)(LPCTSTR)str, str.GetLength());
 					}
 					*/
 				}
 				break;
-			case 0x96:	// ï¿½ï¿½Þ°ï¿½ï¿½ï¿½ -> ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¿ï¿½Îµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä¿ï¿½)! 2010.07.21 by LKM
+			case 0x96:	// ±ä±Þ°øÁö -> ±ä±Þ °­Á¦ ´Ù¿î·Îµå·Î º¯°æ(Æ÷¸ËÀº ÃßÈÄ¿¡)! 2010.07.21 by LKM
 				ProcessRexp( (struct rexp_mid*)lParam );
 				break;
-			case 0x97:	// ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½..............
+			case 0x97:	// Áßº¹»ç¿ëÀÚ..............
 				m_alarmMsg = str;
 				PostMessage(WM_AXIS, MAKEWPARAM(axDIALOG, HIWORD(wParam)), lParam);
 				break;
@@ -4397,7 +4515,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 				{
 					switch(str.GetAt(0))
 					{
-					case '$':		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
+					case '$':		// ÀçÁ¢¼Ó ¿©ºÎ¸¦ ¹¯Áö ¾Ê°í Á¾·á
 						m_bExit = false;
 						m_forceClose = true;
 						m_wizard->InvokeHelper(DI_RUN, DISPATCH_METHOD, VT_BOOL, (void *)&rc, (BYTE *)(VTS_I4 VTS_I4 VTS_I4), loginAXISx, 0, -1);
@@ -4437,7 +4555,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 							}
 						}
 						break;
-					default:		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å´
+					default:		// ÀçÁ¢¼Ó ¿©ºÎ¸¦ ¹¯°í, ÀçÁ¢¼Ó/Á¾·á ½ÃÅ´
 						{
 							m_bExit = false;
 							m_forceClose = true;
@@ -4450,7 +4568,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 				}
 
 				//20170210 dkkim
-				//ï¿½Ý±ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+				//´Ý±âÀü¿¡ È­¸éÀúÀå
 				saveExitMap();
 
 				PostMessage(WM_CLOSE);
@@ -4466,12 +4584,12 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 
 					const HWND	hWnd = m_hWnd;
 
-					str.Replace("ï¿½ï¿½ï¿½ï¿½ID", "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+					str.Replace("Á¢¼ÓID", "°í°´¸í");
 					str.Replace(Axis::userID, Axis::userNM);
 
 					Axis::MessageBox(this, str +
-						"\nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½È­ï¿½é¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½."
-						"\n        [8211] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½" );
+						"\nÀÌÁßÁ¢¼Ó¼³Á¤Àº ¾Æ·¡È­¸é¿¡¼­ ¼³Á¤°¡´ÉÇÕ´Ï´Ù."
+						"\n        [8211] ÀÌÁßÁ¢¼Ó ¼³Á¤/ÇØÁö" );
 
 					saveExitMap();
 					
@@ -4485,7 +4603,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 			break;
 		case userINFO:	
 			GetWindowText(title);
-			if (title.Find("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½") == -1)
+			if (title.Find("°í°´¸¸Á·ÆÀ") == -1)
 			{
 				str = (m_rndkey%2) ? CALLCENTER1 : CALLCENTER2;
 				title += str;
@@ -4497,9 +4615,9 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 				
 			}
 
-			if (title.Find("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½") == -1)
+			if (title.Find("ÃÖÁ¾Á¢¼ÓÀÏ") == -1)
 			{
-				str.Format("   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : %s", (char *) lParam);
+				str.Format("   ÃÖÁ¾Á¢¼ÓÀÏ : %s", (char *) lParam);
 				title += str;
 				m_saveTitle = title;
 				m_titleS = title;
@@ -4508,7 +4626,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 			break;
 		case printVIEW:
 			{
-				//ï¿½Î±ï¿½ï¿½Î½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
+				//·Î±×ÀÎ½Ã ÇÃ·§ÆûÀÌ º¸³»´Â ÇÁ¸°Æ® ¸Þ¼¼Áö ¶§¹®¿¡ ¸ÞÀÎÀÌ »¸´Â Çö»ó ¹ß»ý
 				//m_printS =(char *) lParam;
 				//AfxMessageBox("printVIEW");
 				//PostMessage(WM_AXIS, MAKEWPARAM(axPRINTIMG, 0));
@@ -4536,7 +4654,11 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 			break;
 		case linkVIEW:
 			{
+#ifdef DF_USE_CPLUS17
 				CLink	dlg(m_tMenu.get(), (char*)lParam);
+#else
+				CLink	dlg(m_tMenu, (char *)lParam);
+#endif
 				if (dlg.DoModal() == IDOK)
 				{
 				}
@@ -4544,8 +4666,8 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 			break;
 		case closeAXIS:
 			WriteLog("CMainFrame::OnFireRect  closeAXIS RunVers [%d] ",  HIWORD(wParam));
-			//HIWORD(wParam) = true  ï¿½Ï¶ï¿½ Rebootï¿½Ï¿ï¿½ Login Dialog ï¿½ï¿½ï¿½Â·ï¿½..
-			//HIWORD(wParam) = false ï¿½Ï¶ï¿½ Axis ï¿½ï¿½ï¿½ï¿½
+			//HIWORD(wParam) = true  ÀÏ¶§ RebootÇÏ¿© Login Dialog »óÅÂ·Î..
+			//HIWORD(wParam) = false ÀÏ¶§ Axis Á¾·á
 			if (HIWORD(wParam))
 				m_axMisc->RunVers(verRETRY);
 			m_bExit = false;
@@ -4616,7 +4738,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 					if (lParam && m_axConnect)
 					{
 						WriteLog("FEV_ERROR=======================+=======axOPENSIGN\n");
-						{	// ï¿½ï¿½ï¿½ï¿½ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
+						{	// Á÷¿ø Áßº¹Á¢¼ÓÀÏ °æ¿ì.
 							CString msg((const char*)lParam);
 							if (msg.GetLength() > 4 && atoi(msg.Left(4)) == 3192)
 							{
@@ -4646,7 +4768,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 						}
 						
 						{
-							// 2011.08.02 ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½È½ï¿½ï¿½Ç¥ï¿½â¸¦ï¿½ï¿½ï¿½Ø¼ï¿½)
+							// 2011.08.02 ºñ¹Ð¹øÈ£ ¿À·ùÀÏ °æ¿ì ¾ÕÀÇ ½Ã°£À» ¾ø¾Ú(¿À·ùÈ½¼öÇ¥±â¸¦À§ÇØ¼­)
 							CString emsg = (char*)lParam;
 							int ecod = atoi(emsg.Left(4));
 							do {
@@ -4662,21 +4784,21 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 									if (pos[1]==-1) break;
 									nRemain = atoi(emsg.Mid(pos[1]-1,1));
 
-									emsg.Format("ï¿½ï¿½ï¿½Óºï¿½Ð¹ï¿½È£ï¿½ï¿½ %dÈ¸ ï¿½ß¸ï¿½ï¿½Ô·ï¿½ï¿½Ï¼Ì½ï¿½ï¿½Ï´ï¿½.", nTotal-nRemain);
-									// 3È¸ ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ï¿½
+									emsg.Format("Á¢¼Óºñ¹Ð¹øÈ£¸¦ %dÈ¸ Àß¸øÀÔ·ÂÇÏ¼Ì½À´Ï´Ù.", nTotal-nRemain);
+									// 3È¸ ÀÌ»ó ¿À·ù
 									if (nRemain==0)
 									{
 										CString mmsg;
 										mmsg.Format(
-											"ï¿½ï¿½ï¿½Óºï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½%dÈ¸ ï¿½ß¸ï¿½ï¿½Ô·ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\n\n"
-											"È¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½È½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ï½Ã±ï¿½ ï¿½Ù¶ï¿½ï¿½Ï´ï¿½.", nTotal);
-										m_axConnect->ShowMessageBox(mmsg, "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", MB_OK|MB_ICONERROR);
+											"Á¢¼Óºñ¹Ð¹øÈ£¸¦ ÃÑ%dÈ¸ Àß¸øÀÔ·ÂÇÏ¿© »ç¿ëÀÌ Á¤ÁöµÇ¾ú½À´Ï´Ù.\n\n"
+											"È¨ÆäÀÌÁö È¤Àº ÁöÁ¡¿¡ ³»¹æÇÏ¿© ¿À·ùÈ½¼ö¸¦ ÃÊ±âÈ­ ÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.", nTotal);
+										m_axConnect->ShowMessageBox(mmsg, "IBKÅõÀÚÁõ±Ç", MB_OK|MB_ICONERROR);
 									}
 									else if ((nTotal-nRemain)>=3)
 									{
 										CString mmsg;
-										mmsg.Format("%s\n\nï¿½ï¿½ %dÈ¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë´Ï´ï¿½.", emsg, nTotal);
-										m_axConnect->ShowMessageBox(mmsg, "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", MB_OK|MB_ICONERROR);
+										mmsg.Format("%s\n\nÃÑ %dÈ¸ ¿À·ù½Ã »ç¿ëÁ¤ÁöµË´Ï´Ù.", emsg, nTotal);
+										m_axConnect->ShowMessageBox(mmsg, "IBKÅõÀÚÁõ±Ç", MB_OK|MB_ICONERROR);
 									}
 
 									m_axis->WriteProfileInt(WORKSTATION, "itgy", 1);
@@ -4691,12 +4813,12 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 								else if (ecod==9999)
 								{
 									emsg = emsg.Mid(5);
-									m_axConnect->ShowMessageBox(emsg, "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", MB_OK|MB_ICONERROR);
+									m_axConnect->ShowMessageBox(emsg, "IBKÅõÀÚÁõ±Ç", MB_OK|MB_ICONERROR);
 								}
 								else if (ecod==4259)
 								{
 									//emsg = emsg;
-									emsg = "[4259]ï¿½ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Õ´Ï´ï¿½.";
+									emsg = "[4259]¼±ÅÃÇÏ½Å ÀÎÁõ¼­´Â Å¸±â°ü ÀÎÁõ¼­ µî·ÏÀÌ ÇÊ¿äÇÕ´Ï´Ù.";
 								}
 							} while(FALSE);
 							m_axConnect->SetGuide(emsg);
@@ -4719,7 +4841,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 					if (lParam && m_axConnectOld)
 					{
 						WriteLog("FEV_ERROR  axOPENSIGN\n");
-						{	// ï¿½ï¿½ï¿½ï¿½ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
+						{	// Á÷¿ø Áßº¹Á¢¼ÓÀÏ °æ¿ì.
 							CString msg((const char*)lParam);
 							if (msg.GetLength() > 4 && atoi(msg.Left(4)) == 3192)
 							{
@@ -4749,7 +4871,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 						}
 						
 						{
-							// 2011.08.02 ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½È½ï¿½ï¿½Ç¥ï¿½â¸¦ï¿½ï¿½ï¿½Ø¼ï¿½)
+							// 2011.08.02 ºñ¹Ð¹øÈ£ ¿À·ùÀÏ °æ¿ì ¾ÕÀÇ ½Ã°£À» ¾ø¾Ú(¿À·ùÈ½¼öÇ¥±â¸¦À§ÇØ¼­)
 							CString emsg = (char*)lParam;
 							int ecod = atoi(emsg.Left(4));
 							do {
@@ -4765,21 +4887,21 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 									if (pos[1]==-1) break;
 									nRemain = atoi(emsg.Mid(pos[1]-1,1));
 									
-									emsg.Format("ï¿½ï¿½ï¿½Óºï¿½Ð¹ï¿½È£ï¿½ï¿½ %dÈ¸ ï¿½ß¸ï¿½ï¿½Ô·ï¿½ï¿½Ï¼Ì½ï¿½ï¿½Ï´ï¿½.", nTotal-nRemain);
-									// 3È¸ ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ï¿½
+									emsg.Format("Á¢¼Óºñ¹Ð¹øÈ£¸¦ %dÈ¸ Àß¸øÀÔ·ÂÇÏ¼Ì½À´Ï´Ù.", nTotal-nRemain);
+									// 3È¸ ÀÌ»ó ¿À·ù
 									if (nRemain==0)
 									{
 										CString mmsg;
 										mmsg.Format(
-											"ï¿½ï¿½ï¿½Óºï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½%dÈ¸ ï¿½ß¸ï¿½ï¿½Ô·ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\n\n"
-											"È¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½È½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ï½Ã±ï¿½ ï¿½Ù¶ï¿½ï¿½Ï´ï¿½.", nTotal);
-										m_axConnect->ShowMessageBox(mmsg, "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", MB_OK|MB_ICONERROR);
+											"Á¢¼Óºñ¹Ð¹øÈ£¸¦ ÃÑ%dÈ¸ Àß¸øÀÔ·ÂÇÏ¿© »ç¿ëÀÌ Á¤ÁöµÇ¾ú½À´Ï´Ù.\n\n"
+											"È¨ÆäÀÌÁö È¤Àº ÁöÁ¡¿¡ ³»¹æÇÏ¿© ¿À·ùÈ½¼ö¸¦ ÃÊ±âÈ­ ÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.", nTotal);
+										m_axConnect->ShowMessageBox(mmsg, "IBKÅõÀÚÁõ±Ç", MB_OK|MB_ICONERROR);
 									}
 									else if ((nTotal-nRemain)>=3)
 									{
 										CString mmsg;
-										mmsg.Format("%s\n\nï¿½ï¿½ %dÈ¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë´Ï´ï¿½.", emsg, nTotal);
-										m_axConnect->ShowMessageBox(mmsg, "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", MB_OK|MB_ICONERROR);
+										mmsg.Format("%s\n\nÃÑ %dÈ¸ ¿À·ù½Ã »ç¿ëÁ¤ÁöµË´Ï´Ù.", emsg, nTotal);
+										m_axConnect->ShowMessageBox(mmsg, "IBKÅõÀÚÁõ±Ç", MB_OK|MB_ICONERROR);
 									}
 									
 									m_axis->WriteProfileInt(WORKSTATION, "itgy", 1);
@@ -4794,7 +4916,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 								else if (ecod==9999)
 								{
 									emsg = emsg.Mid(5);
-									m_axConnectOld->ShowMessageBox(emsg, "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", MB_OK|MB_ICONERROR);
+									m_axConnectOld->ShowMessageBox(emsg, "IBKÅõÀÚÁõ±Ç", MB_OK|MB_ICONERROR);
 								}
 								else
 								{
@@ -4889,7 +5011,7 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 			
 			if (!excel.CreateDispatch("Excel.Application"))
 			{
-				str = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+				str = _T("¿¢¼¿À» ½ÃÀÛÇÒ ¼ö ¾ø½À´Ï´Ù.");
 			}
 			else
 			{
@@ -4965,41 +5087,29 @@ WriteLog("CMainFrame::OnFireRect  0x99  [%s] ", str);
 	return 0;
 }
 
-UINT gThread_Func(void* pv)
-{
-	CMainFrame* pmain = (CMainFrame*)pv;
-	pmain->CreateWizard();
-	return 0;
-}
-
 bool CMainFrame::CreateWizard()
 {
 	registerControl();
-	char buf[256]{};
-	memset(buf, 0x00, 256);
-	GetCurrentDirectory(256, buf);
-//	SetCurrentDirectory(Axis::home + "\\exe");
-//	memset(buf, 0x00, 256);
-//	GetCurrentDirectory(256, buf);
-	
+	OutputDebugString("[axis]CMainFrame::CreateWizard ");
 	m_wizard = std::make_unique<CWnd>();
 	if (!m_wizard->CreateControl("AxisWizard.WizardCtrl.IBK2019", NULL, WS_CHILD, CRect(0, 0, 0, 0), this, -1))
 	{
-		int ierror = GetLastError();
 		m_wizard = nullptr;
+		WriteLog("---------------[axis]createwizard fail---------------");
 		return -1;
 	}
-	return true;
 }
 
 int CMainFrame::Initialize()
 {
-	if (m_regkey.Find("ï¿½ï¿½ï¿½ï¿½") >= 0 && !m_axis->GetProfileInt(INFORMATION, "staff_change_flag", 0))
+	if (m_regkey.Find("Á÷¿ø") >= 0 && !m_axis->GetProfileInt(INFORMATION, "staff_change_flag", 0))
 	{
 		m_axis->WriteProfileInt(INFORMATION, "staff_change_flag", 1);
 		m_axis->WriteProfileString(INFORMATION, "Server", "172.16.205.20");
 	}
 	CloseChaserAPP();
+//	m_hHook = SetWindowsHookEx(WH_GETMESSAGE, KeyboardProc, 
+//			AfxGetInstanceHandle(), GetCurrentThreadId());
 	m_pMain = (CMainFrame *) this;
 
 	m_saveTitle = m_axMisc->m_regkey;
@@ -5010,47 +5120,66 @@ int CMainFrame::Initialize()
 	::SetWindowPos(m_hWndMDIClient, NULL, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOZORDER|SWP_NOACTIVATE|SWP_NOREDRAW|SWP_FRAMECHANGED);
 	m_MClient->SubclassWindow(m_hWndMDIClient);
 	m_MClient->m_nBkMode = m_nBkMode;
-	//registerControl();    //test xecure
+	
 	m_axGuide->Create(this);
-
+	OutputDebugString("[axis] initialize 1");
 	CString backupID(Axis::userID);
 	SetUserInfo();
 	if (!backupID.IsEmpty())
 		Axis::userID = backupID;
-
-	m_axConnectOld = std::make_unique<CDtconnect>(this, Axis::userID, IsNewLoginImage((m_regkey.Find("ï¿½ï¿½ï¿½ï¿½") >= 0)));
+	OutputDebugString("[axis] initialize 2");
+#ifdef DF_USE_CPLUS17
+	m_axConnectOld = std::make_unique<CDtconnect>(this, Axis::userID, IsNewLoginImage((m_regkey.Find("Á÷¿ø") >= 0)));
 	m_axConnect = std::make_unique<CCertLogin>(this, Axis::userID);
 	m_logodlg = std::make_unique<CLogoDlg>(this);
+#else
+	m_axConnectOld = new CDtconnect(this, Axis::userID, IsNewLoginImage((m_regkey.Find("Á÷¿ø") >= 0)));
+	m_axConnect = new CCertLogin(this, Axis::userID);
+	m_logodlg = new CLogoDlg(this);
+	m_wizard = new CWnd();
+#endif 
 	m_logodlg->Create(NULL, "CLogoDlg", WS_CHILD | WS_BORDER | WS_OVERLAPPEDWINDOW, CRect(0, 0, 0, 0), this, -1);
-	
-	/*char buf[256]{};
-	memset(buf, 0x00, 256);
-	GetCurrentDirectory(256, buf);*/
-	//test xecure
-	if (!CreateWizard())
-		return -1;
+	OutputDebugString("[axis] initialize 3");
 
-	//CWinThread* pWorkerThread;
-	//pWorkerThread = AfxBeginThread(gThread_Func, this, THREAD_PRIORITY_NORMAL, 0, CREATE_SUSPENDED);
-	//pWorkerThread->ResumeThread();
+#ifdef DF_USE_CPLUS17
+	if (!CreateWizard())
+	{
+		m_wizard = nullptr;
+		return -1;
+	}
+	//m_wizard = std::make_unique<CWnd>();
+	//if (!m_wizard->CreateControl("AxisWizard.WizardCtrl.IBK2019", NULL, WS_CHILD, CRect(0, 0, 0, 0), this, -1))
+	//{
+	//	m_wizard = nullptr;
+	//	return -1;
+	//}
+#else
+	m_wizard = new CWnd();
+	if (!m_wizard->CreateControl("AxisWizard.WizardCtrl.IBK2019", NULL, WS_CHILD, CRect(0,0,0,0), this, -1))
+	{
+		delete m_wizard;
+		m_wizard = NULL;
+		return -1;
+	}
+#endif
 
 	if (m_axis->GetProfileInt(ENVIRONMENT, "KeyProtect", 0))
 	{
 		((CAxisApp*)m_axis)->protectKey(Axis::home, true);
 	}
 	if (m_axMisc->m_regkey == "IBK")
-		SetWindowText("IBKï¿½ï¿½ï¿½ï¿½");
+		SetWindowText("IBK°³¹ß");
 	else if (m_axMisc->m_regkey == "IBK_STAFF")
-		SetWindowText("[ï¿½ï¿½ï¿½ï¿½]IBKï¿½ï¿½ï¿½ï¿½");
+		SetWindowText("[Á÷¿ø]IBK°³¹ß");
 	else if (m_axMisc->m_regkey == "IBKMAC_STAFF")
-		SetWindowText("[ï¿½ï¿½ï¿½ï¿½]IBK hot Trading");
+		SetWindowText("[Á÷¿ø]IBK hot Trading");
 	else
 		SetWindowText("IBK hot Trading");
 
 	m_iClickEPBBanner = 0;
 	m_iClickCROWDBanner = 0;
 
-	
+	OutputDebugString("[axis] initialize 4");
 	ReadAxisGlb();
 	return 0;
 }
@@ -5059,7 +5188,7 @@ void CMainFrame::CreateTB()
 {	
 	OutputDebugString("[axis][createTB] start\n");
 	//ModifyStyle(WS_CAPTION, 0); 
-
+#ifdef DF_USE_CPLUS17
 	m_bitmapBtn = std::make_unique<CBmpButton>();
 	if (!m_bitmapBtn->Create("", BS_BITMAP/*BS_OWNERDRAW*/, CRect(5, -1, 76, 57), this, IDC_BTN_LOGO))
 	{
@@ -5118,6 +5247,76 @@ void CMainFrame::CreateTB()
 		m_tInfo1 = NULL;
 		return;
 	}
+#else
+	m_bitmapBtn = new CBmpButton();
+	if(!m_bitmapBtn->Create("", BS_BITMAP/*BS_OWNERDRAW*/, CRect(5,-1, 76,57), this, IDC_BTN_LOGO))
+	{
+		delete m_bitmapBtn;
+		m_bitmapBtn = NULL;
+		return;
+	}
+
+	m_bitmapBtn->SetImgBitmap(Axis::GetSkinBitmap("LOGO", true), 1);
+	m_bitmapBtn->ShowWindow(SW_HIDE);
+
+	SetMenu(NULL);
+
+	m_sdibar = new CSdibar(axiscall);
+	if (!m_sdibar->Create(this, IDD_SDIBAR, WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CBRS_ALIGN_LEFT, IDD_SDIBAR))
+	{
+		delete m_sdibar;
+		m_sdibar = NULL;
+		return;
+	}
+
+	m_tMenu = new CTMenu(this, 22);
+	if (!m_tMenu->Create(this, IDD_TMENU, WS_DLGFRAME | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CBRS_ALIGN_TOP, IDD_TMENU))
+		//if (!m_tMenu->Create(this, IDD_TMENU, WS_DLGFRAME|WS_CLIPCHILDREN|WS_CLIPSIBLINGS, IDD_TMENU))
+	{
+		delete m_tMenu;
+		m_tMenu = NULL;
+		return;
+	}
+
+	m_tMenu->ModifyStyle(WS_THICKFRAME, 0);
+
+	m_bar1 = new CDbar1(axiscall);
+	if (!m_bar1->Create(this, IDD_DBAR1, WS_DLGFRAME | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CBRS_ALIGN_TOP, IDD_DBAR1))
+	{
+		delete m_bar1;
+		m_bar1 = NULL;
+		return;
+	}
+
+	m_bar1->set_MenuInfo(m_tMenu);
+
+	const int btn_tmp = 0;
+
+	m_smain = new CSmain(axiscall);
+	if (!m_smain->Create(this, IDD_SMAIN, WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CBRS_ALIGN_BOTTOM, IDD_SMAIN))
+	{
+		delete m_smain;
+		m_smain = NULL;
+		return;
+	}
+
+	m_tInfo2 = new CTInfo2(axiscall);
+	if (!m_tInfo2->Create(this, IDD_INFO2, WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CBRS_ALIGN_BOTTOM, IDD_INFO2))
+	{
+		delete m_tInfo2;
+		m_tInfo2 = NULL;
+		return;
+	}
+
+	m_tInfo1 = new CTInfo1(axiscall);
+	if (!m_tInfo1->Create(this, IDD_INFO1, WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CBRS_ALIGN_BOTTOM, IDD_INFO1))
+	{
+		delete m_tInfo1;
+		m_tInfo1 = NULL;
+		return;
+	}
+#endif
+
 
 	//DWORD dwListBarStyle = m_axis->GetProfileInt(INFORMATION, "listbar_pos", CBRS_ALIGN_BOTTOM);
 	DWORD dwListBarStyle = m_axis->GetProfileInt(INFORMATION, "listbar_pos", 0);
@@ -5144,6 +5343,7 @@ void CMainFrame::CreateTB()
 		CProfile(pkUserSetup).Write(INFORMATION, "listbar3_pos", (double)dwListBarStyle3);
 	}
 
+#ifdef DF_USE_CPLUS17
 	m_bar2 = std::make_unique < CDbar2>(axiscall);
 	if (!m_bar2->Create(this, IDD_DBAR2, WS_CHILD | WS_DLGFRAME | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | dwListBarStyle, IDD_DBAR2))
 	{
@@ -5164,6 +5364,31 @@ void CMainFrame::CreateTB()
 		m_tInfo3 = NULL;
 		return;
 	}
+#else
+	m_bar2 = new CDbar2(axiscall);
+	if (!m_bar2->Create(this, IDD_DBAR2, WS_CHILD|WS_DLGFRAME|WS_CLIPCHILDREN|WS_CLIPSIBLINGS|dwListBarStyle, IDD_DBAR2))
+	{
+		delete m_bar2;
+		m_bar2 = NULL;
+		return;
+	}
+
+	m_bar3 = new CDbar3(axiscall);
+	if (!m_bar3->Create(this, IDD_DBAR3, WS_CHILD|WS_DLGFRAME|WS_CLIPCHILDREN|WS_CLIPSIBLINGS|dwListBarStyle3, IDD_DBAR3))
+	{
+		delete m_bar3;
+		m_bar3 = NULL;
+		return;
+	}
+	
+	m_tInfo3 = new CTInfo3(axiscall);
+	if (!m_tInfo3->Create(this, IDD_INFO3, WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CBRS_ALIGN_BOTTOM, IDD_INFO3))
+	{
+		delete m_tInfo3;
+		m_tInfo3 = NULL;
+		return;
+	}
+#endif
 
 	if (m_tInfo3)
 	{
@@ -5180,7 +5405,7 @@ void CMainFrame::CreateTB()
 	{
 		
 		CMenuXP*	mainM = (CMenuXP*) m_tMenu->GetPopupMenu(0);
-		//ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½
+		//°í°´ÀÌ¸é °í°³ºñ¹Ð¹øÈ£ º¯°æ ¸Þ´º »èÁ¦
 
 		mainM->DeleteMenu(ID_STAFF_PWD, MF_BYCOMMAND);
 		
@@ -5189,17 +5414,17 @@ void CMainFrame::CreateTB()
 		memset(&info, 0, sizeof(MENUITEMINFO));
 		info.cbSize = sizeof(MENUITEMINFO);
 		info.fMask = MIIM_DATA | MIIM_TYPE;
-		mainM->GetMenuItemInfo(mainM->GetMenuItemID(1), &info);		// ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½.
+		mainM->GetMenuItemInfo(mainM->GetMenuItemID(1), &info);		// °èÁÂ¼³Á¤ ÅØ½ºÆ® º¯°æ.
 		
 		const CMenuXPItem *pData = (CMenuXPItem *)info.dwItemData;
 		/**
-		pData->m_strText = _T("ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½");
+		pData->m_strText = _T("°èÁÂ¼³Á¤");
 		**/
 
-		/*  //20191205 ï¿½ï¿½ï¿½ï¿½ï¿½Î°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½ ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ ï¿½Ö¼ï¿½
+		/*  //20191205 °í°´ÀÎ°æ¿ì ¼ö¼ö·á ÆË¾÷ ¸Þ´º°¡ º¸¿©Á®¾ß ÇÔ ±âÁ¸Ã³¸® ÁÖ¼®
 		mainM = (CMenuXP*) m_tMenu->GetPopupMenu(-1);
 
-		mainM->GetMenuItemInfo(mainM->GetMenuItemID(6), &info);		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+		mainM->GetMenuItemInfo(mainM->GetMenuItemID(6), &info);		// °èÁÂÅø¹Ù »èÁ¦.
 		mainM->RemoveMenu(6, MF_BYPOSITION);
 		pData = (CMenuXPItem *)info.dwItemData;
 		if ((info.fType & MFT_OWNERDRAW) && pData && pData->IsMyData())
@@ -5216,7 +5441,7 @@ void CMainFrame::CreateTB()
 		CMenuXPItem *pData2 = (CMenuXPItem *)info.dwItemData;
 		//AfxMessageBox(pData2->m_strText);
 		
-		pData2->m_strText = "ï¿½ï¿½È¸ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½";
+		pData2->m_strText = "Á¶È¸°èÁÂ¼³Á¤";
 		
 		//if (pData2) delete pData2;
 	}
@@ -5251,9 +5476,16 @@ void CMainFrame::CreateTB()
 	m_smain->SetBarStyle(m_smain->GetBarStyle()|CBRS_TOOLTIPS|CBRS_FLYBY|CBRS_SIZE_DYNAMIC);
 	m_smain->make_Ctrl();
 
+#ifdef DF_USE_CPLUS17
 	m_bar0 = std::make_unique<CCoolDialogBar>(this, axiscall, m_wizard.get());
+#else
+	m_bar0 = new CCoolDialogBar(this, axiscall, m_wizard);
+#endif
 	if (!m_bar0->Create(this, IDD_DBAR0))
 	{
+#ifndef DF_USE_CPLUS17
+		delete m_bar0;
+#endif
 		m_bar0 = NULL;
 		return;
 	}
@@ -5263,10 +5495,21 @@ void CMainFrame::CreateTB()
 
 	m_bar0->EnableDocking(CBRS_ALIGN_LEFT);
 
+#ifdef DF_USE_CPLUS17
 	DockControlBar(m_bar0.get());
 	ShowControlBar(m_bar0.get(), FALSE, FALSE);
+#else
+	DockControlBar(m_bar0);
+	ShowControlBar(m_bar0, FALSE, FALSE);
+#endif
 
+
+#ifdef DF_USE_CPLUS17
 	m_TotalAcc = new CAcntDialogBar(this, axiscall, m_wizard.get());
+#else
+	m_TotalAcc = new CAcntDialogBar(this, axiscall, m_wizard);
+#endif	
+
 	m_TotalAcc->SetAuthInfo(Axis::userID, m_pass);
 	if (!m_TotalAcc->Create(this, IDD_TOTALACC))
 	{
@@ -5283,7 +5526,7 @@ void CMainFrame::CreateTB()
 	
 	ShowControlBar(m_TotalAcc, FALSE, FALSE);
 	ModifyStyle(WS_CAPTION, 0); //vc2019? test
-
+#if 1
 	m_bSDI = m_axis->GetProfileInt(INFORMATION, "SDI", 0) ? true : false;
 
 	if (m_bSDI)
@@ -5302,14 +5545,29 @@ void CMainFrame::CreateTB()
 		m_toolStatus = m_axis->GetProfileInt(INFORMATION, "toolstatus", TOOLSTATUS_SDI);
 
 		ModifyStyle(WS_CAPTION, 0);
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_tMenu.get(), FALSE, FALSE);
 		ShowControlBar(m_bar1.get(), FALSE, FALSE);
 		ShowControlBar(m_bar2.get(), FALSE, FALSE);
 		ShowControlBar(m_bar0.get(), FALSE, FALSE);
-
+#else
+		ShowControlBar(m_tMenu, FALSE, FALSE);
+		ShowControlBar(m_bar1, FALSE, FALSE);
+		ShowControlBar(m_bar2, FALSE, FALSE);
+		ShowControlBar(m_bar0, FALSE, FALSE);
+#endif
+		
+		
+		
+		
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_sdibar.get(), TRUE, FALSE);
 		ShowControlBar(m_smain.get(), TRUE, FALSE);
-
+#else
+		ShowControlBar(m_sdibar, TRUE, FALSE);
+		ShowControlBar(m_smain, TRUE, FALSE);
+#endif
+		
 		SetSDIChangeHeight();
 		ChangeLogo();
 
@@ -5321,14 +5579,71 @@ void CMainFrame::CreateTB()
 	else
 	{
 		m_toolStatus = m_axis->GetProfileInt(INFORMATION, "toolstatus", TOOLSTATUS_MDI);
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_sdibar.get(), FALSE, FALSE);
 		ShowControlBar(m_smain.get(), FALSE, FALSE);
+#else
+		ShowControlBar(m_sdibar, FALSE, FALSE);
+		ShowControlBar(m_smain, FALSE, FALSE);
+#endif
+		
 	}
+#else
+	if (!m_bSDI)
+	{
+		ShowControlBar(m_sdibar, FALSE, FALSE);
+		ShowControlBar(m_smain, FALSE, FALSE);
+	}
+	loadToolStatus();
+	SetToolStatus();
+#endif
 	RecalcLayout();
 }
 
 bool CMainFrame::Start(CString user)
 {	
+	OutputDebugString("[axis]CMainFrame::Start");
+#ifdef USE_AHNLAB_SECUREBROWSER
+	//Delete_AsisICon();
+	CString filename;
+	filename.Format("%s\\%s\\%s", Axis::home, "exe", "NOAOS.TXT");
+	FILE* fp;
+	fopen_s(&fp, filename, "rb");
+
+	int nInternalMember;
+
+	nInternalMember = 0;
+
+	if (fp)
+	{
+		nInternalMember = 1;
+		m_bNoProtect = TRUE;
+		fclose(fp);
+	}
+	else
+	{
+		GetLocalIP();
+
+		if (isIPInRange(m_ipAddr, "172.17.0.0") || isIPInRange(m_ipAddr, "172.20.0.0"))
+		{
+			nInternalMember = 1;
+			m_bNoProtect = TRUE;
+		}
+	}
+
+	if (nInternalMember == 1)
+	{
+		AfxGetApp()->WriteProfileInt(INFORMATION, "AOS", 0);
+		AfxGetApp()->WriteProfileInt(INFORMATION, "PCFirewall", 0);
+	}
+#endif
+
+	m_slog.Format("Start  m_ipAddr=[%s]", m_ipAddr);
+	WriteLog(m_slog);
+
+	GetLocalIP();
+	WriteLog("CMainFrame  GetLocalIP");
+
 	CString s;
 	s.Format("PASSWORD START [%s]\n",user);
 	OutputDebugString(s);
@@ -5382,14 +5697,14 @@ bool CMainFrame::Start(CString user)
 
 	OutputDebugString("MAIN START 1\n");
 	//2015.10.10 dkkim
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//º¸¾ÈÇÁ·Î±×·¥ ±¸µ¿ ¹æ¹ý º¯°æ
 	//LoadSecureTools();
 	OutputDebugString("MAIN START 2\n");
 
 	if(m_bUseNewLogin)
 	{
 		m_axConnect->SetProgK(m_progK);
-		if (m_regkey.Find("ï¿½ï¿½ï¿½ï¿½") >= 0)
+		if (m_regkey.Find("Á÷¿ø") >= 0)
 			m_axConnect->SetStaff(true);
 
 		if (m_regkey.Find("STAFF") >= 0)
@@ -5403,8 +5718,8 @@ bool CMainFrame::Start(CString user)
   
 		if (m_axConnect)
 		{
-			// 2013.01.14 ï¿½ï¿½ï¿½ï¿½ï¿½
-			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½8ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½È³ï¿½
+			// 2013.01.14 ±è´ö±â
+			// À©µµ¿ì8ÀÏ °æ¿ì ¼³Á¤ ¾È³»
 			OSVERSIONINFOEX osvi;
 			osvi.dwOSVersionInfoSize=sizeof(OSVERSIONINFOA);
 			//GetVersionExA((LPOSVERSIONINFO)&osvi);
@@ -5432,13 +5747,13 @@ bool CMainFrame::Start(CString user)
 	// 			if(strNote.Find("NO") >= 0)
 	// 			{
 	// 				CString	str;
-	// 				str.Format("[PC ï¿½î¿µÃ¼ï¿½ï¿½ WINDOWS8 ï¿½Ì»ï¿½ ï¿½Ì¿ï¿½ ï¿½È³ï¿½]"\
+	// 				str.Format("[PC ¿î¿µÃ¼Á¦ WINDOWS8 ÀÌ»ó ÀÌ¿ë ¾È³»]"\
 	// 					"\n\n"\
-	// 					"ï¿½ï¿½ WINDOWS8ï¿½Ì»ó¿¡¼ï¿½ï¿½ï¿½ ï¿½Ñ±ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ID ï¿½Ô·ï¿½ï¿½ï¿½\n ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Éºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½\n ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶ï¿½ï¿½Ï´ï¿½."\
+	// 					"¡á WINDOWS8ÀÌ»ó¿¡¼­ÀÇ ÇÑ±Û/¿µ¾î ÀüÈ¯±â´ÉÀÇ Á¦¾à°ú °ü·ÃÇÏ¿© ID ÀÔ·ÂÀÌ\n µÇÁö ¾Ê´Â ¿À·ù°¡ ¹ß»ýµÇ¾î ´ÙÀ½°ú °°Àº ±â´Éº¯°æÀÌ ÇÊ¿äÇÏ¿À´Ï\n Âü°í ¹Ù¶ø´Ï´Ù."\
 	// 					"\n\n"\
-	// 					"ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½Ã°ï¿½,ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½É¼ï¿½-ï¿½ï¿½ï¿½-ï¿½ï¿½ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"\
+	// 					"¡á °æ ·Î : Á¦¾îÆÇ-½Ã°è,¾ð¾î ¹× ±¹°¡º° ¿É¼Ç-¾ð¾î-°í±Þ¼³Á¤ ¿­±â"\
 	// 					"\n\n"\
-	// 					"ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½é¿¡ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ \n [ï¿½ï¿½ ï¿½ï¿½ Ã¢ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½] ï¿½ï¿½ Ã¼Å©."\
+	// 					"¡á º¯°æ ¹æ¹ý : °í±Þ ¼³Á¤ È­¸é¿¡¼­ ÀÔ·Â ¹æ¹ý ÀüÈ¯ ¾Æ·¡¿¡ ÀÖ´Â \n [°¢ ¾Û Ã¢¿¡ ´Ù¸¥ ÀÔ·Â ¹æ¹ýÀ» Á÷Á¢ ¼³Á¤] À» Ã¼Å©."\
 	// 					"\n\n");
 	// 				
 	// 				Axis::MessageBox(this, str, MB_OK | MB_ICONINFORMATION);
@@ -5446,7 +5761,7 @@ bool CMainFrame::Start(CString user)
 	// 				WritePrivateProfileString("WIN8","NOTICE","YES",file);
 	// 			}
 	// 		}
-			//2012.02.06 ï¿½ï¿½ï¿½ï¿½ï¿½ - ï¿½Î±ï¿½ï¿½ï¿½Ã¢ ï¿½ã¶§ï¿½ï¿½ï¿½ï¿½ ï¿½Â½ï¿½Å©ï¿½Ù¿ï¿½ Ç¥ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½
+			//2012.02.06 ±è´ö±â - ·Î±×ÀÎÃ¢ ¶ã¶§ºÎÅÍ ÅÂ½ºÅ©¹Ù¿¡ Ç¥½ÃÇÏ±â À§ÇØ¼­
 	// 		int screenX = GetSystemMetrics(SM_CXVIRTUALSCREEN);
 	// 		int screenY = GetSystemMetrics(SM_CYVIRTUALSCREEN);
 	// 		int x  = m_axis->GetProfileInt(INFORMATION, "win_x", 0);
@@ -5487,7 +5802,7 @@ bool CMainFrame::Start(CString user)
 	else
 	{
 		m_axConnectOld->SetProgK(m_progK);
-		if (m_regkey.Find("ï¿½ï¿½ï¿½ï¿½") >= 0)
+		if (m_regkey.Find("Á÷¿ø") >= 0)
 			m_axConnectOld->SetStaff(true);
 
 		if (m_regkey.Find("STAFF") >= 0)
@@ -5501,8 +5816,8 @@ bool CMainFrame::Start(CString user)
 
 		if (m_axConnectOld)
 		{
-			// 2013.01.14 ï¿½ï¿½ï¿½ï¿½ï¿½
-			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½8ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½È³ï¿½
+			// 2013.01.14 ±è´ö±â
+			// À©µµ¿ì8ÀÏ °æ¿ì ¼³Á¤ ¾È³»
 			OSVERSIONINFOEX osvi;
 			osvi.dwOSVersionInfoSize=sizeof(OSVERSIONINFOA);
 			//GetVersionExA((LPOSVERSIONINFO)&osvi);
@@ -5570,7 +5885,7 @@ void CMainFrame::registerControl()
 
 	//char*	control[] = { "axWizard.ocx", "axSock.ocx", "axComCtl.ocx", "axXecure.ocx", "axCertify.ocx", "vbscript.dll", "IBKSConnector.ocx", NULL };
 	char*	control[] = { "axWizard.ocx", "axSock.ocx", "axComCtl.ocx", "axXecure.ocx", "axCertify.ocx", NULL };
-	
+
 	CString	path;
 	HINSTANCE hLib{};
 
@@ -5612,6 +5927,7 @@ void CMainFrame::registerControl()
 
 		m_slog.Format("[axis][registerControl] LoadLibrary%s] \n", path);
 		OutputDebugString(m_slog);
+		WriteLog(m_slog);
 	}
 }
 #pragma warning (default : 26430)
@@ -5701,7 +6017,7 @@ OutputDebugString(slog);
 		str.Format("GLB getConnectInfo get_glb_addr IP [%s]   m_ipAddr = [%s]\n",ips,  m_ipAddr);
 		OutputDebugString(str);
 
-		//**m_axis->WriteProfileString(INFORMATION, "Server", ips);	// ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//**m_axis->WriteProfileString(INFORMATION, "Server", ips);	// º¯°æµÇ¸é ¼­¹öÀúÀå
 
 		if (ips.IsEmpty())	
 		{
@@ -5761,7 +6077,7 @@ void CMainFrame::load_start_notice( BOOL bReload )
 		}
 
 		
-		const CWnd* wnd = FindWindow(NULL,"ï¿½Ç½Ã°ï¿½ï¿½Ø¿ï¿½ï¿½ï¿½ï¿½ï¿½");
+		const CWnd* wnd = FindWindow(NULL,"½Ç½Ã°£ÇØ¿ÜÁö¼ö");
 
 		if (!wnd)
 		{
@@ -5824,13 +6140,14 @@ void CMainFrame::endWorkstation()
 	tDept.TrimLeft();tDept.TrimRight();
 
 CString s;
-s.Format("ACCTEST Main endWorkstation ï¿½Î±ï¿½ï¿½ÎºÎ¼ï¿½=[%s] ï¿½ï¿½ï¿½ÏºÎ¼ï¿½=[%s] \n",m_dept, tDept);
+s.Format("ACCTEST Main endWorkstation ·Î±×ÀÎºÎ¼­=[%s] ÆÄÀÏºÎ¼­=[%s] \n",m_dept, tDept);
 OutputDebugString(s);
+WriteLog(s);
 ///	if ( (m_dept != "813") && (m_dept != "828") && m_dept != "812" && m_dept != tDept)
 	if(m_dept != tDept)  
 	{
 		CMenuXP*	mainM = (CMenuXP*) m_tMenu->GetPopupMenu(0);
-		//ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½
+		//°í°´ÀÌ¸é °í°³ºñ¹Ð¹øÈ£ º¯°æ ¸Þ´º »èÁ¦
 		mainM->DeleteMenu(ID_SETACCOUNT, MF_BYCOMMAND);
 
 // 		if(!Axis::isCustomer)
@@ -5838,8 +6155,8 @@ OutputDebugString(s);
 	}
 	else
 	{
-		// 811 ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½
-		// 813, 828 ï¿½Ä»ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ 1/2ï¿½ï¿½
+		// 811 ¹ýÀÎ¿µ¾÷ÆÀ
+		// 813, 828 ÆÄ»ý»óÇ°¿µ¾÷ 1/2ÆÀ
 // 		if (m_dept != "812")
 // 			ShowControlBar(m_TotalAcc, TRUE, FALSE);
 
@@ -5867,11 +6184,16 @@ OutputDebugString(s);
 	WriteLog("endWorkstation - Step 4");
 
 	m_axMisc->LoadGuide();
+#ifdef DF_USE_CPLUS17
 	m_bar0->set_MenuInfo(m_tMenu.get(), Axis::user);
 	m_smain->set_MenuInfo(m_tMenu.get());
-
+#else
+	m_bar0->set_MenuInfo(m_tMenu, Axis::user);
+	m_smain->set_MenuInfo(m_tMenu);
+#endif
 	m_bar1->Change_Skin(Axis::skinName);
 	m_bar2->Change_Skin(Axis::skinName);
+//	m_bar3->Change_Skin(Axis::skinName);
 	m_smain->Change_Skin(Axis::skinName);
 
 	WriteLog("endWorkstation - Step 5");
@@ -5883,10 +6205,10 @@ OutputDebugString(s);
 	
 	preload_screen();
 
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Û¾ï¿½
-	// axlogon -> misf ï¿½ï¿½ SBPLI301ï¿½ï¿½ [ï¿½Î±ï¿½ï¿½Îºï¿½Ð¹ï¿½È£ï¿½ï¿½ï¿½ï¿½] ï¿½Ã·ï¿½ï¿½ï¿½([W]arning, e[X]pired)
-	// IB0000AA ï¿½ï¿½ï¿½ï¿½ misfï¿½Ã·ï¿½ï¿½×¸ï¿½ iniï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½
-	// ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½Ã·ï¿½ï¿½×¸ï¿½ ï¿½Ð¾ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ñ´ï¿½.
+	// Á÷¿øÀÇ ÆÐ½º¿öµå º¯°æÀÛ¾÷
+	// axlogon -> misf ¿¡ SBPLI301ÀÇ [·Î±×ÀÎºñ¹Ð¹øÈ£±¸ºÐ] ÇÃ·¡±×([W]arning, e[X]pired)
+	// IB0000AA ¿¡¼­ misfÇÃ·¡±×¸¦ iniÆÄÀÏ¿¡ ÀúÀå
+	// ¸ÞÀÎ¿¡¼­ ÇØ´ç ÇÃ·¡±×¸¦ ÀÐ¾î ¾Æ·¡¿Í °°ÀÌ Ã³¸®ÇÑ´Ù.
 	if (!Axis::isCustomer)   
 	{
 		CProfile pk(pkUserSetup);
@@ -5896,15 +6218,22 @@ OutputDebugString(s);
 			CEmpPassChangeNotifyDlg dlg(this, (val=="X") ? PNT_MUST : PNT_ADVISE);
 			if (dlg.DoModal()==IDOK)
 			{
-				// ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
+				// ¸¸·áµÇ¾úÀ»°æ¿ì ´ÝÀ»¼ö ¾øµµ·Ï ÇÑ´Ù.
+#ifdef DF_USE_CPLUS17
 				m_EmpPassChangeDlg = std::make_unique<CEmpPassChangeDlg>(this, (val == "X") ? FALSE : TRUE);
 				m_EmpPassChangeDlg->DoModal();
 				m_EmpPassChangeDlg = nullptr;
+#else
+				m_EmpPassChangeDlg = new CEmpPassChangeDlg(this, (val=="X") ? FALSE : TRUE);
+				m_EmpPassChangeDlg->DoModal();
+				delete m_EmpPassChangeDlg;
+				m_EmpPassChangeDlg = NULL;
+#endif
 			}
 		}
 	}
 
-	//ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ ï¿½ß°ï¿½
+	//¸Ê¹èÆ÷½Ã ·¹ÆÄÁöÅä¸® ¸®¼ÂÀ» À§ÇÑ ºÎºÐ Ãß°¡
 	//dkkim 2016.03.21
 	//[MAP]
 	//COUNT=1
@@ -5951,7 +6280,7 @@ OutputDebugString(s);
 
 		WriteLog("endWorkstation - Step 10-2");
 
-		//** ï¿½Å¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½
+		//** ½Å¿ëÁ¤º¸Á¦°ø µ¿ÀÇ ¿©ºÎ Á¡°Ë È­¸é
 
 	
 		const char* trust = "IB820850";
@@ -5966,7 +6295,7 @@ OutputDebugString(s);
 		
 		WriteLog("endWorkstation - Step 10-3");
 		
-		//** ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ OPEN	
+		//** ÃÊ±â°øÁö»çÇ× OPEN	
 		load_start_notice();
 
 		WriteLog("endWorkstation - Step 10-4");
@@ -5994,7 +6323,11 @@ OutputDebugString(s);
 
 	m_smcall = new CSmcall();
 
+#ifdef DF_USE_CPLUS17
 	m_smcall->Set_Infomation(axiscall, m_tMenu.get());
+#else
+	m_smcall->Set_Infomation(axiscall, m_tMenu);
+#endif
 
 	WriteLog("endWorkstation - Step 14");
 
@@ -6060,7 +6393,7 @@ OutputDebugString(s);
 
 	//CreateHistoryBar();
 
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+	//¾÷µ¥ÀÌÆ® ¿¡ÀÌÀüÆ® °ü·Ã
 // 	CString strUpdatePath;
 // 	strUpdatePath.Format("%s\\exe\\UPDATEAGENT.EXE",Axis::home);
 // 	
@@ -6068,9 +6401,9 @@ OutputDebugString(s);
 	ReadNoticeMap();
 	
 	//axFocus(m_activeKey);
-	/// ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½Îºï¿½/////
+	/// ±â´É Ãß°¡ ºÎºÐ/////
 	// dkkim 2016.04.11
-	//SendProcessList();//ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+	//SendProcessList();//ÇÁ·Î¼¼½º ¸®½ºÆ® Àü¼Û
 
 	CString strFile;
 	strFile.Format("%s\\tab\\EXECSCREEN.ini", Axis::home); 
@@ -6084,7 +6417,7 @@ OutputDebugString(s);
 
 	ScrapInformation();
 	///////////////////////
-	//trouble_shooting("ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½");
+	//trouble_shooting("Å×½ºÆ® ¿À·ù ¸Þ½ÃÁö");
 	SetTimer(TM_INITSIZE, 1000, NULL);
 
 	strFile.Format("%s\\tab\\TOP10.ini", Axis::home); 
@@ -6117,7 +6450,7 @@ OutputDebugString(s);
 		Send2018();
 	}
 
-	//ï¿½ï¿½Å¶ï¿½ê·¹ï¿½ï¿½Å© ï¿½ï¿½È¸
+	//¼­Å¶ºê·¹ÀÌÅ© Á¶È¸
 	//SetTimer(TM_CB_SEARCH, 5000, NULL);
 }
 
@@ -6163,8 +6496,11 @@ void CMainFrame::ParseEnca(char* dat,int len)
 	{
 		if(m_bEnca == true)
 			return;
-
+#ifdef DF_USE_CPLUS17
 		CCertErrDialog dlg(m_axConnect.get());
+#else
+		CCertErrDialog dlg(m_axConnect);
+#endif
 		dlg.SetErrCount(CString(mod->cnt,1));
 
 		if(dlg.DoModal() == IDOK)
@@ -6179,7 +6515,7 @@ void CMainFrame::signOnCert()
 #ifdef DF_SIMPLEAUTH
 m_slog.Format("[QRCODE] signOnCert [%s][%s]", m_ip, m_port);;
 OutputDebugString(m_slog);
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//°£ÆíÀÎÁõ
 	if(m_bSimpleAuth)
 	{
 		m_sCustNumber.Empty();
@@ -6187,11 +6523,11 @@ OutputDebugString(m_slog);
 		
 		return;
 	}
-	//@@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//@@°£ÆíÀÎÁõ
 #endif
 
 OutputDebugString("GLB signOnCert");
-	m_axConnect->SetGuide(_T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ ï¿½Ô´Ï´ï¿½."));
+	m_axConnect->SetGuide(_T("»ç¿ëÀÚÁ¤º¸ È®ÀÎ Áß ÀÔ´Ï´Ù."));
 
 	BOOL	rc = FALSE;
 	CString	str;
@@ -6202,14 +6538,14 @@ OutputDebugString("GLB signOnCert");
 	const char encPass[10] = { 0, }, clkPass[16] = { 0, };
 // 
 // 	static struct i_pc {
-// 	  char  optn[10];       /* [0] : 0:ï¿½ï¿½ï¿½ï¿½ 2:ï¿½ï¿½ï¿½ï¿½
+// 	  char  optn[10];       /* [0] : 0:ÃÖÃÊ 2:°­Á¦
 // 							   [1] : CA passwd
-// 							   [2] : ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½
-// 							   [3] : 0:ï¿½ï¿½ï¿½ï¿½ 1:ï¿½ï¿½ï¿½ï¿½ */
+// 							   [2] : ½Ã¼¼Àü¿ë
+// 							   [3] : 0:Á÷¿ø 1:°í°´ */
 // 	  char  cpas[30];	
 // 	  char  pcip[15];
 // 	  char  maca[20];
-// 	  char  sdat[6776];         /* ï¿½ï¿½ï¿½ï¿½ DNï¿½ï¿½ */
+// 	  char  sdat[6776];         /* ÀÎÁõ DN°ª */
 // 	} signPC;
 
 	struct	i_pc {
@@ -6219,7 +6555,7 @@ OutputDebugString("GLB signOnCert");
 		char	cpas[30]{};
 		char	uips[15]{};
 		char	madr[16]{};
-		char  sdat[6776]{};         /* ï¿½ï¿½ï¿½ï¿½ DNï¿½ï¿½ */
+		char  sdat[6776]{};         /* ÀÎÁõ DN°ª */
 	} signPC;
 
 
@@ -6255,7 +6591,7 @@ OutputDebugString("GLB signOnCert");
 	{
 		if(!isIPInRange(m_ipAddr,"172.17.0.0") && !isIPInRange(m_ipAddr,"172.20.0.0"))
 		{
-			m_axConnect->SetGuide(_T("ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ç³»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½."));
+			m_axConnect->SetGuide(_T("ÇØ´ç °èÁ¤Àº »ç³»¿¡¼­¸¸ Á¢¼ÓÀÌ °¡´ÉÇÕ´Ï´Ù."));
 
 			m_step = axNONE;
 			m_axConnect->SetChoice(true);
@@ -6320,14 +6656,14 @@ OutputDebugString("GLB signOnCert");
 	{
 		m_step = axNONE;
 		m_axConnect->SetChoice(true);
-		m_axConnect->SetGuide("ï¿½ï¿½ï¿½ï¿½ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+		m_axConnect->SetGuide("ÀÎÁõ·Î±×ÀÎÀ» Ãë¼ÒÇß½À´Ï´Ù.");
 		return;
 	}
 	else if(ret == 2417)
 	{
 		m_step = axNONE;
 		m_axConnect->SetChoice(true);
-		str = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.";
+		str = "ÀÎÁõ ºñ¹Ð¹øÈ£ ¿À·ùÀÔ´Ï´Ù.";
 		m_axConnect->SetGuide(str);
 
 		SendEnca(m_strDN,false);
@@ -6337,7 +6673,7 @@ OutputDebugString("GLB signOnCert");
 	{
 		m_step = axNONE;
 		m_axConnect->SetChoice(true);
-		str = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.";
+		str = "¼±ÅÃ °¡´ÉÇÑ ÀÎÁõ¼­°¡ ¾ø½À´Ï´Ù.";
 		m_axConnect->SetGuide(str);
 		
 		//SendEnca(m_strDN,false);
@@ -6347,7 +6683,7 @@ OutputDebugString("GLB signOnCert");
 	{
 		m_step = axNONE;
 		m_axConnect->SetChoice(true);
-		str = "AXCERTIFY ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½Û¿ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.";
+		str = "AXCERTIFY ¶Ç´Â ¹öÆÛ¿¡·¯ÀÔ´Ï´Ù.";
 		m_axConnect->SetGuide(str);
 		return;
 	}
@@ -6356,7 +6692,7 @@ OutputDebugString("GLB signOnCert");
 		m_step = axNONE;
 		m_axConnect->SetChoice(true);
 		//m_axMisc->GetGuide(AE_ESECURE, str);   
-		str.Format("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ [%d]",ret);
+		str.Format("ÀÎÁõ¿À·ù [%d]",ret);
 		m_axConnect->SetGuide(str);
 		return;
 	}	
@@ -6401,7 +6737,7 @@ void CMainFrame::signOn()
 	OutputDebugString("----------------------GLB signOn");
 
 #ifdef DF_SIMPLEAUTH
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//°£ÆíÀÎÁõ
 	if(m_bSimpleAuth)
 	{
 		m_sCustNumber.Empty();
@@ -6409,13 +6745,13 @@ void CMainFrame::signOn()
 	
 		return;
 	}
-	//@@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//@@°£ÆíÀÎÁõ
 #endif
 	//SetEncriptFile();
 	if(m_bUseNewLogin)
 	{
 		OutputDebugString("GLB m_bUseNewLogin");
-		m_axConnect->SetGuide(_T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ ï¿½Ô´Ï´ï¿½."));
+		m_axConnect->SetGuide(_T("»ç¿ëÀÚÁ¤º¸ È®ÀÎ Áß ÀÔ´Ï´Ù."));
 
 		BOOL	rc = FALSE;
 		CString	str;
@@ -6490,7 +6826,7 @@ void CMainFrame::signOn()
 		CopyMemory(signM.dats, str, str.GetLength());
 		CopyMemory(signM.cpas, m_cpass, m_cpass.GetLength());
 
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(AXCERTIFY.OCX) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Î¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+		//ÀÎÁõ¸ðµâ(AXCERTIFY.OCX) º¯°æ ÈÄ ³Î¹®ÀÚ ¸¶Áö¸·¿¡ Ãß°¡
 		signM.cpas[m_cpass.GetLength()] = '\0';
 
 		if (m_ipAddr.IsEmpty())
@@ -6502,7 +6838,7 @@ void CMainFrame::signOn()
 		{
 			if(!isIPInRange(m_ipAddr,"172.17.0.0") && !isIPInRange(m_ipAddr,"172.20.0.0"))
 			{
-				m_axConnect->SetGuide(_T("ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ç³»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½."));
+				m_axConnect->SetGuide(_T("ÇØ´ç °èÁ¤Àº »ç³»¿¡¼­¸¸ Á¢¼ÓÀÌ °¡´ÉÇÕ´Ï´Ù."));
 
 				m_step = axNONE;
 				m_axConnect->SetChoice(true);
@@ -6592,7 +6928,7 @@ OutputDebugString(slog);
 	else
 	{
 OutputDebugString("GLB not m_bUseNewLogin");
-		m_axConnectOld->SetGuide(_T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ ï¿½Ô´Ï´ï¿½."));
+		m_axConnectOld->SetGuide(_T("»ç¿ëÀÚÁ¤º¸ È®ÀÎ Áß ÀÔ´Ï´Ù."));
 
 		BOOL	rc = FALSE;
 		CString	str;
@@ -6667,7 +7003,7 @@ OutputDebugString("GLB not m_bUseNewLogin");
 		CopyMemory(signM.dats, str, str.GetLength());
 		CopyMemory(signM.cpas, m_cpass, m_cpass.GetLength());
 
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(AXCERTIFY.OCX) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Î¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+		//ÀÎÁõ¸ðµâ(AXCERTIFY.OCX) º¯°æ ÈÄ ³Î¹®ÀÚ ¸¶Áö¸·¿¡ Ãß°¡
 		signM.cpas[m_cpass.GetLength()] = '\0';
 
 		if (m_ipAddr.IsEmpty())
@@ -6679,7 +7015,7 @@ OutputDebugString("GLB not m_bUseNewLogin");
 		{
 			if(!isIPInRange(m_ipAddr,"172.17.0.0") && !isIPInRange(m_ipAddr,"172.20.0.0"))
 			{
-				m_axConnectOld->SetGuide(_T("ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ç³»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½."));
+				m_axConnectOld->SetGuide(_T("ÇØ´ç °èÁ¤Àº »ç³»¿¡¼­¸¸ Á¢¼ÓÀÌ °¡´ÉÇÕ´Ï´Ù."));
 
 				m_step = axNONE;
 				m_axConnectOld->SetChoice(true);
@@ -6820,8 +7156,12 @@ void CMainFrame::setTitle(int key, CString title)
 			{
 				child->SetMapName(axiscall, mapN);
 				m_bar1->set_Maps(mapN);
-
+#ifdef DF_USE_CPLUS17
 				m_bar2->change_Info(key, mapN, m_tMenu.get());
+#else
+				m_bar2->change_Info(key, mapN, m_tMenu);
+#endif
+				
 				if (!ExistMenu(mapN))
 				{
 					CString	string = child->m_xcaption.GetTitle();
@@ -6857,8 +7197,8 @@ void CMainFrame::SetSCN(CWnd* wnd, int key, CString mapN, CString title, bool bS
 	CString tmp;
 	CString sc_gb(_T(""));
 
-	if (!Axis::isCustomer) sc_gb = " - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
-	if (Axis::devMode) tmp = "(ï¿½ï¿½ï¿½ß¿ï¿½) ";
+	if (!Axis::isCustomer) sc_gb = " - Á÷¿ø¿ë";
+	if (Axis::devMode) tmp = "(°³¹ß¿ë) ";
 	
 	if (mapTitle.Left(6) != mapN.Left(6))
 		title = Format("[%s] "+tmp+"%s", m_tMenu->GetDispN(mapN), m_tMenu->GetDesc(mapN));
@@ -6905,7 +7245,7 @@ int CMainFrame::create_Newview(int actkey, char* data)
 	{
 	case typeVIEW:
 		key = m_mapHelper->CreateChild(mapN, userWH->group, userWH->key, position, point);
-		//key = m_mapHelper->ChangeChild(mapN, userWH->group, userWH->key, position);//15.08.06 axWizard ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½ï¿½Þ´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ newView ï¿½ß»ï¿½
+		//key = m_mapHelper->ChangeChild(mapN, userWH->group, userWH->key, position);//15.08.06 axWizard ¼öÁ¤À¸·Î ÆË¾÷¸Þ´º¿¡¼­ ¹«Á¶°Ç newView ¹ß»ý
 		if (position != -1)	
 			positionWindow(actkey, key, position);
 		return key;
@@ -6925,10 +7265,13 @@ void CMainFrame::loadMap(int key, int size)
 {
 	if (!m_modal)	return;
 	key = m_modal->m_vwKEY;
-
+#ifdef DF_USE_CPLUS17
 	m_wizard->InvokeHelper(DI_ATTACH, DISPATCH_METHOD, VT_I4, (void*)&key,
 		(BYTE*)(VTS_I4 VTS_I4 VTS_I4), (long)m_modal->m_wnd.get(), m_modal->m_vwTYPE, key);
-
+#else
+	m_wizard->InvokeHelper(DI_ATTACH, DISPATCH_METHOD, VT_I4, (void *)&key,
+				(BYTE *)(VTS_I4 VTS_I4 VTS_I4), (long)m_modal->m_wnd, m_modal->m_vwTYPE, key);
+#endif
 	m_modal->m_vwKEY = key;
 	m_arMPOP.SetAt(key, m_modal);
  
@@ -6994,7 +7337,7 @@ void CMainFrame::Setfocus_Child(int key,bool bVS)
 			{
 				if(bTabChange != TRUE)
 				{
-					//ï¿½Ö¼ï¿½È­ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
+					//ÃÖ¼ÒÈ­ »óÅÂ¿¡¼­ ´Ù½Ã ¿øº¹ÇÏ°Ô º¯°æ
 					const CPoint sp(-1, -1);
 
 					if (!schild->m_xcaption.IsMax())
@@ -7026,7 +7369,7 @@ void CMainFrame::Setfocus_Child(int key,bool bVS)
 		{	
 			if(bTabChange != TRUE)
 			{
-				//ï¿½Ö¼ï¿½È­ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
+				//ÃÖ¼ÒÈ­ »óÅÂ¿¡¼­ ´Ù½Ã ¿øº¹ÇÏ°Ô º¯°æ
 				CPoint sp(-1, -1);
 
 				sp = getMinimizePos(child->m_key);
@@ -7042,8 +7385,8 @@ void CMainFrame::Setfocus_Child(int key,bool bVS)
 			
 			CString map(child->m_mapN);
 
-			//ï¿½Ö¼ï¿½È­ Ã³ï¿½ï¿½ dkkim 2015.10.28
-			//DLLï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ È­ï¿½é¸¸ ï¿½ï¿½ï¿½ï¿½ï¿½.OnSizeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+			//ÃÖ¼ÒÈ­ Ã³¸® dkkim 2015.10.28
+			//DLLÀº ½ÇÁ¦·Î ÃÖ¼ÒÈ­ÇÏÁö ¾Ê°í È­¸é¸¸ ¼û±ä´Ù.OnSize¸¦ º¸³»Áö ¾ÊÀ½.
 			if(p1.GetString("DLL Controls", map).IsEmpty())
 			{
 				child->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
@@ -7145,7 +7488,7 @@ void CMainFrame::update_ticker(int kind, struct _alertR* alertR)
 		CString	str;
 		if (!symbol.IsEmpty() && (symbol.GetAt(0) == 'X' || symbol.GetAt(0) == 'x'))
 		{
-			// ï¿½ï¿½î¿µï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+			// Àå¿î¿µÁ¤º¸¸¦ À§ÇØ Ãß°¡
 			if (symbol.CompareNoCase(SYM_MNG) == 0)
 			{
 			
@@ -7206,7 +7549,7 @@ void CMainFrame::change_Skin()
 {
 	Axis::SetSkin(GetSkinName());
 
-	// ï¿½ï¿½ï¿½Ò½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ 
+	// ¸®¼Ò½º ¸®·Îµå 
 	Axis::ReloadSkin();
 
 	ChangeLogo();
@@ -7249,7 +7592,7 @@ void CMainFrame::IMAXSkinSet()
 
 	sSkinName = Axis::skinName;
 
-	if(sSkinName == "Gray")  //gray È¸ï¿½ï¿½ï¿½ï¿½
+	if(sSkinName == "Gray")  //gray È¸»öÀÓ
 		nSkinKind = 1;
 	else if(sSkinName == "Blue")
 		nSkinKind = 2;
@@ -7603,7 +7946,7 @@ bool CMainFrame::Agree_Duplication(CString mapN,bool bDup)
 				if (getSMap(pChild->m_mapN.Left(L_MAPN)) != getSMap("IB2000XX") && getSMap(pChild->m_mapN.Left(L_MAPN)) != getSMap("IB2000YY"))
 					continue;
 			}
-			else if (mapN.Find("IB200000") >= 0  && mapN.Find("1301") >= 0)  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+			else if (mapN.Find("IB200000") >= 0  && mapN.Find("1301") >= 0)  //µ¹·Áº¸±âµîÀ¸·Î Æ®¸®°Å ´øÁø°æ¿ì 
 			{
 				if (bfind2000 == false)
 					continue;
@@ -7892,7 +8235,7 @@ void CMainFrame::changeSize(int key, CSize size)
 			
 		
 			Mpop->SetSize(size.cx, size.cy);
-			if (Mpop->GetSafeHwnd())  //ï¿½Ö¹ï¿½È®ï¿½ï¿½Ã¢ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¶§ Ä¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+			if (Mpop->GetSafeHwnd())  //ÁÖ¹®È®ÀÎÃ¢µîÀ» ¶ç¿ï¶§ Ä¸¼ÇÀÇ ³ôÀÌ
 				Mpop->SetWindowPos(NULL, 0, 0, nCx , nCy + 25, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 			
 		}
@@ -8051,7 +8394,7 @@ LONG CMainFrame::OnCHILDMSG(WPARAM wParam, LPARAM lParam)
 void CMainFrame::GoToTray()
 {
 	ShowWindow(SW_HIDE);
-	//ShowSingleWindows(FALSE);  //SDI ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ ï¿½ï¿½ï¿½ï¿½ childframe ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö°Å³ï¿½ ï¿½Èºï¿½ï¿½ï¿½ï¿½Ö°ï¿½ ï¿½Ñ´ï¿½.
+	//ShowSingleWindows(FALSE);  //SDI ¸ðµåÀÏ¶§ °¢°¢ childframe ¸¦ º¸¿©ÁÖ°Å³ª ¾Èº¸¿©ÁÖ°Å ÇÑ´Ù.
 
 	bool	bConclusion = false, bKobaElw = false;
 	if (m_conclusion->GetStyle() & WS_VISIBLE)
@@ -8082,8 +8425,8 @@ void CMainFrame::BackFromTray()
 	//m_kobanotify->ShowWindow(SW_SHOW);
 
 	//if(m_appMode == MODE_SDI) 
-	//ï¿½ì¼± ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ ï¿½ï¿½å°¡ MODE_TRAY ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½Ã¿ï¿½ï¿½ï¿½ï¿½É¶ï¿½ SDIï¿½ï¿½ï¿½ï¿½ MDIï¿½ï¿½ï¿½ï¿½ ï¿½Ë¸ï¿½ ShowSingleWindows ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½ï¿½Øµï¿½ ï¿½È´ï¿½
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ShowSingleWindows ï¿½Ô¼ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ SDI È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ûµï¿½ï¿½Ç±ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MDI ï¿½ï¿½å¿¡ï¿½ï¿½ È£ï¿½ï¿½ï¿½Øµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//¿ì¼± ¿©±â¼­´Â ¸ðµå°¡ MODE_TRAY ÀÌÁö¸¸ ´Ù½Ã¿øº¹µÉ¶§ SDIÀÎÁö MDIÀÎÁö ¾Ë¸é ShowSingleWindows ¸¦ ±»È÷ È£Ãâ¾ÈÇØµµ µÈ´Ù
+	//ÇÏÁö¸¸ ShowSingleWindows ÇÔ¼öÀÚÃ¼°¡ SDI È­¸éÀÌ ÀÖÀ¸¸é ÀÛµ¿µÇ±â  ¶§¹®¿¡ MDI ¸ðµå¿¡¼­ È£ÃâÇØµµ ¹®Á¦´Â ¾ø´Ù
 	ShowSingleWindows(TRUE);  
 
 	ShowWindow(SW_SHOW);
@@ -8093,7 +8436,7 @@ void CMainFrame::LockProg()
 {
 // 	if(m_bCertLogin)
 // 	{
-// 		Axis::MessageBox(this, "ï¿½ï¿½ï¿½ï¿½ï¿½Î±ï¿½ï¿½Î½Ã¿ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.", MB_ICONINFORMATION);
+// 		Axis::MessageBox(this, "ÀÎÁõ·Î±×ÀÎ½Ã¿¡´Â È­¸éÀá±ÝÀ» »ç¿ë ÇÒ ¼ö ¾ø½À´Ï´Ù.", MB_ICONINFORMATION);
 // 		return;
 // 	}
 
@@ -8107,7 +8450,7 @@ void CMainFrame::LockProg()
 		CLockPass lockpassDlg(this);
 		//if(lockpassDlg.DoModal() == IDCANCEL)
 		//{
-		//	Axis::MessageBox(this, "È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.", MB_ICONINFORMATION);
+		//	Axis::MessageBox(this, "È­¸é Àá±ÝÀ» Ãë¼ÒÇß½À´Ï´Ù.", MB_ICONINFORMATION);
 		//	return;
 		//}
 		ShowWindow(SW_HIDE);
@@ -8170,7 +8513,12 @@ void CMainFrame::LockProg()
 	KillTimer(TM_IDLE);
 	
 	if(m_bCertLogin)
+#ifdef DF_USE_CPLUS17
 		lockDlg.SetWizard(m_wizard.get());
+#else
+		lockDlg.SetWizard(m_wizard);
+#endif
+
 
 	lockDlg.DoModal();
 	if (bConclusion)
@@ -8285,8 +8633,8 @@ void CMainFrame::createUserScreen(CString mapN, bool allVS)
 	CString s;
 	
 	WriteLog("CreateUserScrren========================\n");
-	// ï¿½î¶² ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-	// 2013.01.02 ï¿½ï¿½ï¿½ï¿½ï¿½
+	// ¾î¶² ¸ÊÀÌ Æ÷Ä¿½º¸¦ °¡Á®¾ßÇÏ´ÂÁö¿¡ ´ëÇÑ Á¤º¸
+	// 2013.01.02 ±è´ö±â
 // 	dwRc = GetPrivateProfileString(mapN, "LASTSTATFOCUS", "", wb, sizeof(wb), file);
 // 	
 // 	CString activeKey;
@@ -8823,8 +9171,8 @@ void CMainFrame::save_laststat()
 			// dll data append.........
 			if (m_mapHelper->IsDLL(child->m_mapN))
 			{
-				//DLL È­ï¿½ï¿½ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ï¿½ï¿½ OnSizeï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½È­ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Èµï¿½
-				//ï¿½×·ï¿½ï¿½ï¿½ DLL È­ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½.Æ¯ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+				//DLL È­¸éµéÀº Æ¯º°È÷ OnSize¸¦ Ã³¸®ÇØ ÁÖÁö ¾ÊÀ¸¸é ÃÖ¼ÒÈ­ Ã³¸®°¡ Á¦´ë·Î ¾ÈµÊ
+				//±×·¡¼­ DLL È­¸éµéÀº Á¾·á½Ã ¿øº¹ ÈÄ ÀúÀå Ã³¸®.Æ¯º°È÷ Â÷Æ®°¡ ¹®Á¦
 				//2016.02.11 - dkkim
 				if (child->m_bIconic)
 				{
@@ -9031,11 +9379,11 @@ void CMainFrame::save_laststat()
 		SendLastStat((char*)(const char *)strTotalLast);
 	}
 
-	// ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ mode
+	// ¹ÙÅÁÈ­¸é °øÁö»çÇ× mode
 	CProfile p(pkEnvironment);
 	p.Write("BKNOTICE", "MODE", Format("%d", m_nBkMode));
 	
-	// scr_report() ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½.
+	// scr_report() ÇÔ¼ö·Î ´ëÃ¼ÇÔ.
 	// SendConfig();
 
 	 //SendInstallPath();
@@ -9050,7 +9398,7 @@ void CMainFrame::save_laststat()
 	 }
 
 	 CString		filename;
-	 //ï¿½ï¿½ï¿½ï¿½ï¿½Î±ï¿½ ï¿½È¿Ã¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	 //¿¡·¯·Î±× ¾È¿Ã¸®°Ô Â÷´Ü
 // 	 CFile cfile;
 // 
 // 	 filename.Format("%s\\log", Axis::home);
@@ -9092,7 +9440,7 @@ void CMainFrame::save_laststat()
 // 	 }
 // 	 
 // 	 ::DeleteFile(filename);
-	 //2012.09.18 ï¿½ï¿½ï¿½ï¿½ï¿½ - 2000ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç½Ã°ï¿½ï¿½Ü°ï¿½ ï¿½ï¿½È¸ï¿½Ç¼ï¿½ ï¿½ï¿½ï¿½ï¿½
+	 //2012.09.18 ±è´ö±â - 2000¹ø¿¡¼­ ½Ç½Ã°£ÀÜ°í Á¶È¸°Ç¼ö Àü¼Û
 // 	 if(Axis::userID == "dundas" || Axis::userID == "yale8700")
 // 	 {
 // 		Send2000();
@@ -9221,7 +9569,7 @@ BOOL CMainFrame::printImg(CString dat)
 		CChildFrame* child = (CChildFrame*) MDIGetActive();
 		if (!child)
 		{
-			Axis::MessageBox(this, "ï¿½Î¼ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.", MB_ICONINFORMATION);
+			Axis::MessageBox(this, "ÀÎ¼âÇÒ È­¸éÀÌ ¾ø½À´Ï´Ù.", MB_ICONINFORMATION);
 			return TRUE;
 		}
 
@@ -9236,19 +9584,19 @@ BOOL CMainFrame::printImg(CString dat)
 		}
 		else
 		{
-			Axis::MessageBox(this, "ï¿½Î¼ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.", MB_ICONINFORMATION);
+			Axis::MessageBox(this, "ÀÎ¼âÇÒ È­¸éÀÌ ¾ø½À´Ï´Ù.", MB_ICONINFORMATION);
 			return TRUE;
 		}	
 	}	
 
-	// 2011.02.22 ï¿½Î¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ by LKM
+	// 2011.02.22 ÀÎ¼âÁ¤º¸ Ãß°¡ by LKM
 	{
 		const CTime tm = CTime::GetCurrentTime();
 		
 		dat.Format(
-			"ï¿½Î¼ï¿½ï¿½ï¿½ï¿½ï¿½ : %s(PCï¿½ï¿½ï¿½ï¿½), %s(%s)-%s\r\n"
-			"ï¿½ï¿½ È­ï¿½é³»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½Î¸ï¿½ È°ï¿½ï¿½ï¿½Ï½Ã±ï¿½ ï¿½Ù¶ï¿½ï¿½,\r\n"
-			"ï¿½î¶°ï¿½ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¥ï¿½Ó¼ï¿½ï¿½ç¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë·ï¿½ï¿½å¸³ï¿½Ï´ï¿½.", 
+			"ÀÎ¼âÁ¤º¸ : %s(PC±âÁØ), %s(%s)-%s\r\n"
+			"º» È­¸é³»¿ëÀº Âü°íÀÚ·á·Î¸¸ È°¿ëÇÏ½Ã±â ¹Ù¶ó¸ç,\r\n"
+			"¾î¶°ÇÑ °æ¿ì¿¡µµ ¹ýÀûÃ¥ÀÓ¼ÒÀç¿¡ ´ëÇÑ ÁõºùÀÚ·áµîÀ¸·Î »ç¿ëÇÏ½Ç ¼ö ¾øÀ½À» ¾Ë·Áµå¸³´Ï´Ù.", 
 			(LPCSTR)tm.Format("%Y.%m.%d %H:%M:%S"), Axis::user, Axis::userID, m_ipAddr
 		);
 	}
@@ -9288,13 +9636,15 @@ BOOL CMainFrame::printImg(CString dat)
 	
 	//CString tmp; tmp.Format("cx: %d, cy: %d", szRect.cx, szRect.cy);
 	//AfxMessageBox(tmp);
-	if (Axis::MessageBox(this, "ï¿½ï¿½ï¿½ ï¿½Ï½Ã°Ú½ï¿½ï¿½Ï±ï¿½", MB_YESNO) == IDYES)
+	if (Axis::MessageBox(this, "Ãâ·Â ÇÏ½Ã°Ú½À´Ï±î", MB_YESNO) == IDYES)
 	{
 		if (bResize)
 			pChild->SetWindowPos(NULL, 0, 0, szRect.cx, szRect.cy, SWP_NOMOVE|SWP_NOZORDER);
 
 		m_pPRNChild = pChild;
 		m_sizePRN = szRect;
+		m_sizePRN.cx -= 5;
+		m_sizePRN.cy -= 5;
 		m_sizePRNORG = szOrg;
 		m_bPRNResize = bResize;
 		m_szPRNData.Format("%s", dat);
@@ -9446,11 +9796,12 @@ BOOL CMainFrame::printOper(CWnd* pChild, CSize size, CSize sizeOrg, CString dat,
 // 				rc.OffsetRect(xDest, yDest+height-rc.top+20);
 // 				DrawText(printDC.m_hDC, dat, dat.GetLength(), &rc, DT_TOP|DT_LEFT);
 // #endif
-				OutputDebugString("È­ï¿½ï¿½ï¿½Î¼ï¿½ ï¿½Ï´ï¿½ ï¿½È³ï¿½ ï¿½Î¼ï¿½");
+				OutputDebugString("È­¸éÀÎ¼â ÇÏ´Ü ¾È³» ÀÎ¼â");
 				CRect rc;
 				DrawText(printDC.m_hDC, dat, dat.GetLength(), &rc, DT_TOP|DT_LEFT|DT_CALCRECT);
 				//rc.OffsetRect(xDest, yDest+height-rc.top+20);
 
+				//rc.top = 4407;
 				rc.top = 5;
 				rc.left = 10;
 
@@ -9462,7 +9813,7 @@ BOOL CMainFrame::printOper(CWnd* pChild, CSize size, CSize sizeOrg, CString dat,
 			}
 			EndPage(printDC.m_hDC);
 		}
-	} // ï¿½ï¿½Ç»ï¿½ ï¿½ï¿½ï¿½Úµï¿½ï¿½ ï¿½Ê¿ä°¡ ï¿½ï¿½ï¿½ï¿½. ï¿½Ì°ï¿½ï¿½ï¿½ Çªï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½Î¼ï¿½ï¿½Ò¼ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ß´ï¿½ ï¿½É¼ï¿½
+	} // »ç½Ç»ó ÀÌÄÚµå´Â ÇÊ¿ä°¡ ¾ø´Ù. ÀÌ°ÍÀº Çª¸£µ§¼È´ç½Ã È­¸éÀ» Å©°Ô ÀÎ¼âÇÒ¼ö ÀÖµµ·Ï ÇÏ±â À§ÇØ ÇÊ¿äÇß´ø ¿É¼Ç
 	else
 	{
 		xDest = 0;	yDest = 0;
@@ -9529,7 +9880,7 @@ BOOL CMainFrame::printOper(CWnd* pChild, CSize size, CSize sizeOrg, CString dat,
 					// 				rc.OffsetRect(xDest, yDest+height-rc.top+20);
 					// 				DrawText(printDC.m_hDC, dat, dat.GetLength(), &rc, DT_TOP|DT_LEFT);
 					// #endif
-					OutputDebugString("È­ï¿½ï¿½ï¿½Î¼ï¿½ ï¿½Ï´ï¿½ ï¿½È³ï¿½ ï¿½Î¼ï¿½");
+					OutputDebugString("È­¸éÀÎ¼â ÇÏ´Ü ¾È³» ÀÎ¼â");
 					CRect rc;
 					DrawText(printDC.m_hDC, dat, dat.GetLength(), &rc, DT_TOP|DT_LEFT|DT_CALCRECT);
 					rc.OffsetRect(xDest, yDest+height-rc.top+20);
@@ -9559,7 +9910,7 @@ BOOL CMainFrame::printOper(CWnd* pChild, CSize size, CSize sizeOrg, CString dat,
 
 BOOL CMainFrame::writeImg(CString dir, int entire)
 {
-	// 2010.07.21 È­ï¿½ï¿½Ä¸ï¿½Ä½ï¿½ ï¿½Þ´ï¿½ï¿½Ü»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ Invalidate -> ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¿ï¿½ Ä¸ï¿½ï¿½ï¿½Ñ´ï¿½. by LKM
+	// 2010.07.21 È­¸éÄ¸ÃÄ½Ã ¸Þ´ºÀÜ»óÀÌ ³²´Â Çö»óÀÌ ÀÖ¾î Invalidate -> ¸Þ¼¼ÁöÆßÇÎ ÈÄ¿¡ Ä¸ÃÄÇÑ´Ù. by LKM
 	{
 		MSG msg;
 		Invalidate(TRUE);
@@ -9580,7 +9931,7 @@ BOOL CMainFrame::writeImg(CString dir, int entire)
 		CChildFrame* child = (CChildFrame*) MDIGetActive();
 		if (!child || child->IsWindowVisible() == FALSE)	
 		{
-			Axis::MessageBox(this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.", MB_OK | MB_ICONEXCLAMATION);
+			Axis::MessageBox(this, "½ÇÇàÁßÀÎ È­¸éÀÌ ¾ø½À´Ï´Ù.", MB_OK | MB_ICONEXCLAMATION);
 			return FALSE;
 		}
 
@@ -9590,7 +9941,7 @@ BOOL CMainFrame::writeImg(CString dir, int entire)
 	}
 
 	if (!pChild) {
-		Axis::MessageBox(this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.", MB_OK | MB_ICONSTOP);
+		Axis::MessageBox(this, "½ÇÇàÁßÀÎ È­¸éÀÌ ¾ø½À´Ï´Ù.", MB_OK | MB_ICONSTOP);
 		return FALSE;
 	}
 
@@ -10079,8 +10430,13 @@ void CMainFrame::process_ConSee(int option)
 	CString	code, mapN;
 	switch (option)
 	{
-		case CON_HIDE:	ShowControlBar(m_bar0.get(), FALSE, FALSE);	break;
-		default:	return;
+#ifdef DF_USE_CPLUS17
+	case CON_HIDE:	ShowControlBar(m_bar0.get(), FALSE, FALSE);	break;
+#else
+	case CON_HIDE:	ShowControlBar(m_bar0, FALSE, FALSE);	break;
+#endif
+
+	default:	return;
 	}
 }
 
@@ -10132,8 +10488,14 @@ void CMainFrame::setCodeReg(int cnt, CString dat)
 	DeleteFile(path_);
 
 	m_bar0->reload_Code();
+
+#ifdef DF_USE_CPLUS17
 	if (!(m_bar0->GetStyle() & WS_VISIBLE))
 		ShowControlBar(m_bar0.get(), TRUE, FALSE);
+#else
+	if (!(m_bar0->GetStyle() & WS_VISIBLE))
+		ShowControlBar(m_bar0, TRUE, FALSE);
+#endif
 
 }
 
@@ -10148,7 +10510,7 @@ void CMainFrame::ChangeUser()
 
 void CMainFrame::RunWebBrowser(CString HomePage, int cx, int cy)
 {
-	if (HomePage.Find("@") != -1 && HomePage.Find("@@dev9") == -1)	// IDï¿½ï¿½ "@@dev9ï¿½ï¿½"ï¿½ï¿½ï¿½ï¿½
+	if (HomePage.Find("@") != -1 && HomePage.Find("@@dev9") == -1)	// ID¿¡ "@@dev9°¡"ÀÖÀ½
 	{
 		ShellExecute(NULL, _T("open"), HomePage, NULL,NULL, SW_SHOWNORMAL);
 		return;
@@ -10243,7 +10605,7 @@ void CMainFrame::RunWebBrowser(CString HomePage, int cx, int cy)
 	m_pWBApp->put_Left(CRC.left);
 	m_pWBApp->put_Top(CRC.top);
 	
-	//** ï¿½ï¿½ï¿½Ù¿ï¿½ ï¿½ï¿½ï¿½Â¹Ù¸ï¿½ Ç¥ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ ï¿½ï¿½. (IBK)
+	//** Åø¹Ù¿Í »óÅÂ¹Ù¸¦ Ç¥½ÃÇÏ±â·Î ÇÔ. (IBK)
 	//m_pWBApp->put_ToolBar(VARIANT_FALSE);
 	//**m_pWBApp->put_StatusBar(VARIANT_FALSE);
 //	m_pWBApp->put_Resizable(VARIANT_FALSE);
@@ -10352,7 +10714,7 @@ void CMainFrame::PopupWeb(CString url, int cx, int cy)
 	VariantInit(&vEmpty);
 	
 	CString strHeader;
-	strHeader = "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
+	strHeader = "IBKÅõÀÚÁõ±Ç";
 	vHeader.vt = VT_BSTR;
 	vHeader.bstrVal = strHeader.AllocSysString();
 	
@@ -10557,7 +10919,7 @@ bool CMainFrame::changeMAX(CString mapN)
 }
 
 ////////////////////////////////////////////////
-/////  2006. 08. 23 ï¿½ï¿½ï¿½ï¿½È£
+/////  2006. 08. 23 ÀÌÀÎÈ£
 ////////////////////////////////////////////////
 CString CMainFrame::Parser(CString &srcstr, CString substr)
 {
@@ -10612,7 +10974,7 @@ void CMainFrame::load_eninfomation(bool first)
 
 	file.Format("%s\\%s\\%s\\%s", Axis::home, USRDIR, Axis::user, SETUPFILE);
 	WriteLog("load_eninformation========================1\n");
-	//Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ë¾ï¿½ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//Ã³À½ Á¢¼ÓÀÚ´Â µðÆúÆ®·Î ÆË¾÷µÇ°Ô º¯°æ
 	if(Axis::isCustomer)
 	{
 		if (!GetPrivateProfileInt("SCREEN", "POPUPACCSAVE", 0, file))
@@ -10623,7 +10985,7 @@ void CMainFrame::load_eninfomation(bool first)
 	}
 	else
 	{
-		//Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½ ï¿½ÈµÇ°ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½
+		//Ã³À½ Á¢¼ÓÀÚ´Â µðÆúÆ®·Î ºñ¹Ð¹øÈ£ ÀúÀå ÆË¾÷ ¾ÈµÇ°Ô µðÆúÆ® ¼³Á¤À» ¹Ù²Þ
 		if (!GetPrivateProfileInt("SCREEN", "POPUPACCSTAFF", 0, file))
 		{
 			WritePrivateProfileString("SCREEN", "POPUPACCSTAFF", "1", file);
@@ -10636,7 +10998,7 @@ void CMainFrame::load_eninfomation(bool first)
 	if (first && GetPrivateProfileInt("SCREEN", "POPUPACC", 1, file) && Axis::user.CollateNoCase("guest"))
 		AcctPasswordConfig();
 
-	//ï¿½ï¿½Ã¢ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+	//»õÃ¢¿­±â Çã¿ë
 	m_screenNew = GetPrivateProfileInt("SCREEN", "SCREENNEW", 1, file);
 
 	m_titleChange = GetPrivateProfileInt("SCREEN", "TITLECHANGE", 0, file);
@@ -10720,7 +11082,7 @@ void CMainFrame::load_eninfomation(bool first)
 			(BYTE *)(VTS_I4 VTS_I4), MAKELONG(setFCB, 0), value);
 
 //	m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_I4, (void *)&rc,
-//			(BYTE *)(VTS_I4 VTS_I4), MAKELONG(setTRG, 0), MAKELONG(0, 0));	// ï¿½ï¿½ï¿½Ï±×·ï¿½ ï¿½ï¿½ï¿½ï¿½
+//			(BYTE *)(VTS_I4 VTS_I4), MAKELONG(setTRG, 0), MAKELONG(0, 0));	// µ¿ÀÏ±×·ì Àû¿ë
 
 	value = profile.GetInt(szScreen, "VS_REFLECT", 1) ? 1 : 0;
 	m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_I4, (void *)&rc,
@@ -10834,21 +11196,21 @@ void CMainFrame::load_mngSetup()
 			int	val;
 			char	desc[20];
 		} msgOPEN[] = { 
-				{1,	"30ï¿½ï¿½ï¿½ï¿½" },
-				{21,	"10ï¿½ï¿½ï¿½ï¿½" },
-				{26,	"5ï¿½ï¿½ï¿½ï¿½" },
-				{30,	"1ï¿½ï¿½ï¿½ï¿½" },
-				{33,	"30ï¿½ï¿½ï¿½ï¿½" },
-				{31,	"10ï¿½ï¿½ï¿½ï¿½" }
+				{1,	"30ºÐÀü" },
+				{21,	"10ºÐÀü" },
+				{26,	"5ºÐÀü" },
+				{30,	"1ºÐÀü" },
+				{33,	"30ÃÊÀü" },
+				{31,	"10ÃÊÀü" }
 				};
 
 		static struct _msginfo msgCLOSE[] = 
 			{
-				{ 121,	"10ï¿½ï¿½ï¿½ï¿½" },
-				{ 126,	"5ï¿½ï¿½ï¿½ï¿½" },
-				{ 130,	"1ï¿½ï¿½ï¿½ï¿½" },
-				{ 133,	"30ï¿½ï¿½ï¿½ï¿½" },
-				{ 131,	"10ï¿½ï¿½ï¿½ï¿½" }
+				{ 121,	"10ºÐÀü" },
+				{ 126,	"5ºÐÀü" },
+				{ 130,	"1ºÐÀü" },
+				{ 133,	"30ÃÊÀü" },
+				{ 131,	"10ÃÊÀü" }
 			};
 
 		int	ncnt = sizeof(msgOPEN) / sizeof(_msginfo);
@@ -10873,7 +11235,7 @@ void CMainFrame::load_mngSetup()
 		profile.Write(szMessage, "INIT", "1");
 	}
 
-	// ï¿½å°³ï¿½ï¿½
+	// Àå°³½Ã
 	szTotal = profile.GetString(szMessage, "OPEN");
 	m_mapAlarmList.RemoveAll();
 	while (!szTotal.IsEmpty())
@@ -10884,7 +11246,7 @@ void CMainFrame::load_mngSetup()
 			m_mapAlarmList.SetAt(szUnit, "");
 	}
 
-	// ï¿½å¸¶ï¿½ï¿½
+	// Àå¸¶°¨
 	szTotal = profile.GetString(szMessage, "CLOSE");
 	while (!szTotal.IsEmpty())
 	{
@@ -10899,7 +11261,7 @@ void CMainFrame::load_mngSetup()
 	m_bUseAlarm = profile.GetInt("Setup", "USE", 1);
 	m_nBkMode = profile.GetInt(szBkNotice, "MODE");
 
-	// KOBA ELW ï¿½ï¿½î¿µ ï¿½Ë¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// KOBA ELW Àå¿î¿µ ¾Ë¸² ¼³Á¤
 	const int val = profile.GetInt("Manage", MNG_INFO_KOBAELW, -1);
 	if (val==-1)
 	{
@@ -11195,8 +11557,8 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 				}
 
 				ReadNoticeMap();
-				//ï¿½ï¿½ï¿½ï¿½ï¿½Ö°ï¿½ï¿½ï¿½
-				//MessageBox("ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Û¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ÏºÎ½Ã¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ç°ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½. \nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ë¼ï¿½ï¿½Õ´Ï´ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.", "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+				//±ä±ÞÀå¾Ö°øÁö
+				//MessageBox("½Ã½ºÅÛ Á¡°ËÀÛ¾÷À¸·Î ÀÎÇÏ¿© ÀÏºÎ½Ã¼¼ Á¤º¸Á¦°øÀÌ ¾È µÇ°í ÀÖ½À´Ï´Ù. \nºÒÆíÀ» µå·Á ÁË¼ÛÇÕ´Ï´Ù. °¨»çÇÕ´Ï´Ù.", "IBKÅõÀÚÁõ±Ç");
 				WriteLog("TM_DNINTEREST - Step 4-5");
 			}
 		}
@@ -11231,7 +11593,7 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 	case TM_ITGY:
 		{
 
-WriteLog("OnTimer - TM_ITGY 50ï¿½Êµï¿½ï¿½ï¿½ piboitgy ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È¿Ô´ï¿½?");
+WriteLog("OnTimer - TM_ITGY 50ÃÊµ¿¾È piboitgy ÀÀ´äÀÌ ¾È¿Ô´Ù?");
 
 			m_bItgy = FALSE;
 
@@ -11263,7 +11625,7 @@ WriteLog("OnTimer - TM_ITGY 50ï¿½Êµï¿½ï¿½ï¿½ piboitgy ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È¿Ô´
 		break;
 	case TM_AOS_ALIVE:
 		{
-// 			OutputDebugString("AOS ï¿½ï¿½âµ¿ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½....");
+// 			OutputDebugString("AOS Àç±âµ¿ °Ë»ç ½ÇÇà....");
 // 
 // 			BOOL pcAOS = AfxGetApp()->GetProfileInt(INFORMATION, "AOS", 1);
 // 
@@ -11271,7 +11633,7 @@ WriteLog("OnTimer - TM_ITGY 50ï¿½Êµï¿½ï¿½ï¿½ piboitgy ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È¿Ô´
 // 			{
 // 				if(!isRunningSDKPd(AOSSDK_SERVICE_CODE_SB))
 // 				{
-// 					OutputDebugString("AOS ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½....");
+// 					OutputDebugString("AOS ºñÁ¤»ó Á¾·á·Î ÀÎÇÑ Àç½ÇÇà....");
 // 					if (initAOSSDK())
 // 						initSBSDK();
 // 				}
@@ -11389,7 +11751,7 @@ void CMainFrame::add_history(CString mapN)
 	{
 		maps = m_savelist.GetAt(ii);
 		tail = maps.Mid(6, 2);
-		// È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ - dkkim 2016.01.08
+		// È­¸é È÷½ºÅä¸® ¿À·ù ¼öÁ¤ - dkkim 2016.01.08
 		//if (tail.CompareNoCase("00"))	continue;
 		if (!mapN.CompareNoCase(maps))	return;
 	}
@@ -11590,20 +11952,20 @@ void CMainFrame::SetConclusion()
 
 	const char* const szDefSoundFiles[] =
 	{
-		"\\image\\ï¿½Åµï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½.WAV",
-		"\\image\\ï¿½Å¼ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½.WAV",
-		"\\image\\ï¿½ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½.WAV",
-		"\\image\\ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½.WAV",
-		"\\image\\ï¿½Åµï¿½ï¿½Ö¹ï¿½Ã¼ï¿½ï¿½.WAV",
-		"\\image\\ï¿½Å¼ï¿½ï¿½Ö¹ï¿½Ã¼ï¿½ï¿½.WAV",
-		"\\image\\ï¿½Ö¹ï¿½ï¿½Åºï¿½.WAV"
+		"\\image\\¸ÅµµÁÖ¹®Á¢¼ö.WAV",
+		"\\image\\¸Å¼öÁÖ¹®Á¢¼ö.WAV",
+		"\\image\\Á¤Á¤ÁÖ¹®Á¢¼ö.WAV",
+		"\\image\\Ãë¼ÒÁÖ¹®Á¢¼ö.WAV",
+		"\\image\\¸ÅµµÁÖ¹®Ã¼°á.WAV",
+		"\\image\\¸Å¼öÁÖ¹®Ã¼°á.WAV",
+		"\\image\\ÁÖ¹®°ÅºÎ.WAV"
 	};
 
 	for (int i = 0; szSoundFiles[i]; i++)
 	{
 		m_waveF[i] = profile.GetString(szCommon, szSoundFiles[i]);
 
-		// 2011.02.23 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ò°ï¿½ï¿½ Defaultï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½.
+		// 2011.02.23 »ç¿îµåÆÄÀÏÀÌ Á¤»óÀÌ ¾Æ´Ò°æ¿ì Default·Î ¼³Á¤ÇØÁØ´Ù.
 		WIN32_FIND_DATA wfd;
 		memset(&wfd, 0, sizeof(wfd));
 		HANDLE handle = FindFirstFile(m_waveF[i], &wfd);
@@ -11624,16 +11986,23 @@ void CMainFrame::SetConclusion()
 	if (m_tInfo3)
 	{
 		m_tInfo3->SetCols(m_matchToolCount);
+#ifdef DF_USE_CPLUS17
 		if (m_matchToolBar == 1)
 			ShowControlBar(m_tInfo3.get(), TRUE, FALSE);
 		else
 			ShowControlBar(m_tInfo3.get(), FALSE, FALSE);
+#else
+		if (m_matchToolBar == 1)
+			ShowControlBar(m_tInfo3, TRUE, FALSE);
+		else
+			ShowControlBar(m_tInfo3, FALSE, FALSE);
+#endif
 	}
 	
 	
-	// 20070330 ï¿½Þ¼ï¿½ï¿½ï¿½È®ï¿½ï¿½Ã¢:ledgerï¿½ï¿½ï¿½ï¿½ msgbox ï¿½ï¿½ï¿½ï¿½ï¿½ field checkï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½
-	// wizard 0:ï¿½âº»ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1:ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½È³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	// file 0:ï¿½È¶ï¿½ï¿½, 1:ï¿½ï¿½ï¿½
+	// 20070330 ¸Þ¼¼ÁöÈ®ÀÎÃ¢:ledger¿¡¼­ msgbox ¶ç¿ì¶ó´Â field check¾ÈÇÏµµ·Ï
+	// wizard 0:±âº»¸Þ¼¼Áö³ª¿À°Ô,1:¸Þ¼¼Áö¾È³ª¿Àµµ·Ï
+	// file 0:¾È¶ç¿ò, 1:¶ç¿ò
 	/**
 	long	rc = 0;
 	int value = profile.GetInt(szCommon, "ShowMsg2", 1);
@@ -11775,7 +12144,7 @@ void CMainFrame::ShowMngInfo(DWORD* dat)
 // 			s.Format("MNG INFO [%d][%s]\n",i,(char*)dat[i]);
 // 			OutputDebugString(s);
 // 		}
-		// KOBA ELW ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È³ï¿½
+		// KOBA ELW Á¶±âÁ¾·á ¾È³»
 		if (val==MNG_KOBAELW && m_bKobaElwNotify)
 		{
 			if (dat[23])
@@ -11807,7 +12176,7 @@ void CMainFrame::ShowMngInfo(DWORD* dat)
 				return;
 		}
 		
-// 		if (!fms.Lookup(MNG_KIND, sym))	// 0:ï¿½ï¿½î¿µï¿½ï¿½ï¿½ï¿½,1:ï¿½Ë¸ï¿½
+// 		if (!fms.Lookup(MNG_KIND, sym))	// 0:Àå¿î¿µÁ¤º¸,1:¾Ë¸²
 // 			return;
 		if(!dat[47])
 			return;
@@ -11861,21 +12230,21 @@ void CMainFrame::ShowMngInfo(DWORD* dat)
 
 void CMainFrame::ShowMngInfo(CString dat)
 {
-	// {      2, 802,  "ï¿½Ö½ï¿½ ï¿½Ã°ï¿½ï¿½Ü°ï¿½ï¿½ï¿½"       },
-	// {      3, 803,  "ï¿½Ö½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"       },
-	// {      4, 804,  "ï¿½Ö½ï¿½ ï¿½Ã°ï¿½ï¿½Ü°ï¿½ï¿½ï¿½"       },
-	// {      5, 805,  "ï¿½Ö½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½"       },
-	// {      6, 806,  "ï¿½Ö½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½"       },
+	// {      2, 802,  "ÁÖ½Ä ½Ã°£¿Ü°³½Ã"       },
+	// {      3, 803,  "ÁÖ½Ä ½Ã°£¿ÜÁ¾·á"       },
+	// {      4, 804,  "ÁÖ½Ä ½Ã°£¿Ü°³½Ã"       },
+	// {      5, 805,  "ÁÖ½Ä ´ÜÀÏ°³°³½Ã"       },
+	// {      6, 806,  "ÁÖ½Ä ´ÜÀÏ°¡Á¾·á"       },
 	// SAMPLE
 	// #define SYM_MNG		"XXXXX"
-	// #define MNG_KIND		"047"	0:ï¿½ï¿½î¿µï¿½ï¿½ï¿½ï¿½,1:ï¿½Ë¸ï¿½
-	// #define MSG_MGUBN		"600"	ï¿½å±¸ï¿½ï¿½
+	// #define MNG_KIND		"047"	0:Àå¿î¿µÁ¤º¸,1:¾Ë¸²
+	// #define MSG_MGUBN		"600"	Àå±¸ºÐ
 	// #define MNG_FLAG		"601"	KEY
 	// #define MNG_MSG		"023"	message
 	
 	// #define NO_CHECK		200
-	// XXXXX	047	1	600	000	601	35	023	ï¿½å°³ï¿½ï¿½ 10ï¿½ï¿½ï¿½ï¿½
-	// XXXXX	047	0	600	801	601	801	023	ï¿½å°³ï¿½ï¿½ 
+	// XXXXX	047	1	600	000	601	35	023	Àå°³½Ã 10ÃÊÀü
+	// XXXXX	047	0	600	801	601	801	023	Àå°³½Ã 
 	//AfxMessageBox(dat);
 
 
@@ -11925,7 +12294,7 @@ void CMainFrame::ShowMngInfo(CString dat)
 		if (!fms.Lookup(MNG_FLAG, val))	// KEY(601)
 			return;
 
-		// KOBA ELW ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È³ï¿½
+		// KOBA ELW Á¶±âÁ¾·á ¾È³»
 		if (val==MNG_KOBAELW && m_bKobaElwNotify)
 		{
 			if (fms.Lookup("023", val))
@@ -11955,7 +12324,7 @@ void CMainFrame::ShowMngInfo(CString dat)
 				return;
 		}
 		
-		if (!fms.Lookup(MNG_KIND, sym))	// 0:ï¿½ï¿½î¿µï¿½ï¿½ï¿½ï¿½,1:ï¿½Ë¸ï¿½
+		if (!fms.Lookup(MNG_KIND, sym))	// 0:Àå¿î¿µÁ¤º¸,1:¾Ë¸²
 			return;
 		if (!m_bUseAlarm)
 			return;
@@ -11998,7 +12367,9 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 		OnCHASER(MAKEWPARAM(dat.GetLength(), x_CONs),
 			(LPARAM) (char*)(const char*)dat);
 	}
+	//TRACE("RD(ORIGINAL): "+dat+"\n");
 
+//	if (m_block)	return FALSE;
 	if (!m_runAxis)	return FALSE;
 
 	CString			str, value, jcode;
@@ -12013,20 +12384,48 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 		ary.RemoveAll();
 		return FALSE;
 	}
-
-	if ((m_dept == "811") || (m_dept == "812"))  //ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ 1,2ï¿½ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½
-		if (Axis::userID != str) return FALSE;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½
+	// 2013.03.13 dkkim - Ã¼°áÅëº¸ º¯°æÀ¸·Î Á¦°Å
+	if ((m_dept == "811") || (m_dept == "812"))  //¹ýÀÎ¿µ¾÷ 1,2ÆÀÀÏ¶§¸¸
+		if (Axis::userID != str) return FALSE;  //º»ÀÎÀÌ ³½ ÁÖ¹®ÀÌ ¾Æ´Ï¶ó¸é ÇÊÅÍ¸µ
+	//TRACE("RD: "+str + "]" + Axis::userID+"\n");
+	
 
 	CString strOdrUser;
 	
+// 	s.Format("ID COMPARE [%s] [%s]\n",str,Axis::userID);
+// 	OutputDebugString(s);
 
+// 	if(str == Axis::userID)
+// 	{
+// 		OutputDebugString("ID SAME\n");
+// 	}
+// °ü¸®ÀÚ ÁÖ¹®Ã¼°áÅëº¸¸¦ À§ÇØ!! for test
+#if 1
 	if (str.CompareNoCase(Axis::userID))		// check userID
+#else
+	if (FALSE)
+#endif
 	{
 		ary.RemoveAll();
 		return FALSE;
+		//strOdrUser = _T("¡Ú ");
+		// ´ë¸®ÀÎ ÁÖ¹® °ü·Ã ºÎºÐ
+// 		CString strAcc = Variant(loadACC);
+// 
+// // 		s.Format("HTS ACC [%s] [%d]\n",strAcc,Axis::isCustomer);
+// // 		OutputDebugString(s);
+// 		
+// 		if(ary.Lookup("901", value))
+// 		{
+// 			if(strAcc.Find(value) < 0)
+// 			{
+// 				ary.RemoveAll();
+// 				return FALSE;
+// 			}
+// 		}
 	}
 
-	if (!ary.Lookup("988", str))		// Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	if (!ary.Lookup("988", str))		// Ã³¸®±¸ºÐ
 	{
 		ary.RemoveAll();
 		return FALSE;
@@ -12039,14 +12438,14 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 	bool	bFail = false;
 	int		priceUnit = 1;
 
-	if (str.Find("Ã¼ï¿½ï¿½") != -1)
+	if (str.Find("Ã¼°á") != -1)
 		bCon = true;
-	else if (str.Find("ï¿½Åºï¿½") != -1)
+	else if (str.Find("°ÅºÎ") != -1)
 		bFail = true;
 
-	if (m_Econclusion && (bFail || (m_conKIND & CON_MSN)))	// ï¿½ÅºÎ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+	if (m_Econclusion && (bFail || (m_conKIND & CON_MSN)))	// °ÅºÎ´Â ¹«Á¶°Ç Ã³¸®ÇÏ±â À§ÇØ
 	{
-		//ï¿½ï¿½ï¿½ï¿½\tï¿½ï¿½ï¿½ï¿½ï¿½\tï¿½Å¸Å±ï¿½ï¿½ï¿½\tÃ¼ï¿½ï¿½ï¿½ï¿½ï¿½\tÃ¼ï¿½á°¡ï¿½ï¿½
+		//°èÁÂ\tÁ¾¸ñ¸í\t¸Å¸Å±¸ºÐ\tÃ¼°á¼ö·®\tÃ¼°á°¡°Ý
 		if (bCon)
 		{
 			if (ary.Lookup("901", value))	// account number
@@ -12059,7 +12458,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 				dat += value;
 			dat += "\t";
 
-			if (ary.Lookup("912", value))	// Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(mmgb+dataï¿½ï¿½ï¿½ï¿½)
+			if (ary.Lookup("912", value))	// Ã³¸®±¸ºÐ(mmgb+data±¸ºÐ)
 			{
 				dat += value;
 				if (ary.Lookup("988", value))
@@ -12092,7 +12491,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 				dat += str;
 			}
 		}
-		else  //ï¿½Åºï¿½
+		else
 		{
 			if (ary.Lookup("901", value))	// account number
 			{
@@ -12104,7 +12503,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 				dat += value;
 			dat += "\t";
 
-			if (ary.Lookup("912", value))	// Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(mmgb+dataï¿½ï¿½ï¿½ï¿½)
+			if (ary.Lookup("912", value))	// Ã³¸®±¸ºÐ(mmgb+data±¸ºÐ)
 			{
 				dat += value;
 				if (ary.Lookup("988", value))
@@ -12141,7 +12540,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 			}
 			
 			dat += "\t";
-			if (ary.Lookup("921", value))	// ï¿½ï¿½Ã¼ï¿½ï¿½
+			if (ary.Lookup("921", value))	// ¹ÌÃ¼°á
 			{
 				str.Format("%d", atoi(value));
 				dat += str;
@@ -12149,31 +12548,31 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 			
 		}
 		
-		if (ary.Lookup("988", str))	// Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		if (ary.Lookup("988", str))	// Ã³¸®±¸ºÐ
 		{
 			
-			if (str.Find("ï¿½ï¿½ï¿½ï¿½") != -1)
+			if (str.Find("Á¢¼ö") != -1)
 			{
-				m_Econclusion->ChangeTitle(2, "ï¿½Å¸Å±ï¿½ï¿½ï¿½");
-				m_Econclusion->ChangeTitle(3, "ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½");
-				m_Econclusion->ChangeTitle(4, "ï¿½Ö¹ï¿½ï¿½Ü°ï¿½");
+				m_Econclusion->ChangeTitle(2, "¸Å¸Å±¸ºÐ");
+				m_Econclusion->ChangeTitle(3, "ÁÖ¹®¼ö·®");
+				m_Econclusion->ChangeTitle(4, "ÁÖ¹®´Ü°¡");
 			}
-			else if (str.Find("È®ï¿½ï¿½") != -1)
+			else if (str.Find("È®ÀÎ") != -1)
 			{
-				m_Econclusion->ChangeTitle(2, "È®ï¿½Î±ï¿½ï¿½ï¿½");
-				m_Econclusion->ChangeTitle(3, "È®ï¿½Î¼ï¿½ï¿½ï¿½");
-				m_Econclusion->ChangeTitle(4, "ï¿½Ö¹ï¿½ï¿½Ü°ï¿½");
+				m_Econclusion->ChangeTitle(2, "È®ÀÎ±¸ºÐ");
+				m_Econclusion->ChangeTitle(3, "È®ÀÎ¼ö·®");
+				m_Econclusion->ChangeTitle(4, "ÁÖ¹®´Ü°¡");
 			}
-			else if (str.Find("Ã¼ï¿½ï¿½") != -1)
+			else if (str.Find("Ã¼°á") != -1)
 			{
-				m_Econclusion->ChangeTitle(2, "ï¿½Å¸Å±ï¿½ï¿½ï¿½");
-				m_Econclusion->ChangeTitle(3, "Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½");
-				m_Econclusion->ChangeTitle(4, "Ã¼ï¿½ï¿½Ü°ï¿½");
+				m_Econclusion->ChangeTitle(2, "¸Å¸Å±¸ºÐ");
+				m_Econclusion->ChangeTitle(3, "Ã¼°á¼ö·®");
+				m_Econclusion->ChangeTitle(4, "Ã¼°á´Ü°¡");
 			}
-			else if (str.Find("ï¿½Åºï¿½") != -1)
+			else if (str.Find("°ÅºÎ") != -1)
 			{
-				m_Econclusion->ChangeTitle(2, "ï¿½Å¸Å±ï¿½ï¿½ï¿½");
-				m_Econclusion->ChangeTitle(3, "ï¿½ÅºÎ´Ü°ï¿½");
+				m_Econclusion->ChangeTitle(2, "¸Å¸Å±¸ºÐ");
+				m_Econclusion->ChangeTitle(3, "°ÅºÎ´Ü°¡");
 			}
 		}
 		else	m_Econclusion->ChangeTitle();
@@ -12184,7 +12583,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 	if (m_conclusion && (bCon || bFail))
 	{
 		
-		// ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½... filter........
+		// ÁÖ¹®Á¢¼öÃ³¸®... filter........
 		if (!bFail && !ary.Lookup("992", str))		// conclusion count
 		{
 			ary.RemoveAll();
@@ -12198,7 +12597,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 			return FALSE;
 		}
 
-		//Ã¼ï¿½ï¿½Ã°ï¿½\tï¿½Ö¹ï¿½ï¿½ï¿½È£\tï¿½ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½È£\tï¿½ï¿½ï¿½ï¿½\tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\tï¿½ï¿½ï¿½ï¿½ï¿½\tï¿½ï¿½È£(1)ï¿½Å¸Å±ï¿½ï¿½ï¿½\tÃ¼ï¿½ï¿½ï¿½ï¿½ï¿½\tÃ¼ï¿½á°¡ï¿½ï¿½
+		//Ã¼°á½Ã°£\tÁÖ¹®¹øÈ£\t¿øÁÖ¹®¹øÈ£\t°èÁÂ\t°í°´¸í\tÁ¾¸ñ¸í\t±âÈ£(1)¸Å¸Å±¸ºÐ\tÃ¼°á¼ö·®\tÃ¼°á°¡°Ý
 		if (ary.Lookup("923", value))	// time
 			dat = value;
 		else	dat.Empty();
@@ -12236,13 +12635,13 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 			dat += value;
 		dat += "\t";
 
-		if (ary.Lookup("912", value))	// Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(mmgb+dataï¿½ï¿½ï¿½ï¿½)
+		if (ary.Lookup("912", value))	// Ã³¸®±¸ºÐ(mmgb+data±¸ºÐ)
 		{
 			if (bCon)
 			{
 				str = " ";
-				if (value.Find("ï¿½Åµï¿½") != -1)	str = "-";
-				if (value.Find("ï¿½Å¼ï¿½") != -1)	str = "+";
+				if (value.Find("¸Åµµ") != -1)	str = "-";
+				if (value.Find("¸Å¼ö") != -1)	str = "+";
 				dat += str + value;
 			}
 			else	dat += " " + value;
@@ -12270,12 +12669,18 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 			const double price = atof(value);
 			if (jcode.GetLength() == 8)
 			{
-
+				//int mkgb = atoi(jcode.Mid(1, 2));
 				jcode.MakeUpper();
 
 				CString sMkgb = jcode.Mid(1,2);
 
-				// ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// 				if (mkgb>=85 && mkgb<=99)
+// 					str.Format("%.f", price / priceUnit);
+// 				else if (mkgb>=10 && mkgb<=59)
+// 					str.Format("%.f", price / priceUnit);
+// 				else
+// 					str.Format("%.2f", price / priceUnit);
+				// ÆÄ»ýÁ¦µµº¯°æ
 				// 2014.08.11 by dkkim
 				if (sMkgb>="85" && sMkgb<="99")
 					str.Format("%.f", price / priceUnit);
@@ -12292,12 +12697,12 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 		}
 		
 		dat += "\t";
-		if (ary.Lookup("921", value))	// ï¿½ï¿½Ã¼ï¿½ï¿½
+		if (ary.Lookup("921", value))	// ¹ÌÃ¼°á
 		{
 			str.Format("%d", atoi(value));
 			dat += str;
 		}
-		//ï¿½ë¸®ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½Îºï¿½
+		//´ë¸®ÀÎ Ã¼°á ºÎºÐ
 // 		dat += "\t";
 // 
 // 		if(ary.Lookup("973", value))
@@ -12312,7 +12717,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 // 			{
 // 				if(str == "01")
 // 				{
-// 					str = "ï¿½ï¿½";
+// 					str = "Á÷";
 // 				}
 // 				else if( str == "02")
 // 				{
@@ -12320,7 +12725,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 // 				}
 // 				else if( str == "04")
 // 				{
-// 					str = "ï¿½ï¿½";
+// 					str = "±â";
 // 				}
 // 				else
 // 				{
@@ -12331,10 +12736,10 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 // 			{
 // 				if( str == "01")
 // 				{
-// // 					CString errMsg = "ï¿½ï¿½ï¿½ï¿½ï¿½ë¿¡ï¿½ï¿½ 'ï¿½ï¿½'ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.[" + dat + "]";
+// // 					CString errMsg = "Á÷¿ø¿ë¿¡¼­ 'Á÷'ÀÌ º¸ÀÓ.[" + dat + "]";
 // // 
 // // 					trouble_shooting(errMsg);
-// 					str = "ï¿½ï¿½";
+// 					str = "Á÷";
 // 				}
 // 				else if( str == "02")
 // 				{
@@ -12342,7 +12747,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 // 				}
 // 				else if( str == "04")
 // 				{
-// 					str = "ï¿½ï¿½";
+// 					str = "±â";
 // 				}
 // 				else
 // 				{
@@ -12368,20 +12773,20 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 
 	if (m_conKIND & CON_SOUND)
 	{
-		int	mmgbK  = 0; /* 0 - none, 1 - ï¿½Åµï¿½, 2 - ï¿½Å¼ï¿½ , 3 - ï¿½ï¿½ï¿½ï¿½, 4 - ï¿½ï¿½ï¿½*/
+		int	mmgbK  = 0; /* 0 - none, 1 - ¸Åµµ, 2 - ¸Å¼ö , 3 - Á¤Á¤, 4 - Ãë¼Ò*/
 		int	sndIdx = -1;
-		if (ary.Lookup("912", value))	// ï¿½Å¸Å±ï¿½ï¿½ï¿½
+		if (ary.Lookup("912", value))	// ¸Å¸Å±¸ºÐ
 		{
-			if (value.Find("ï¿½Åµï¿½") != -1)	mmgbK = 1;
-			if (value.Find("ï¿½Å¼ï¿½") != -1)	mmgbK = 2;
+			if (value.Find("¸Åµµ") != -1)	mmgbK = 1;
+			if (value.Find("¸Å¼ö") != -1)	mmgbK = 2;
 		}
 
-		if (ary.Lookup("988", str))	// Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		if (ary.Lookup("988", str))	// Ã³¸®±¸ºÐ
 		{
-			if (str.Find("ï¿½ï¿½ï¿½ï¿½") != -1)
+			if (str.Find("Á¢¼ö") != -1)
 			{
-				if (str.Find("ï¿½ï¿½ï¿½ï¿½") != -1)	mmgbK = 3;
-				if (str.Find("ï¿½ï¿½ï¿½") != -1)	mmgbK = 4;
+				if (str.Find("Á¤Á¤") != -1)	mmgbK = 3;
+				if (str.Find("Ãë¼Ò") != -1)	mmgbK = 4;
 				switch (mmgbK)
 				{
 				case 1:
@@ -12402,7 +12807,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 					break;
 				}
 			}
-			else if (str.Find("Ã¼ï¿½ï¿½") != -1)
+			else if (str.Find("Ã¼°á") != -1)
 			{
 				switch (mmgbK)
 				{
@@ -12416,7 +12821,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 					break;
 				}
 			}
-			else if (str.Find("ï¿½Åºï¿½") != -1)
+			else if (str.Find("°ÅºÎ") != -1)
 			{
 				sndIdx = IDX_REFUSAL;
 			}
@@ -12435,9 +12840,9 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 
 //#ifdef _DEBUG
 	
-	//if (!bCon)  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½î¼­ ï¿½ï¿½ï¿½Ù¿ï¿½ ï¿½Ñ¸ï¿½
+	//if (!bCon)  //Á¢¼ö¶§µµ µ¥ÀÌÅÍ¸¦ ¸¸µé¾î¼­ Åø¹Ù¿¡ »Ñ¸²
 	{
-		// ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½... filter........
+		// ÁÖ¹®Á¢¼öÃ³¸®... filter........
 		/*
 		if (!bFail && !ary.Lookup("992", str))		// conclusion count
 		{
@@ -12453,7 +12858,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 		}
 		*/
 		
-		//Ã¼ï¿½ï¿½Ã°ï¿½\tï¿½Ö¹ï¿½ï¿½ï¿½È£\tï¿½ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½È£\tï¿½ï¿½ï¿½ï¿½\tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\tï¿½ï¿½ï¿½ï¿½ï¿½\tï¿½ï¿½È£(1)ï¿½Å¸Å±ï¿½ï¿½ï¿½\tÃ¼ï¿½ï¿½ï¿½ï¿½ï¿½\tÃ¼ï¿½á°¡ï¿½ï¿½
+		//Ã¼°á½Ã°£\tÁÖ¹®¹øÈ£\t¿øÁÖ¹®¹øÈ£\t°èÁÂ\t°í°´¸í\tÁ¾¸ñ¸í\t±âÈ£(1)¸Å¸Å±¸ºÐ\tÃ¼°á¼ö·®\tÃ¼°á°¡°Ý
 		if (ary.Lookup("923", value))	// time
 			dat = value;
 		else	dat.Empty();
@@ -12476,7 +12881,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 		if (ary.Lookup("901", value))	// account
 			dat += value;
 		dat += "\t";
-		// ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½Ï¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ ï¿½ï¿½ï¿½Ù¿ï¿½ Ç¥ï¿½ÃµÇ¹Ç·ï¿½ ï¿½Ø´ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½
+		// Á¢¼ö È®ÀÎ ¸Þ¼¼Áö ÀÏ¶§´Â °èÁÂ¸íÀÌ ³»·Á¿Í¼­ Åø¹Ù¿¡ Ç¥½ÃµÇ¹Ç·Î ÇØ´çºÎºÐ Á¦°Å
 		/*
 		if (ary.Lookup("906", value))	// customer name
 			dat += value;
@@ -12487,13 +12892,13 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 			dat += value;
 		dat += "\t";
 		
-		if (ary.Lookup("912", value))	// Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(mmgb+dataï¿½ï¿½ï¿½ï¿½)
+		if (ary.Lookup("912", value))	// Ã³¸®±¸ºÐ(mmgb+data±¸ºÐ)
 		{
 			if (bCon)
 			{
 				str = " ";
-				if (value.Find("ï¿½Åµï¿½") != -1)	str = "-";
-				if (value.Find("ï¿½Å¼ï¿½") != -1)	str = "+";
+				if (value.Find("¸Åµµ") != -1)	str = "-";
+				if (value.Find("¸Å¼ö") != -1)	str = "+";
 				dat += str + value;
 			}
 			else	dat += " " + value;
@@ -12527,7 +12932,7 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 		}
 		
 		dat += "\t";
-		if (ary.Lookup("921", value))	// ï¿½ï¿½Ã¼ï¿½ï¿½
+		if (ary.Lookup("921", value))	// ¹ÌÃ¼°á
 		{
 			str.Format("%d", atoi(value));
 			dat += str;
@@ -12540,10 +12945,17 @@ BOOL CMainFrame::ConclusionNotice(CString dat, CString& title)
 		if ((m_tInfo3->AddData(dat, bFail)) &&
 		  !(m_tInfo3->GetStyle() & WS_VISIBLE))
 		{
+#ifdef DF_USE_CPLUS17
 			if (m_matchToolBar == 1)
 				ShowControlBar(m_tInfo3.get(), TRUE, FALSE);
 			else
 				ShowControlBar(m_tInfo3.get(), FALSE, FALSE);
+#else
+			if (m_matchToolBar == 1)
+				ShowControlBar(m_tInfo3, TRUE, FALSE);
+			else
+				ShowControlBar(m_tInfo3, FALSE, FALSE);
+#endif
 		}
 	}
 //#endif
@@ -12643,7 +13055,7 @@ BOOL CMainFrame::HideGuide()
 BOOL CMainFrame::ExistMenu(CString mapN)
 {
 	if (!m_tMenu)	return FALSE;
-	if (mapN == "IB985000") return true; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½Ö´Âµï¿½ ï¿½Î½Ä½ï¿½ï¿½ï¿½ï¿½ï¿½
+	if (mapN == "IB985000") return true; //Á÷¿ø ºñ¹Ð¹øÈ£ ¼³Á¤ È­¸éÀÌ¶ó¸é ¸Þ´º¿¡ ÀÖ´Âµí ÀÎ½Ä½ÃÄÑÁÜ
 	return m_tMenu->ExistMenu(mapN);
 }
 
@@ -12657,7 +13069,7 @@ int CMainFrame::ExceptionProcess(CString mapN)
 			return 0;
 		else
 		{
-			MessageBox("ï¿½ï¿½ ï¿½ï¿½ï¿½ñ½º´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 09:00 ~ 17:00 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.", "ï¿½Ë¸ï¿½", MB_OK);
+			MessageBox("º» ¼­ºñ½º´Â ¿µ¾÷ÀÏ 09:00 ~ 17:00 ¿¡¸¸ ¼­ºñ½º °¡´ÉÇÕ´Ï´Ù.", "¾Ë¸²", MB_OK);
 			return 1;
 		}
 	}
@@ -12804,7 +13216,11 @@ void CMainFrame::SetAMap(int key, char* mapN)
 
 void CMainFrame::SetSearchMap(char* mapN)
 {
+#ifdef DF_USE_CPLUS17
 	CTrSearch	dlg(m_tMenu.get());
+#else
+	CTrSearch	dlg(m_tMenu);
+#endif
 	if (dlg.DoModal() == IDOK)
 		sprintf(mapN, dlg.getTR());
 }
@@ -13027,11 +13443,11 @@ void CMainFrame::toolRegisterAll(int index)
 {
 	switch (index)
 	{
-	case 0:		// ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½Ùµï¿½ï¿½ --> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	case 0:		// ¸ðµçÈ­¸é Åø¹Ùµî·Ï --> Åø¹Ù ÆíÁý
 		EditTool();
 		//AllScreenRegister();
 		break;
-	case 1:		// ï¿½ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	case 1:		// »ç¿ëÀÚÈ­¸é ÀúÀå
 		saveUserScreen();
 		break;
 	default:
@@ -13118,9 +13534,14 @@ void CMainFrame::OnSize(UINT nType, int cx, int cy)
 	if (m_bClose) return;  //vc2019 test
 	//CDebug::Out("=================");
 	CMDIFrameWnd::OnSize(nType, cx, cy);
-
+#ifdef DF_USE_CPLUS17
 	if (m_runAxis && m_bar0->GetSafeHwnd() && (m_bar0->GetStyle() & WS_VISIBLE))
 		ShowControlBar(m_bar0.get(), TRUE, FALSE);
+#else
+	if (m_runAxis && m_bar0->GetSafeHwnd() && (m_bar0->GetStyle() & WS_VISIBLE))
+		ShowControlBar(m_bar0, TRUE, FALSE);
+#endif
+
 
 	if(m_top10 != nullptr && m_top10->GetSafeHwnd())
 	{
@@ -13424,14 +13845,27 @@ void CMainFrame::fullScreenMode(bool full)
 		GetWindowPlacement(&m_pl);
 		SetToolStatus();
 
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_bar1.get(), FALSE, FALSE);
 		ShowControlBar(m_bar2.get(), FALSE, FALSE);
 		ShowControlBar(m_bar3.get(), FALSE, FALSE);
+#else
+		ShowControlBar(m_bar1, FALSE, FALSE);
+		ShowControlBar(m_bar2, FALSE, FALSE);
+		ShowControlBar(m_bar3, FALSE, FALSE);
+#endif	
 		
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_tInfo1.get(), FALSE, FALSE);
 		ShowControlBar(m_tInfo2.get(), FALSE, FALSE);
 		if (m_tInfo3)
 			ShowControlBar(m_tInfo3.get(), FALSE, FALSE);
+#else
+		ShowControlBar(m_tInfo1, FALSE, FALSE);
+		ShowControlBar(m_tInfo2, FALSE, FALSE);
+		if (m_tInfo3)
+			ShowControlBar(m_tInfo3, FALSE, FALSE);
+#endif
 	
 
 		PostMessage(WM_SYSCOMMAND, SC_MAXIMIZE);
@@ -13440,16 +13874,31 @@ void CMainFrame::fullScreenMode(bool full)
 	{	
 		if (m_toolStatus & TB_MAINBAR)
 		{
+#ifdef DF_USE_CPLUS17
 			ShowControlBar(m_bar1.get(), TRUE, FALSE);
 			if (m_toolStatus & TB_LISTBAR)		ShowControlBar(m_bar2.get(), TRUE, FALSE);
-			if (m_toolStatus & TB_HISTBAR)		ShowControlBar(m_bar3.get(), TRUE, FALSE);	
+			if (m_toolStatus & TB_HISTBAR)		ShowControlBar(m_bar3.get(), TRUE, FALSE);
+#else
+			ShowControlBar(m_bar1, TRUE, FALSE);
+			if (m_toolStatus & TB_LISTBAR)		ShowControlBar(m_bar2, TRUE, FALSE);
+			if (m_toolStatus & TB_HISTBAR)		ShowControlBar(m_bar3, TRUE, FALSE);
+#endif			
 		}
 		
+#ifdef DF_USE_CPLUS17
 		if (m_toolStatus & TB_INFOBAR1)		ShowControlBar(m_tInfo1.get(), TRUE, FALSE);
 		if (m_toolStatus & TB_INFOBAR2)		ShowControlBar(m_tInfo2.get(), TRUE, FALSE);
 		if (m_toolStatus & TB_INFOBAR3)
 			if (m_tInfo3)
 				ShowControlBar(m_tInfo3.get(), TRUE, FALSE);
+#else
+		if (m_toolStatus & TB_INFOBAR1)		ShowControlBar(m_tInfo1, TRUE, FALSE);
+		if (m_toolStatus & TB_INFOBAR2)		ShowControlBar(m_tInfo2, TRUE, FALSE);
+		if (m_toolStatus & TB_INFOBAR3)
+			if (m_tInfo3)
+				ShowControlBar(m_tInfo3, TRUE, FALSE);
+#endif
+		
 		
 		SetWindowPlacement(&m_pl);
 	}
@@ -13463,6 +13912,7 @@ void CMainFrame::changeFontSize()
 	long	rc = 0;
 	POSITION pos{};
 
+//test 2023
 	m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_I4, (void *)&rc,
 			(BYTE *)(VTS_I4 VTS_I4), MAKELONG(setFONTx, -1), MAKELONG(0, m_fontSize));
 //	global font apply
@@ -13524,7 +13974,7 @@ void CMainFrame::processFMX(WPARAM wParam, LPARAM lParam)
 	case 253:   m_TotalAcc->ProcessGroup((char *) lParam, HIWORD(wParam)); break;
 	case 'Q':	parsingOubsDN((char *) lParam, HIWORD(wParam)); break;
 	case 'P':	processSecureTool((char *) lParam, HIWORD(wParam)); break;
-	case 'p':	break;	// (SecureTool ï¿½ï¿½ï¿½TR, OS Report TR) ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½.
+	case 'p':	break;	// (SecureTool µî·ÏTR, OS Report TR) ·Î Ã³¸®ÇÏÁö ¾Ê´Â´Ù.
 	case 'R':   processTran((char*)lParam, len); break;
 	case 255:	ParsePihoitgyList((char*)lParam, len); break;
 	case 252:	ParsePihoitgy((char*)lParam, len); break;
@@ -13603,13 +14053,13 @@ void CMainFrame::ParseSBPGT336(char* pdata, int len)
 
 	if (m_iCErrCnt == 5)
 	{
-		stmp.Format("ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ %dÈ¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ HTSï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ë´Ï´ï¿½.\r\n ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ß±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ ï¿½Ù½ï¿½ ï¿½Ãµï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½", m_iCErrCnt);
+		stmp.Format("ÀüÀÚ¼­¸í ºñ¹Ð¹øÈ£ %dÈ¸ ¿À·ù·Î HTS°¡ Á¾·áµË´Ï´Ù.\r\n ÀÎÁõ¼­¸¦ Àç¹ß±Þ ¹ÞÀ¸½Ã°í ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä", m_iCErrCnt);
 		AfxMessageBox(stmp);
 		this->SendMessage(WM_CLOSE, 0, 0);
 	}
 	else if (m_iCErrCnt != 0)
 	{
-		stmp.Format("ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ %dÈ¸ ï¿½ß»ï¿½ ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.. \r\n ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï½Ã°ï¿½ ï¿½Ù½ï¿½ ï¿½Ãµï¿½ï¿½ï¿½ ï¿½Ö½Ã±ï¿½ ï¿½Ù¶ï¿½ï¿½Ï´ï¿½.", m_iCErrCnt);
+		stmp.Format("ÀüÀÚ¼­¸í ºñ¹Ð¹øÈ£ ¿À·ù°¡ %dÈ¸ ¹ß»ý ÇÏ¿´½À´Ï´Ù.. \r\n ºñ¹Ð¹øÈ£¸¦ È®ÀÎÇÏ½Ã°í ´Ù½Ã ½ÃµµÇØ ÁÖ½Ã±â ¹Ù¶ø´Ï´Ù.", m_iCErrCnt);
 		AfxMessageBox(stmp);
 	}
 }
@@ -13759,11 +14209,11 @@ void CMainFrame::processETICK(CString dat)
 void CMainFrame::processINTER(char* dat)
 {
 	struct	_grid {
-		char	code[12];		 /* ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½			 */
-		char    hnam[20];                /* ï¿½ï¿½ï¿½ï¿½ï¿½                       */
-		char    curr[8];                 /* ï¿½ï¿½ï¿½ç°¡                       */
-		char    diff[6];                 /* ï¿½ï¿½ï¿½Ï´ï¿½ï¿½      (9999V99)      */
-		char    gvol[12];                /* ï¿½Å·ï¿½ï¿½ï¿½                       */
+		char	code[12];		 /* Á¾¸ñÄÚµå			 */
+		char    hnam[20];                /* Á¾¸ñ¸í                       */
+		char    curr[8];                 /* ÇöÀç°¡                       */
+		char    diff[6];                 /* ÀüÀÏ´ëºñ      (9999V99)      */
+		char    gvol[12];                /* °Å·¡·®                       */
 	};
 
 	struct  _interMod {
@@ -13923,7 +14373,7 @@ WriteLog("CMainFrame::sendTicInfo");
 	OutputDebugString(s);
 	
 	len = idx*sizeof(struct _rtick);
-	//2012.08.10 ï¿½ï¿½ï¿½ï¿½ï¿½ - PIBOTICK -> PIBFTICK
+	//2012.08.10 ±è´ö±â - PIBOTICK -> PIBFTICK
 	//sendTR("PIBOTICK", buf, len, US_PASS, 't');
 
 	m_slog.Format("\r\n ----------- TICK SEND [%s] ------\r\n", CString(buf, len));
@@ -14075,7 +14525,7 @@ void CMainFrame::actionCaption(int key, int action)
 		m_mapHelper->CopyScreen(child->m_mapN, value, child->m_xcaption.GetFontSize(), sp);
 		break;
 	case IDX_HELP:	HelpLink(key);	break;
-	case IDX_FONTX: //ï¿½âº»Å©ï¿½ï¿½ï¿½
+	case IDX_FONTX: //±âº»Å©±â·Î
 		refleshMap(child->m_key);
 		child->m_xcaption.SetFontSize(m_fontSize);
 		m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_I4, (void *)&rc,
@@ -14295,6 +14745,7 @@ void CMainFrame::ConfigFrame()
 	CheckNewsSetting();
 	OutputDebugString("--------------------------------3--------------------\n");
 
+#ifdef DF_USE_CPLUS17
 	m_conclusion = std::make_unique<CConclusion>(this);
 	if (!m_conclusion->Create(IDD_CONCLUSIONLIST))
 		m_conclusion = nullptr;
@@ -14331,6 +14782,65 @@ void CMainFrame::ConfigFrame()
 		m_Nclock = nullptr;
 	else
 		m_Nclock->Init();
+#else
+	m_conclusion = new CConclusion(this);
+	if (!m_conclusion->Create(IDD_CONCLUSIONLIST))
+	{
+		delete m_conclusion;
+		m_conclusion = NULL;
+	}
+	else	m_conclusion->Init();
+
+	m_kobanotify = new CKobaElwNotify(this);
+	if (!m_kobanotify->Create(IDD_KOBA_NOTIFY))
+	{
+		delete m_kobanotify;
+		m_kobanotify = NULL;
+	}
+	else
+	{
+		m_kobanotify->Init();
+		//m_kobanotify->ShowWindow(SW_SHOW);
+	}
+
+	m_Econclusion = new CEConclusion(this);
+	if (!m_Econclusion->Create(IDD_CONCLUSION))
+	{
+		delete m_Econclusion;
+		m_Econclusion = NULL;
+	}
+	else	m_Econclusion->Init();
+	OutputDebugString("--------------------------------6--------------------\n");
+
+	m_mngInfo = new CManageInfo(this);
+	if (!m_mngInfo->Create(IDD_MNGINFO))
+	{
+		delete m_mngInfo;
+		m_mngInfo = NULL;
+	}
+	OutputDebugString("--------------------------------7--------------------\n");
+	m_top10 = new CTOP10Dialog(this);
+	if (!m_top10->Create(IDD_TOP10))
+	{
+		delete m_top10;
+		m_top10 = NULL;
+	}
+	OutputDebugString("--------------------------------8--------------------\n");
+
+	m_Nclock = new CNClock();
+	LPCTSTR className = AfxRegisterWndClass(CS_VREDRAW | CS_HREDRAW, ::LoadCursor(NULL, IDC_ARROW),
+		(HBRUSH) ::GetStockObject(WHITE_BRUSH), m_resourceHelper->GetIcon());
+	if (!m_Nclock->CreateEx(WS_EX_TOOLWINDOW, className, _T(""), WS_POPUP,//|WS_BORDER, 
+		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, 0))
+	{
+		delete m_Nclock;
+		m_Nclock = NULL;
+	}
+	else
+		m_Nclock->Init();
+#endif
+	
+
 
 	change_BackGround();
 	CreateTB();
@@ -14390,12 +14900,22 @@ void CMainFrame::CreateChaser()
 		return;
 	}
 
+#ifdef DF_USE_CPLUS17
 	m_chaser = std::make_unique<CChaser>(this); 
 	if (!m_chaser->Create(NULL, "axis chaser", WS_CHILD, CRect(0, 0, 0, 0), this, (int)m_chaser.get()))
 	{
 		m_chaser = NULL;
 		return;
 	}
+#else
+	m_chaser = new CChaser(this);
+	if (!m_chaser->Create(NULL, "axis chaser", WS_CHILD, CRect(0, 0, 0, 0), this, (int)m_chaser))
+	{
+		delete m_chaser;
+		m_chaser = NULL;
+		return;
+	}
+#endif
 
 	m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_I4, (void *)&rc,
 	(BYTE *)(VTS_I4 VTS_I4), MAKEWPARAM(setTRACE, WM_USER), m_chaser->GetSafeHwnd());
@@ -14582,11 +15102,11 @@ LONG CMainFrame::OnApplyACC(WPARAM wp, LPARAM lp)
 		m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_I4, (void *)&rc,
 			(BYTE *)(VTS_I4 VTS_I4), MAKEWPARAM(setACCB, HIWORD(wp)), lp);
 		break;
-	case 101:	// ï¿½Ö½ï¿½
+	case 101:	// ÁÖ½Ä
 		m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_I4, (void *)&rc,
 			(BYTE *)(VTS_I4 VTS_I4), MAKEWPARAM(setACCG, 0), (long)(const char*)data);
 		break;
-	case 102:	// ï¿½ï¿½ï¿½ï¿½
+	case 102:	// ¼±¹°
 		m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_I4, (void *)&rc,
 			(BYTE *)(VTS_I4 VTS_I4), MAKEWPARAM(setACCG, 1), (long)(const char*)data);
 		break;
@@ -14679,7 +15199,7 @@ LRESULT CMainFrame::OnAxisClose(WPARAM wParam, LPARAM lParam)
 		}
 
 		//20170210 dkkim
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		//Á¾·áÀü ¸¶Áö¸·È­¸é ÀúÀå
 		saveExitMap();
 
 		msg.LoadString(ST_MSG_DISCONNECT_EXIT);
@@ -14692,7 +15212,7 @@ LRESULT CMainFrame::OnAxisClose(WPARAM wParam, LPARAM lParam)
 		m_axMisc->MsgBox(str, title);
 
 		//20170210 dkkim
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		//Á¾·áÀü ¸¶Áö¸·È­¸é ÀúÀå
 		saveExitMap();
 
 		if(m_bUseNewLogin)
@@ -14710,11 +15230,11 @@ LRESULT CMainFrame::OnAxisClose(WPARAM wParam, LPARAM lParam)
 		msg.LoadString(ST_MSG_DISCONNECT_RETRY);
 		title.LoadString(ST_TEXT_OK);
 		//2014.02.04 dkkim
-		//ï¿½ï¿½ï¿½ï¿½ï¿½Ó½ï¿½ ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		//ÀçÁ¢¼Ó½Ã ¹æÈ­º® ÇØÁ¦
 		FreeFirewall();
 
 		//20170210 dkkim
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		//Á¾·áÀü ¸¶Áö¸·È­¸é ÀúÀå
 		saveExitMap();
 
 		if (Axis::MessageBox(msg, MB_OKCANCEL) == IDOK)
@@ -14724,7 +15244,7 @@ LRESULT CMainFrame::OnAxisClose(WPARAM wParam, LPARAM lParam)
 		}
 		else
 		{
-			if (Axis::MessageBox(this, "ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï½Ã·ï¿½ï¿½ï¿½ [È®ï¿½ï¿½] ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½", MB_OKCANCEL) == IDCANCEL)
+			if (Axis::MessageBox(this, "ÇÁ·Î±×·¥À» Á¾·áÇÏ½Ã·Á¸é [È®ÀÎ] ¹öÆ°À» ´­·¯ ÁÖ¼¼¿ä", MB_OKCANCEL) == IDCANCEL)
 				return 0;
 		}
 		break;
@@ -14766,7 +15286,11 @@ LRESULT CMainFrame::OnTrayEvent(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::ProcessInfofile(bool upload)
 {
+#ifdef DF_USE_CPLUS17
 	m_infofile = std::make_unique<CInfofile>(m_wizard.get(), upload);
+#else
+	m_infofile = new CInfofile(m_wizard, upload);
+#endif
 	m_infofile->DoModal();
 
 	if (!upload)
@@ -14789,10 +15313,18 @@ void CMainFrame::ProcessInfofile(bool upload)
 			sendTicInfo();
 
 			CProfile profile(pkAxisTicker);
+#ifdef DF_USE_CPLUS17
 			ShowControlBar(m_tInfo1.get(), profile.GetInt(szGeneral, "view1", 1), FALSE);
 			ShowControlBar(m_tInfo2.get(), profile.GetInt(szGeneral, "view2", 1), FALSE);
 			if (m_tInfo3)
 				ShowControlBar(m_tInfo3.get(), profile.GetInt(szGeneral, "view3", 1), FALSE);
+#else
+			ShowControlBar(m_tInfo1, profile.GetInt(szGeneral, "view1", 1), FALSE);
+			ShowControlBar(m_tInfo2, profile.GetInt(szGeneral, "view2", 1), FALSE);
+			if (m_tInfo3)
+				ShowControlBar(m_tInfo3, profile.GetInt(szGeneral, "view3", 1), FALSE);
+#endif
+		
 
 			if (m_bSDI)
 			{
@@ -14809,8 +15341,19 @@ void CMainFrame::ProcessInfofile(bool upload)
 		load_dbar2();
 	}
 
+#ifdef DF_USE_CPLUS17
 	if (m_infofile && m_infofile->GetSafeHwnd())
 		m_infofile = nullptr;
+#else
+	if (m_infofile && m_infofile->GetSafeHwnd())
+	{
+		delete m_infofile;
+		m_infofile = NULL;
+	}
+
+	if (m_infofile)
+		delete m_infofile;
+#endif
 }
 
 void CMainFrame::Action(WPARAM wParam, LPARAM lParam)
@@ -14907,7 +15450,7 @@ void CMainFrame::HideChildButton(int key)
 			if (IsWebMenu(schild->m_mapN))
 				schild->m_xcaption.HideButton(HIDE_FONT);
 
-			//if (schild->m_mapN.Mid(0,4) == "IB76" || schild->m_mapN.Mid(0,8) == "IB202200")  //ï¿½ï¿½ï¿½ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½
+			//if (schild->m_mapN.Mid(0,4) == "IB76" || schild->m_mapN.Mid(0,8) == "IB202200")  //Á¾¸ñ°Ë»ö ÂÊÀº ÆùÆ® »­
 			if (IsNoFontMenu(schild->m_mapN))
 			{
 				schild->m_xcaption.HideButton(HIDE_FONT);
@@ -14933,7 +15476,7 @@ void CMainFrame::HideChildButton(int key)
 			child->m_xcaption.ShowButton(HIDE_HELP);
 		else
 			child->m_xcaption.HideButton(HIDE_HELP);
-		//if (child->m_mapN.Mid(0,4) == "IB76" || child->m_mapN.Mid(0,8) == "IB202200")  //ï¿½ï¿½ï¿½ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½
+		//if (child->m_mapN.Mid(0,4) == "IB76" || child->m_mapN.Mid(0,8) == "IB202200")  //Á¾¸ñ°Ë»ö ÂÊÀº ÆùÆ® »­
 		if (IsNoFontMenu(child->m_mapN))
 		{
 			child->m_xcaption.HideButton(HIDE_FONT);
@@ -15058,7 +15601,7 @@ void CMainFrame::SettingEticker(int paneID)
 	
 	len = idx*sizeof(struct _rtick);
 
-	//2012.08.10 ï¿½ï¿½ï¿½ï¿½ï¿½ - PIBOTICK -> PIBFTICK
+	//2012.08.10 ±è´ö±â - PIBOTICK -> PIBFTICK
 	//sendTR("PIBOTICK", buf, len, US_PASS, 'e');
 	sendTR("PIBOTICK", buf, len, US_PASS, 'e');
 
@@ -15348,8 +15891,13 @@ void CMainFrame::SendInstallPath()
 	CopyMemory(uini.gubn, "I", sizeof(uini.gubn));
 	CopyMemory(uini.item.usid, Axis::userID, sizeof(uini.item.usid));
 	CopyMemory(uini.item.innm, fname, sizeof(uini.item.innm));
+#ifdef DF_USE_CPLUS17
 	CopyMemory(uini.item.senm, "OS", strlen("OS"));
 	CopyMemory(uini.item.skey, "INSTALL", strlen("INSTALL"));
+#else
+	CopyMemory(uini.item.senm, "OS", sizeof(uini.item.senm));
+	CopyMemory(uini.item.skey, "INSTALL", sizeof(uini.item.skey));
+#endif
 
 	CopyMemory(uini.item.valu, Axis::home, sizeof(uini.item.valu));
 	CopyMemory(uini.item.date, sdat, sizeof(uini.item.date));
@@ -15357,7 +15905,7 @@ void CMainFrame::SendInstallPath()
 	sendTR("pidouini", (char*)&uini, sz_pidouini, 0, 'N');
 }
 
-// ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+// ÇÁ·Î¼¼½º ¸®½ºÆ® Á¤º¸¾÷µ¥ÀÌÆ®
 void CMainFrame::SendProcessList()
 {		
 	struct	_pidouini_mid	uini;
@@ -15398,8 +15946,13 @@ void CMainFrame::SendProcessList()
 			CopyMemory(uini.gubn, "I", sizeof(uini.gubn));
 			CopyMemory(uini.item.usid, Axis::userID, sizeof(uini.item.usid));
 			CopyMemory(uini.item.innm, fname, sizeof(uini.item.innm));
+#ifdef DF_USE_CPLUS17
 			CopyMemory(uini.item.senm, "HTS", strlen("HTS"));
 			CopyMemory(uini.item.skey, "PROCESS",strlen("HTS"));
+#else
+			CopyMemory(uini.item.senm, "HTS", sizeof(uini.item.senm));
+			CopyMemory(uini.item.skey, "PROCESS", sizeof(uini.item.skey));
+#endif
 
 			CopyMemory(uini.item.valu, strProcess.Mid(i*500,500), sizeof(uini.item.valu));
 			CopyMemory(uini.item.date, sdat, sizeof(uini.item.date));
@@ -15414,8 +15967,14 @@ void CMainFrame::SendProcessList()
 		CopyMemory(uini.gubn, "I", sizeof(uini.gubn));
 		CopyMemory(uini.item.usid, Axis::userID, sizeof(uini.item.usid));
 		CopyMemory(uini.item.innm, fname, sizeof(uini.item.innm));
+
+#ifdef DF_USE_CPLUS17
 		CopyMemory(uini.item.senm, "HTS", strlen("HTS"));
 		CopyMemory(uini.item.skey, "PROCESS", strlen("PROCESS"));
+#else
+		CopyMemory(uini.item.senm, "HTS", sizeof(uini.item.senm));
+		CopyMemory(uini.item.skey, "PROCESS", sizeof(uini.item.skey));
+#endif
 
 		CopyMemory(uini.item.valu, strProcess, sizeof(uini.item.valu));
 		CopyMemory(uini.item.date, sdat, sizeof(uini.item.date));
@@ -15469,8 +16028,8 @@ void CMainFrame::ErrReport(CString eMsg)
 		WriteErrFile((char *)(const char*)eMsg, eMsg.GetLength());
 
 	//save_laststat();
-	//MessageBox(eMsg, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
-	// 2010.07.21 È­ï¿½ï¿½Ä¸ï¿½Ä½ï¿½ ï¿½Þ´ï¿½ï¿½Ü»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ Invalidate -> ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¿ï¿½ Ä¸ï¿½ï¿½ï¿½Ñ´ï¿½. by LKM
+	//MessageBox(eMsg, "¿À·ù°¨Áö");
+	// 2010.07.21 È­¸éÄ¸ÃÄ½Ã ¸Þ´ºÀÜ»óÀÌ ³²´Â Çö»óÀÌ ÀÖ¾î Invalidate -> ¸Þ¼¼ÁöÆßÇÎ ÈÄ¿¡ Ä¸ÃÄÇÑ´Ù. by LKM
 	{
 		MSG msg;
 		Invalidate(TRUE);
@@ -15487,7 +16046,7 @@ void CMainFrame::ErrReport(CString eMsg)
 	pChild = this;
 
 	if (!pChild) {
-		Axis::MessageBox(this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.", MB_OK | MB_ICONSTOP);
+		Axis::MessageBox(this, "½ÇÇàÁßÀÎ È­¸éÀÌ ¾ø½À´Ï´Ù.", MB_OK | MB_ICONSTOP);
 		return;
 	}
 
@@ -15704,7 +16263,11 @@ void CMainFrame::addScreenList(CString mapN, int key, int vsN)
 {
 	add_history(mapN);
 	addTool_history(mapN);
+#ifdef DF_USE_CPLUS17
 	m_bar2->add_Button(key, mapN, m_tMenu.get(), vsN);
+#else
+	m_bar2->add_Button(key, mapN, m_tMenu, vsN);
+#endif
 	m_activeMapN = mapN;
 }
 
@@ -15762,6 +16325,7 @@ bool CMainFrame::FindSDIMap(CString mapName, int vsN)
 void CMainFrame::loadToolStatus()
 {
 	CProfile profile(pkAxisTicker);
+#ifdef DF_USE_CPLUS17
 	ShowControlBar(m_tInfo1.get(), profile.GetInt(szGeneral, "view1", 1), FALSE);
 	ShowControlBar(m_tInfo2.get(), profile.GetInt(szGeneral, "view2", 1), FALSE);
 	if (m_tInfo3)
@@ -15770,6 +16334,16 @@ void CMainFrame::loadToolStatus()
 	ShowControlBar(m_bar1.get(), profile.GetInt(szGeneral, "ttbar1", 1), FALSE);
 	ShowControlBar(m_bar2.get(), profile.GetInt(szGeneral, "ttbar2", 1), FALSE);
 	ShowControlBar(m_bar3.get(), profile.GetInt(szGeneral, "ttbar3", 1), FALSE);
+#else
+	ShowControlBar(m_tInfo1, profile.GetInt(szGeneral, "view1", 1), FALSE);
+	ShowControlBar(m_tInfo2, profile.GetInt(szGeneral, "view2", 1), FALSE);
+	if (m_tInfo3)
+		ShowControlBar(m_tInfo3, profile.GetInt(szGeneral, "view3", 0), FALSE);
+
+	ShowControlBar(m_bar1, profile.GetInt(szGeneral, "ttbar1", 1), FALSE);
+	ShowControlBar(m_bar2, profile.GetInt(szGeneral, "ttbar2", 1), FALSE);
+	ShowControlBar(m_bar3, profile.GetInt(szGeneral, "ttbar3", 1), FALSE);
+#endif
 
 	RelayoutTicker();
 	ChangeLogo();
@@ -15941,7 +16515,7 @@ void CMainFrame::runProgram(int index)
 
 	if (dw <= 0)
 	{
-		Axis::MessageBox(this, "ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.", MB_ICONSTOP);
+		Axis::MessageBox(this, "ÇÁ·Î±×·¥¿¬°áÁ¤º¸ ¿À·ùÀÔ´Ï´Ù.", MB_ICONSTOP);
 		return;
 	}
 	CString cstr = CString(buffer, dw);
@@ -16091,11 +16665,11 @@ void CMainFrame::preload_screen()
 		if (!m_hSHA256)
 		{
 			const DWORD dwError = GetLastError();
-			emsg.Format("ï¿½ï¿½È£È­ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.ï¿½Î±ï¿½ï¿½Î½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½Þ±â¸¦ ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.(%d)", dwError);
+			emsg.Format("¾ÏÈ£È­ ¸ðµâÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.·Î±×ÀÎ½Ã¿¡ ÆÄÀÏ ÀüÃ¼ ¹Þ±â¸¦ ÇØÁÖ¼¼¿ä.(%d)", dwError);
 			MessageBox(path, emsg);
 		}
 	}
-//FDS ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//FDS »ç¿ë ¿¹Á¦
 // 	CString path, emsg;
 // 	path.Format("%s\\%s\\%s", Axis::home, DEVDIR, "CX_FDS.DLL");
 // 
@@ -16104,7 +16678,7 @@ void CMainFrame::preload_screen()
 // 	if(!hFDS)
 // 	{
 // 		WORD dwError = GetLastError();
-// 		emsg.Format("ï¿½ï¿½È£È­ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.ï¿½Î±ï¿½ï¿½Î½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½Þ±â¸¦ ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.(%d)", dwError);
+// 		emsg.Format("¾ÏÈ£È­ ¸ðµâÀÌ Á¸ÀçÇÏÁö ¾ÊÀ¾´Ï´Ù.·Î±×ÀÎ½Ã¿¡ ÆÄÀÏ ÀüÃ¼ ¹Þ±â¸¦ ÇØÁÖ¼¼¿ä.(%d)", dwError);
 // 		MessageBox(path, emsg);
 // 	}
 // 	char src[1024];
@@ -16142,7 +16716,7 @@ void CMainFrame::preload_screen()
 
 	CChildFrame*	child = NULL;
 #if 1
-	// 2011.01.26 LOGINï¿½ï¿½Ã¼ï¿½ï¿½ Pushï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½Ñ´ï¿½. (ï¿½Ö¹ï¿½ï¿½ë¸®ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¾ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½Ã¼Å©)
+	// 2011.01.26 LOGIN°´Ã¼¸¦ PushÇØÁÖ´Â ¸ÊÀ» ·ÎµùÇÑ´Ù. (ÁÖ¹®´ë¸®ÀÎ/ÅõÀÚÀÏÀÓ¾÷ÀÚ¿©ºÎÃ¼Å©)
 	child = load_hidescreen(MAPN_LOGINSET);
 	m_arHide.Add(child);
 #endif
@@ -16165,7 +16739,7 @@ void CMainFrame::preload_screen()
 	const BOOL	rc = FALSE;
 	CString mapname;
 
-//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ï¿½ï¿½
+//	Á¾¸ñÁ¦¾î¹Ù ÄÚµåµî·Ï
 	/**
 	m_category = m_bar0->GetCategoryWnd();
 	mapname = _T("IBCBCODE");
@@ -16177,7 +16751,7 @@ void CMainFrame::preload_screen()
 			(BYTE *)(VTS_I4 VTS_BSTR VTS_I4 VTS_BOOL), key, mapname, size, false);
 	**/
 
-//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//	°èÁÂÅø¹Ù
 
 	//** temp
 	//***m_accTool = FALSE;
@@ -16485,13 +17059,22 @@ void CMainFrame::ChangeMDI()
 	m_appMode = MODE_MDI;
 
 	//ModifyStyle(0, WS_CAPTION);
+#ifdef DF_USE_CPLUS17
 	ShowControlBar(m_tMenu.get(), TRUE, FALSE);
 	ShowControlBar(m_bar1.get(), TRUE, FALSE);
 	ChangeLogo();
 
 	if (m_toolStatus & TB_LISTBAR)
 		ShowControlBar(m_bar2.get(), FALSE, FALSE);
+#else
+	ShowControlBar(m_tMenu, TRUE, FALSE);
+	ShowControlBar(m_bar1, TRUE, FALSE);
+	ChangeLogo();
 
+	if (m_toolStatus & TB_LISTBAR)
+		ShowControlBar(m_bar2, FALSE, FALSE);
+#endif
+	
 
 #if 0
 	DWORD dwStyle = m_axis->GetProfileInt(INFORMATION, "listbar_pos", CBRS_ALIGN_BOTTOM);//m_bar2->GetBarStyle();
@@ -16524,20 +17107,33 @@ void CMainFrame::ChangeMDI()
 	m_bar2->EnableDocking(CBRS_ALIGN_BOTTOM|CBRS_ALIGN_TOP);
 	m_bar2->SetBarStyle(dwStyle);
 	m_bar2->SetMDIMode(TRUE);
-
+#ifdef DF_USE_CPLUS17
 	if (m_toolStatus & TB_LISTBAR)
 		ShowControlBar(m_bar2.get(), TRUE, FALSE);
+#else
+	if (m_toolStatus & TB_LISTBAR)
+		ShowControlBar(m_bar2, TRUE, FALSE);
+#endif
 
 	m_bar3->EnableDocking(CBRS_ALIGN_BOTTOM|CBRS_ALIGN_TOP);
 	m_bar3->SetBarStyle(dwStyle3);
 	m_bar3->SetMDIMode(TRUE);
 
+#ifdef DF_USE_CPLUS17
 	if (m_toolStatus & TB_HISTBAR)
 		ShowControlBar(m_bar3.get(), TRUE, FALSE);
 	m_bar0->EnableDocking(CBRS_ALIGN_LEFT);
 	DockControlBar(m_bar0.get(), AFX_IDW_DOCKBAR_LEFT);
 	ShowControlBar(m_sdibar.get(), FALSE, FALSE);
 	ShowControlBar(m_smain.get(), FALSE, FALSE);
+#else
+	if (m_toolStatus & TB_HISTBAR)
+		ShowControlBar(m_bar3, TRUE, FALSE);
+	m_bar0->EnableDocking(CBRS_ALIGN_LEFT);
+	DockControlBar(m_bar0, AFX_IDW_DOCKBAR_LEFT);
+	ShowControlBar(m_sdibar, FALSE, FALSE);
+	ShowControlBar(m_smain, FALSE, FALSE);
+#endif
 
 	SetWindowPlacement(&m_switchpl);
 	SetWindowPos(&wndNoTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
@@ -16611,6 +17207,7 @@ void CMainFrame::ChangeSDI(bool hide)
 	SetToolStatus();
 
 	ModifyStyle(WS_CAPTION, 0);
+#ifdef DF_USE_CPLUS17
 	ShowControlBar(m_tMenu.get(), FALSE, FALSE);
 	ShowControlBar(m_bar1.get(), FALSE, FALSE);
 	ShowControlBar(m_bar0.get(), FALSE, FALSE);
@@ -16618,16 +17215,34 @@ void CMainFrame::ChangeSDI(bool hide)
 	ShowControlBar(m_bar3.get(), FALSE, FALSE);
 	ShowControlBar(m_sdibar.get(), TRUE, FALSE);
 	ShowControlBar(m_smain.get(), TRUE, FALSE);
-
+#else
+	ShowControlBar(m_tMenu, FALSE, FALSE);
+	ShowControlBar(m_bar1, FALSE, FALSE);
+	ShowControlBar(m_bar0, FALSE, FALSE);
+	ShowControlBar(m_bar2, FALSE, FALSE);
+	ShowControlBar(m_bar3, FALSE, FALSE);
+	ShowControlBar(m_sdibar, TRUE, FALSE);
+	ShowControlBar(m_smain, TRUE, FALSE);
+#endif
+	
 	SetSDIChangeHeight();
 	SetSDIHeight();
 			
 	WINDOWPLACEMENT	pl;
 	GetWindowPlacement(&pl);
 
+#ifdef DF_USE_CPLUS17
 	const CPoint	sdiPt = CPoint(pl.rcNormalPosition.left, m_switchpl.rcNormalPosition.top + m_SDIHEIGHT);
 	FloatControlBar(m_bar0.get(), sdiPt);
 	m_bar0->EnableDocking(0);
+#else
+	const CPoint	sdiPt = CPoint(pl.rcNormalPosition.left, m_switchpl.rcNormalPosition.top + m_SDIHEIGHT);
+	FloatControlBar(m_bar0, sdiPt);
+	m_bar0->EnableDocking(0);
+#endif
+
+
+	
 
 	if (!hide)	
 		ShowWindow(SW_SHOW);
@@ -16686,8 +17301,11 @@ void CMainFrame::StopLoss()
 	{
 		CStopWarn	dlg;
 		if (dlg.DoModal() != IDOK)	return;
+#ifdef DF_USE_CPLUS17
 		m_stoploss = new CStoploss(m_bar2.get());
-
+#else
+		m_stoploss = new CStoploss(m_bar2);
+#endif
 		if (!m_stoploss->Create(IDD_STOPLOSS))
 		{
 			delete m_stoploss;
@@ -16854,15 +17472,15 @@ void CMainFrame::drawTitle(CDC* pDC)
 		**/
 
 		CString caption = "IBK hot Trading";
-		if (!Axis::isCustomer)	caption += "(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)";
-		if (Axis::devMode)     caption += " - ï¿½ï¿½ï¿½ß¿ï¿½";
+		if (!Axis::isCustomer)	caption += "(Á÷¿ø¿ë)";
+		if (Axis::devMode)     caption += " - °³¹ß¿ë";
 
 		if(m_titleChange)
 		{
 			caption = m_userTitle;
 
-			if (!Axis::isCustomer)	caption += "(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)";
-			if (Axis::devMode)     caption += " - ï¿½ï¿½ï¿½ß¿ï¿½";
+			if (!Axis::isCustomer)	caption += "(Á÷¿ø¿ë)";
+			if (Axis::devMode)     caption += " - °³¹ß¿ë";
 
 			CString tmp;
 			GetWindowText(tmp);
@@ -16879,18 +17497,18 @@ void CMainFrame::drawTitle(CDC* pDC)
 
 			if (m_axMisc->m_regkey == "IBK")
 			{
-				if(tmp != "IBKï¿½ï¿½ï¿½ï¿½")
-					SetWindowText("IBKï¿½ï¿½ï¿½ï¿½");
+				if(tmp != "IBK°³¹ß")
+					SetWindowText("IBK°³¹ß");
 			}
 			else if (m_axMisc->m_regkey == "IBK_STAFF")
 			{
-				if(tmp != "[ï¿½ï¿½ï¿½ï¿½]IBKï¿½ï¿½ï¿½ï¿½")
-					SetWindowText("[ï¿½ï¿½ï¿½ï¿½]IBKï¿½ï¿½ï¿½ï¿½");
+				if(tmp != "[Á÷¿ø]IBK°³¹ß")
+					SetWindowText("[Á÷¿ø]IBK°³¹ß");
 			}
 			else if (m_axMisc->m_regkey == "IBKMAC_STAFF")
 			{
-				if(tmp != "[ï¿½ï¿½ï¿½ï¿½]IBK hot Trading")
-					SetWindowText("[ï¿½ï¿½ï¿½ï¿½]IBK hot Trading");
+				if(tmp != "[Á÷¿ø]IBK hot Trading")
+					SetWindowText("[Á÷¿ø]IBK hot Trading");
 			}
 			else
 			{
@@ -17255,7 +17873,7 @@ void CMainFrame::fitDual()
 
 	if (moniterN <= 1)
 	{
-		Axis::MessageBox(this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Æ´Õ´Ï´ï¿½.", MB_ICONINFORMATION);
+		Axis::MessageBox(this, "µà¾ó¸ð´ÏÅÍ°¡ ¾Æ´Õ´Ï´Ù.", MB_ICONINFORMATION);
 		return;
 	}
 	
@@ -17346,17 +17964,17 @@ void CMainFrame::fitDual()
 	
 }
 
-//ï¿½ï¿½ï¿½ï¿½ ï¿½Ø¿ï¿½ ï¿½ï¿½ï¿½ï¿½
+//±âÁ¸ ÇØ¿Ü Áö¼ö
 // const int indexKey[] = {
 // 	1, 2, 3, 4, 5, 6, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20,
 // 		21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33 
 // };
-//ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½Ø¿ï¿½ ï¿½ï¿½ï¿½ï¿½
+//»õ·Î¿î ÇØ¿Ü Áö¼ö
 // const int indexKey[] = {
 // 	1, 2, 3, 4, 5, 6, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20,
 // 		21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50
 // };
-//Æ¼Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//Æ¼Ä¿º¯°æ½Ã ¼öÁ¤
 const int indexKey[] = {
 	1, 2, 3, 4,/*4,*/ 5, 6, 9, 10, 13, 14, 15, 16, 17, 18, 19, 32, 33
 };
@@ -17504,7 +18122,7 @@ void CMainFrame::OpenAnnouncement()
 
 		PopupWeb(urls, cx, cy);
 	}
-// ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// ¹è°æÈ­¸é °øÁö»çÇ×
 
 	keys.Format("bknotice%02d", m_nBkMode);
 	value = profile.GetString(szDTAccouncement, keys);
@@ -17610,7 +18228,7 @@ int CMainFrame::GetMacAddr(char* ipaddr, char* data)
 			}
 		}
 		m_slog.Format("mac add = %s", data);
-		WriteLog(m_slog);
+		//WriteLog(m_slog);
 		FreeLibrary(hModule);
 	}
 	return ilen;
@@ -17651,7 +18269,7 @@ void CMainFrame::OnDestroy()
 
 void CMainFrame::MRFrame(CChildFrame* child)
 {
-	// 2006.10.26 ï¿½Ç½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½
+	// 2006.10.26 ½Ç½Ã°£Áö¼ö È­¸éÀÇ µ¶¸³½ÇÇà¹öÆ°°ú º¹»ç¹öÆ° »èÁ¦¸¦ À§ÇÏ¿©
 	if (child->m_mapN.CompareNoCase("DH150700") == 0)
 	{  
 		child->HideButton(HIDE_SINGLE|HIDE_GROUP|HIDE_COPY|HIDE_FONT|HIDE_HELP);
@@ -17736,7 +18354,7 @@ void CMainFrame::MngInfoPos()
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-	// ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¾ï¿½ ï¿½ï¿½Ö½Å°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 2006.12.06
+	// °³Àå½Ã°£¿¡ ¸ÂÃß¾î Àå¾Ö½Å°í¸¦ º¸³¾¼ö ÀÖµµ·Ï ¿µ¾÷À» ÀúÀå 2006.12.06
 
 
 void CMainFrame::sendRTime()
@@ -17944,17 +18562,17 @@ void CMainFrame::DeleteAllScreen(bool all /*= true*/)
 
 // void CMainFrame::ShowDoctorInfo(DWORD* data)
 // {
-// 	//	TRACE("Ã´Ã´ï¿½Ú»ï¿½[%s]\n", dat);
+// 	//	TRACE("Ã´Ã´¹Ú»ç[%s]\n", dat);
 // 	CString dat;
 // 	
 // 	if (!m_pDoctor)		return;
-// 	if (m_bCustomer)	return;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ popupï¿½È³ï¿½ï¿½ï¿½
+// 	if (m_bCustomer)	return;		// °í°´Àº popup¾È³ª¿È
 // 	
-// 	// popup 0:ï¿½ï¿½ï¿½ï¿½, 1:ï¿½Èºï¿½ï¿½ï¿½
+// 	// popup 0:º¸ÀÓ, 1:¾Èº¸ÀÓ
 // 	
 // 	CProfile profile(pkEnvironment);
 // 	
-// 	if (profile.GetInt("DOCTORQNA", "CHKPOPUP", 0) != 0)	return;	// 0:ï¿½ï¿½ï¿½ï¿½
+// 	if (profile.GetInt("DOCTORQNA", "CHKPOPUP", 0) != 0)	return;	// 0:º¸ÀÓ
 // 	
 // 	CString symS, tmpS;
 // 	
@@ -17962,13 +18580,13 @@ void CMainFrame::DeleteAllScreen(bool all /*= true*/)
 // 	
 // 	
 // 	m_pDoctor->StopSlide();
-// 	//#define	SYM_NUM			14			// ï¿½Ï·Ã¹ï¿½È£
-// 	//#define	SYM_DATE		48			// ï¿½ï¿½ï¿½ï¿½ï¿½
-// 	//#define	SYM_TIME		44			// ï¿½ï¿½Ï½Ã°ï¿½
+// 	//#define	SYM_NUM			14			// ÀÏ·Ã¹øÈ£
+// 	//#define	SYM_DATE		48			// µî·ÏÀÏ
+// 	//#define	SYM_TIME		44			// µî·Ï½Ã°£
 // 	//#define	SYM_ID			13			// ID
-// 	//#define	SYM_TITLE		15			// ï¿½ï¿½ï¿½ï¿½
-// 	//#define	SYM_RES			46			// ï¿½äº¯ï¿½Ç¼ï¿½
-// 	//#define	SYM_SEQ			47			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// 	//#define	SYM_TITLE		15			// Á¦¸ñ
+// 	//#define	SYM_RES			46			// ´äº¯°Ç¼ö
+// 	//#define	SYM_SEQ			47			// ³ª¸¸º¸±â
 // 	
 // 	CString idS, titleS, resS;
 // 	if (!data[46])		return;
@@ -17977,7 +18595,7 @@ void CMainFrame::DeleteAllScreen(bool all /*= true*/)
 // 	idS = (char*)data[13];
 // 	if (!data[15])	return;
 // 	titleS = (char*)data[15];
-// 	if (atoi(resS) > 0)			return;			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¸¸ tooltip 
+// 	if (atoi(resS) > 0)			return;			// Áú¹®³»¿ë¸¸ tooltip 
 // 	int len = min(titleS.GetLength(), 30);
 // 	dat.Format("%s:%s", idS, titleS.Left(len));
 // 	
@@ -18001,16 +18619,16 @@ void CMainFrame::DeleteAllScreen(bool all /*= true*/)
 
 // void CMainFrame::ShowDoctorInfo(CString dat)
 // {
-// //	TRACE("Ã´Ã´ï¿½Ú»ï¿½[%s]\n", dat);
+// //	TRACE("Ã´Ã´¹Ú»ç[%s]\n", dat);
 // 
 // 	if (!m_pDoctor)		return;
-// 	if (m_bCustomer)	return;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ popupï¿½È³ï¿½ï¿½ï¿½
+// 	if (m_bCustomer)	return;		// °í°´Àº popup¾È³ª¿È
 // 
-// 	// popup 0:ï¿½ï¿½ï¿½ï¿½, 1:ï¿½Èºï¿½ï¿½ï¿½
+// 	// popup 0:º¸ÀÓ, 1:¾Èº¸ÀÓ
 // 
 // 	CProfile profile(pkEnvironment);
 // 
-// 	if (profile.GetInt("DOCTORQNA", "CHKPOPUP", 0) != 0)	return;	// 0:ï¿½ï¿½ï¿½ï¿½
+// 	if (profile.GetInt("DOCTORQNA", "CHKPOPUP", 0) != 0)	return;	// 0:º¸ÀÓ
 // 
 // 	CString symS, tmpS;
 // 	CString dataS = dat;
@@ -18040,19 +18658,19 @@ void CMainFrame::DeleteAllScreen(bool all /*= true*/)
 // 	
 // 
 // 	m_pDoctor->StopSlide();
-// 	//#define	SYM_NUM			14			// ï¿½Ï·Ã¹ï¿½È£
-// 	//#define	SYM_DATE		48			// ï¿½ï¿½ï¿½ï¿½ï¿½
-// 	//#define	SYM_TIME		44			// ï¿½ï¿½Ï½Ã°ï¿½
+// 	//#define	SYM_NUM			14			// ÀÏ·Ã¹øÈ£
+// 	//#define	SYM_DATE		48			// µî·ÏÀÏ
+// 	//#define	SYM_TIME		44			// µî·Ï½Ã°£
 // 	//#define	SYM_ID			13			// ID
-// 	//#define	SYM_TITLE		15			// ï¿½ï¿½ï¿½ï¿½
-// 	//#define	SYM_RES			46			// ï¿½äº¯ï¿½Ç¼ï¿½
-// 	//#define	SYM_SEQ			47			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// 	//#define	SYM_TITLE		15			// Á¦¸ñ
+// 	//#define	SYM_RES			46			// ´äº¯°Ç¼ö
+// 	//#define	SYM_SEQ			47			// ³ª¸¸º¸±â
 // 
 // 	CString idS, titleS, resS;
 // 	if (!rtmStore.Lookup(46, resS))		return;
 // 	if (!rtmStore.Lookup(13, idS))		return;
 // 	if (!rtmStore.Lookup(15, titleS))	return;
-// 	if (atoi(resS) > 0)			return;			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¸¸ tooltip 
+// 	if (atoi(resS) > 0)			return;			// Áú¹®³»¿ë¸¸ tooltip 
 // 	int len = min(titleS.GetLength(), 30);
 // 	dat.Format("%s:%s", idS, titleS.Left(len));
 // 
@@ -18211,15 +18829,15 @@ void CMainFrame::checkRTSQueue()
 
 // 	if (Axis::devMode)
 // 	{
-// 		m_titleS.Format("CPU[%d%%] ï¿½ï¿½ï¿½ï¿½ï¿½Ç¼ï¿½[%dï¿½ï¿½]", cpuuse, cnt);
+// 		m_titleS.Format("CPU[%d%%] Áö¿¬°Ç¼ö[%d°³]", cpuuse, cnt);
 // 		DrawFrame();
 // 		return;
 // 	}
 	
-// 	if (cnt > 500 || cpuuse > 90)	// ï¿½ï¿½ï¿½ï¿½ï¿½Ç¼ï¿½, CPUï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ titleï¿½ï¿½ Ç¥ï¿½ï¿½
+// 	if (cnt > 500 || cpuuse > 90)	// Áö¿¬°Ç¼ö, CPU»ç¿ëÀ² ³ôÀ»¶§¸¸ title¿¡ Ç¥½Ã
 // 	{
 // 		m_bRTSQueue = true;
-// 		tmpS.Format("%s    CPU[%d%%] ï¿½ï¿½ï¿½ï¿½ï¿½Ç¼ï¿½[%dï¿½ï¿½]", m_saveTitle, cpuuse, cnt);
+// 		tmpS.Format("%s    CPU[%d%%] Áö¿¬°Ç¼ö[%d°³]", m_saveTitle, cpuuse, cnt);
 // 		m_titleS = tmpS;
 // 		DrawFrame();
 // 	}
@@ -18255,11 +18873,20 @@ void CMainFrame::checkOpenedList()
 			if (file.Open(Path, CFile::modeRead)) 
 			{
 				const int len = (int)file.GetLength();
-				if (len > 0 && len < 2000)	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±×¸ï¿½ 2000 ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½
+				if (len > 0 && len < 2000)	// Á¤»óÀûÀÎ ·Î±×¸é 2000 ÀÌÇÏÀÏ°Í
 				{
+#ifdef DF_USE_CPLUS17
 					std::unique_ptr<char[]> pBuf = std::make_unique<char[]>(len);
 					file.Read(pBuf.get(), len);
 					const bool bret = sendTR("pihoerpt", pBuf.get(), len, US_PASS, 'd');
+#else
+					char* pBuf = new char[len];
+					file.Read(pBuf, len);
+					const bool bret = sendTR("pihoerpt", pBuf, len, US_PASS, 'd');
+
+					delete[] pBuf;
+#endif
+				
 				}
 				file.Close();
 			}
@@ -18272,12 +18899,12 @@ void CMainFrame::checkOpenedList()
 
 	m_bFirstOpen = false;
 	writeOpenedList(true);
-	//SetTimer(TM_SCRLOG, 120000, NULL);	È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½É¶ï¿½ ï¿½ï¿½ï¿½ï¿½â¶§ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½Ö¼ï¿½Ã³ï¿½ï¿½
+	//SetTimer(TM_SCRLOG, 120000, NULL);	È­¸é »ý¼ºµÉ¶§¶û Á¾·áµÉ¶§ ³²±â±â¶§¹®¿¡ ÀÏ´Ü ÁÖ¼®Ã³¸®
 }
 
 struct _errmid {
 	char	usid[24];		// user id
-	char	optn[4];		// 0 - È¸ï¿½ï¿½ï¿½ç±¸ï¿½ï¿½( 'H' - hana, 'D' - daetoo), 1 - ( 1 - ï¿½ï¿½ï¿½ï¿½, 2- ï¿½ï¿½ï¿½ï¿½), 2~3 : filler 
+	char	optn[4];		// 0 - È¸¿ø»ç±¸ºÐ( 'H' - hana, 'D' - daetoo), 1 - ( 1 - Á÷¿ø, 2- °í°´), 2~3 : filler 
 	char	yymd[8];		// YYYYMMDD
 	char	hmss[6];		// HHMMSS
 	char	mapn[8];		// map name
@@ -18315,6 +18942,7 @@ void CMainFrame::writeOpenedList(bool bFirst /*= false*/)
 		m_sIE  = m_sysInfo->GetIEInfo();
 	}
 
+#ifdef DF_USE_CPLUS17
 	const int	dLen = sz_errmid;
 	std::unique_ptr<char[]>pBuf = std::make_unique<char[]>(dLen);
 	memset(pBuf.get(), ' ', dLen);
@@ -18322,7 +18950,7 @@ void CMainFrame::writeOpenedList(bool bFirst /*= false*/)
 	const int	infoL = sizeof(errmid->info);		// 512
 	cnt = sMap.GetLength() / 9;
 
-	sData.Format("%s\t%s\t%s\tIEV:%s\t[%dï¿½ï¿½:%s] %s ", m_sWin, m_sCpu, m_sMem, m_sIE, cnt, (bFirst ? "F" : "C"), sMap/*, getProcessList()*/);
+	sData.Format("%s\t%s\t%s\tIEV:%s\t[%d°³:%s] %s ", m_sWin, m_sCpu, m_sMem, m_sIE, cnt, (bFirst ? "F" : "C"), sMap/*, getProcessList()*/);
 
 	if (sData.GetLength() > infoL)
 		sData = sData.Left(infoL - 1);
@@ -18364,13 +18992,67 @@ void CMainFrame::writeOpenedList(bool bFirst /*= false*/)
 	{
 	}
 	END_CATCH;
+#else
+	const int	dLen = sz_errmid;
+	char* pBuf = new char[dLen];
+	memset(pBuf, ' ', dLen);
+	_errmid* errmid = (_errmid*)pBuf;
+	const int	infoL = sizeof(errmid->info);		// 512
+	cnt = sMap.GetLength() / 9;
+
+	sData.Format("%s\t%s\t%s\tIEV:%s\t[%d°³:%s] %s ", m_sWin, m_sCpu, m_sMem, m_sIE, cnt, (bFirst ? "F" : "C"), sMap/*, getProcessList()*/);
+
+	if (sData.GetLength() > infoL)
+		sData = sData.Left(infoL - 1);
+
+	sprintf(errmid->usid, Axis::userID);
+	strcpy_s(errmid->optn, sizeof(errmid->optn), "110");
+	sprintf(errmid->yymd, "%04d%02d%02d", curr.GetYear(), curr.GetMonth(), curr.GetDay());
+	sprintf(errmid->hmss, "%02d%02d%02d", curr.GetHour(), curr.GetMinute(), curr.GetSecond());
+
+	if (m_ipAddr.IsEmpty())
+	{
+		::gethostname(errmid->ipad, sizeof(errmid->ipad));
+		if (lstrcmp(errmid->ipad, "") != 0)
+		{
+			const HOSTENT FAR* lphostent = ::gethostbyname(errmid->ipad);
+			if (lphostent)
+			{
+				sprintf(errmid->ipad, "%s", inet_ntoa(*((struct in_addr*)lphostent->h_addr)));
+			}
+		}
+		m_ipAddr.Format("%s", errmid->ipad);
+	}
+	const int ipadL = min(sizeof(errmid->ipad), m_ipAddr.GetLength());
+	sprintf(errmid->ipad, "%s", (LPSTR)(LPCTSTR)m_ipAddr.Left(ipadL));
+	sprintf(errmid->info, sData);
+
+	TRY
+	{
+		CFile	file;
+		if (!file.Open(Path, CFile::modeCreate | CFile::modeWrite))
+		{
+			TRACE("Create Failed\n");
+			delete[] pBuf;
+			return;
+		}
+		file.Write(pBuf, dLen);
+		file.Close();
+	}
+		CATCH(CFileException, e)
+	{
+	}
+	END_CATCH;
+
+	delete[] pBuf;
+#endif
 }
 
 void CMainFrame::removeOpenedList()
 {
 	CProfile profile(pkUserSetup);
 
-	profile.Write("LOGCHECK", "CLOSE", "1"); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1
+	profile.Write("LOGCHECK", "CLOSE", "1"); // Á¤»óÁ¾·á 1
 
 
 	CString	Path;
@@ -18427,45 +19109,45 @@ CString CMainFrame::getProcessList()
 	}
 	CloseHandle (hProcessSnap); 
 
-	// Å·ï¿½ï¿½ : kdrmgr
-	// nProtect(ï¿½ï¿½Ä«), npï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ : npkcmsvc, npmon, npkagt
-	// ï¿½ï¿½Ã¶ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ : mkd20tray
+	// Å·½º : kdrmgr
+	// nProtect(À×Ä«), np·Î ½ÃÀÛ : npkcmsvc, npmon, npkagt
+	// ¾ÈÃ¶¼ö Å°º¸µå : mkd20tray
 	//       V3 2007 : AcAis.exe,acaegmgr.exe,acaas.exe,acals.exe, msProxy
 	//       V3 : AhnSd, AhnSDsv, monsvcnt, monsysnt
-	//       ï¿½ï¿½È­ï¿½ï¿½ : mfnt
-	// ï¿½Ì´ï¿½ï¿½ï¿½ : INISafeWeb
+	//       ¹æÈ­º® : mfnt
+	// ÀÌ´ÏÅØ : INISafeWeb
 	CString tmpS, allS = _T("");
 	for (int ii = 0, idx = 0; ii < arProcess.GetSize(); ii++)
 	{
 		tmpS.Format("%s  ", arProcess.GetAt(ii)); 
-		if (tmpS.Find("conime") != -1			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¼ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,16ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½DOSï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½
-			|| tmpS.Find("csrss") != -1		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ±ï¿½ï¿½Ô·ï¿½ï¿½Ì³ï¿½ ï¿½×¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-			|| tmpS.Find("ctfmon") != -1		// ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï·Î¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+		if (tmpS.Find("conime") != -1			// À©µµ¿ìÄÜ¼Ö °üÀå, ¾²·¹µå¸¦ »ý¼º»èÁ¦,16ºñÆ® °¡»óDOS¸ðµå¸¦ Áö¿ø
+			|| tmpS.Find("csrss") != -1		// ¸í·ÉÇÁ·ÒÇÁÆ®»óÀÇ ÇÑ±ÛÀÔ·ÂÀÌ³ª ±×¿Ü ÇÁ·ÒÇÁÆ®¸¦ »ç¿ëÇÏ´Â ÇÁ·Î±×·¥À» Áö¿ø
+			|| tmpS.Find("ctfmon") != -1		// ¹ÙÅÁ È­¸éÀÇ ÀÔ·Â µµ±¸ÀÇ ½ÇÇà ÆÄÀÏ·Î¼­ ¹®ÀÚ ÀÔ·ÂÀ» ¼öÇàÇÏ´Â ÅØ½ºÆ® ¼­ºñ½º
 			|| tmpS.Find("explore") != -1 
-			|| tmpS.Find("jusched") != -1		// ï¿½Ú¹Ù¾ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½Ù·ï¿½
-			|| tmpS.Find("lsass") != -1		// Winlogon ï¿½ï¿½ï¿½ñ½º¿ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+			|| tmpS.Find("jusched") != -1		// ÀÚ¹Ù¾÷µ¥ÀÌÆ® ½ºÄÉÁÙ·¯
+			|| tmpS.Find("lsass") != -1		// Winlogon ¼­ºñ½º¿¡ ÇÊ¿äÇÑ ÀÎÁõ ÇÁ·Î¼¼½º¸¦ ´ã´ç
 			|| tmpS.Find("mdm") != -1		// Machine Debug Manager
-			|| tmpS.Find("mstask") != -1		// ï¿½Û¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ì·¯ ï¿½ï¿½ï¿½ï¿½
+			|| tmpS.Find("mstask") != -1		// ÀÛ¾÷ ½ºÄÉÁì·¯ ¼­ºñ½º
 			|| tmpS.Find("process") != -1 
-			|| tmpS.Find("rundll32") != -1		// 32bit ï¿½ï¿½ï¿½Î±×·ï¿½
-			|| tmpS.Find("services") != -1		// ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ñ½ºµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½, ï¿½×µé°£ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
-			|| tmpS.Find("smss") != -1		// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
-			|| tmpS.Find("spoolsv") != -1		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ñ½ï¿½ï¿½ï¿½ Spooling ï¿½ï¿½ï¿½
-			|| tmpS.Find("svchost") != -1		// DLLï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ host ï¿½ï¿½ï¿½ï¿½
-			|| tmpS.Find("system") != -1		// ï¿½ï¿½Îºï¿½ï¿½ï¿½ Ä¿ï¿½Î¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½
-			|| tmpS.Find("taskmgr") != -1		// ï¿½Û¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			|| tmpS.Find("rundll32") != -1		// 32bit ÇÁ·Î±×·¥
+			|| tmpS.Find("services") != -1		// ½Ã½ºÅÛ ¼­ºñ½ºµéÀ» ½ÃÀÛ/Á¤Áö½ÃÅ°°í, ±×µé°£ÀÇ »óÈ£ÀÛ¿ëÇÏ´Â ±â´É
+			|| tmpS.Find("smss") != -1		// »ç¿ëÀÚ ¼¼¼ÇÀ» ½ÃÀÛÇÏ´Â ±â´É
+			|| tmpS.Find("spoolsv") != -1		// ÇÁ¸°ÅÍ ¹× ÆÑ½ºÀÇ Spooling ±â´É
+			|| tmpS.Find("svchost") != -1		// DLL·ÎºÎÅÍ ½ÇÇàµÇ´Â ´Ù¸¥ ÇÁ·Î¼¼½ºµéÀÇ host ¿ªÇÒ
+			|| tmpS.Find("system") != -1		// ´ëºÎºÐÀÇ Ä¿³Î¸ðµå ¾²·¹µåµéÀÇ ½ÃÀÛÁ¡ÀÌ µÇ´Â ÇÁ·Î¼¼½º
+			|| tmpS.Find("taskmgr") != -1		// ÀÛ¾÷°ü¸®ÀÚ
 			|| tmpS.Find("usnsvc") != -1		// Messenger Sharing USN Journal Reader Service 
-			|| tmpS.Find("winmgmt") != -1		// Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½
-			|| tmpS.Find("winlogon") != -1		// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½/ï¿½Î±×¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½
-			|| tmpS.Find("wuauclt") != -1		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+			|| tmpS.Find("winmgmt") != -1		// Å¬¶óÀÌ¾ðÆ® °ü¸®ÀÇ ÇÙ½É
+			|| tmpS.Find("winlogon") != -1		// »ç¿ëÀÚ ·Î±×ÀÎ/·Î±×¿ÀÇÁ¸¦ ´ã´çÇÏ´Â ÇÁ·Î¼¼½º
+			|| tmpS.Find("wuauclt") != -1		// À©µµ¿ì ¾÷µ¥ÀÌÆ®
 
 			// vista
-			|| tmpS.Find("wininit") != -1		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
-			|| tmpS.Find("lsm") != -1		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-			|| tmpS.Find("audiodg") != -1		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡
+			|| tmpS.Find("wininit") != -1		// À©µµ¿ì ¾÷µ¥ÀÌÆ®
+			|| tmpS.Find("lsm") != -1		// ·ÎÄÃ ¼¼¼Ç °ü¸®ÀÚ
+			|| tmpS.Find("audiodg") != -1		// ¿Àµð¿ÀÀåÄ¡
 			|| tmpS.Find("slsvc") != -1		// Microsoft Software Licensing Service 
-			|| tmpS.Find("taskeng") != -1		// ï¿½Û¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ù·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-			|| tmpS.Find("dwm") != -1		// ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ Ã¢ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			|| tmpS.Find("taskeng") != -1		// ÀÛ¾÷ ½ºÄÉÁÙ·¯ÀÇ ¿£Áø ½ÇÇà
+			|| tmpS.Find("dwm") != -1		// ¹ÙÅÁ È­¸é Ã¢ °ü¸®ÀÚ
 			|| tmpS.Find("sidebar") != -1		// side bar
 			)
 			continue;
@@ -18482,19 +19164,28 @@ void CMainFrame::show_Ticker(int nID)
 	{
 	case 1:		// info1
 		{
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_tInfo1.get(), FALSE, FALSE);
+#else
+			ShowControlBar(m_tInfo1, FALSE, FALSE);
+#endif
 		}
 		saveToolStatus();
 		SetSDIChangeHeight();
 		break;
 	case 2:
 		{
+#ifdef DF_USE_CPLUS17
 			ShowControlBar(m_tInfo2.get(), FALSE, FALSE);
+#else
+			ShowControlBar(m_tInfo2, FALSE, FALSE);
+#endif
 		}
 		saveToolStatus();
 		SetSDIChangeHeight();
 		break;
 	case 3:		// info3
+#ifdef DF_USE_CPLUS17
 		if (!(m_tInfo2 && m_tInfo2->GetStyle() & WS_VISIBLE))
 			ShowControlBar(m_tInfo2.get(), TRUE, FALSE);
 		else if (!(m_tInfo1 && m_tInfo1->GetStyle() & WS_VISIBLE))
@@ -18504,6 +19195,17 @@ void CMainFrame::show_Ticker(int nID)
 			ShowControlBar(m_tInfo1.get(), FALSE, FALSE);
 			ShowControlBar(m_tInfo2.get(), FALSE, FALSE);
 		}
+#else
+		if (!(m_tInfo2 && m_tInfo2->GetStyle() & WS_VISIBLE))
+			ShowControlBar(m_tInfo2, TRUE, FALSE);
+		else if (!(m_tInfo1 && m_tInfo1->GetStyle() & WS_VISIBLE))
+			ShowControlBar(m_tInfo1, TRUE, FALSE);
+		else
+		{
+			ShowControlBar(m_tInfo1, FALSE, FALSE);
+			ShowControlBar(m_tInfo2, FALSE, FALSE);
+		}
+#endif		
 		saveToolStatus();
 		SetSDIChangeHeight();
 		break;
@@ -18515,7 +19217,11 @@ void CMainFrame::hide_Ticker(int nID)
 	switch (nID)
 	{
 	case 5:
+#ifdef DF_USE_CPLUS17
 		ShowControlBar(m_tInfo3.get(), FALSE, FALSE);
+#else
+		ShowControlBar(m_tInfo3, FALSE, FALSE);
+#endif
 		saveToolStatus();
 	}
 }
@@ -18577,7 +19283,7 @@ BOOL CMainFrame::IsNewLoginImage(BOOL bStaff)
 		BITMAP bm;
 		GetObject(hBitmap, sizeof(BITMAP), &bm);
 		::DeleteObject(hBitmap);
-		if (!(bm.bmWidth == 370 && bm.bmHeight == 621))	// ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½
+		if (!(bm.bmWidth == 370 && bm.bmHeight == 621))	// ½Å ÀÌ¹ÌÁö
 			return TRUE;
 	}
 	return FALSE;
@@ -18597,7 +19303,7 @@ BOOL CMainFrame::IsNewExitImage()
 		BITMAP bm;
 		GetObject(hBitmap, sizeof(BITMAP), &bm);
 		::DeleteObject(hBitmap);
-		if (!(bm.bmWidth == 279 && bm.bmHeight == 525))	// ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½
+		if (!(bm.bmWidth == 279 && bm.bmHeight == 525))	// ½Å ÀÌ¹ÌÁö
 			return TRUE;
 	}
 	return FALSE;
@@ -18758,7 +19464,11 @@ void CMainFrame::FOStopLoss()
 	{
 		CStopWarn	dlg;
 		if (dlg.DoModal() != IDOK)	return;
+#ifdef DF_USE_CPLUS17
 		m_foStoploss = new CStoploss(m_bar2.get());
+#else
+		m_foStoploss = new CStoploss(m_bar2);
+#endif
 		if (!m_foStoploss->Create(IDD_STOPLOSS))
 		{
 			delete m_foStoploss;
@@ -18858,9 +19568,9 @@ void CMainFrame::MDINextChild()
 		key = m_hooklist[m_vsN].GetAt(1);
 		const int firstKey = m_hooklist[m_vsN].GetAt(0);
 		m_hooklist[m_vsN].RemoveAt(0);
-		m_hooklist[m_vsN].Add(firstKey);	// Ã³ï¿½ï¿½ keyï¿½ï¿½ lastï¿½ï¿½
+		m_hooklist[m_vsN].Add(firstKey);	// Ã³À½ key¸¦ last·Î
 		m_hooklist[m_vsN].RemoveAt(0);
-		m_hooklist[m_vsN].InsertAt(0, key);	// ï¿½Î¹ï¿½Â° keyï¿½ï¿½ firstï¿½ï¿½
+		m_hooklist[m_vsN].InsertAt(0, key);	// µÎ¹øÂ° key¸¦ first·Î
 	}
 
 	CChildFrame*	child;
@@ -18914,6 +19624,7 @@ void CMainFrame::WriteFileData(CString sPath, CString sData, BOOL bCreate)
 
 void CMainFrame::checkDelayList()
 {
+#ifdef DF_USE_CPLUS17
 	CFileFind finder;
 	CString sPath;
 	sPath.Format("%s\\%s\\%s\\delayinfo", Axis::home, USRDIR, Axis::user);
@@ -18988,6 +19699,83 @@ void CMainFrame::checkDelayList()
 		END_CATCH;
 	}
 	finder.Close();
+#else
+	CFileFind finder;
+	CString sPath;
+	sPath.Format("%s\\%s\\%s\\delayinfo", Axis::home, USRDIR, Axis::user);
+	if (finder.FindFile(sPath))
+	{
+		TRY
+		{
+			CFile file;
+			CString sBuf;
+			if (file.Open(sPath, CFile::modeRead))
+			{
+				const long len = (long)file.GetLength();
+				file.Read(sBuf.GetBuffer(len + 1), len);
+				sBuf.ReleaseBuffer();
+				file.Close();
+				::DeleteFile(sPath);
+			}
+
+			const CTime curr = CTime::GetCurrentTime();
+			const int	dLen = sz_errmid;
+			char* pBuf = new char[dLen];
+			memset(pBuf, ' ', dLen);
+			_errmid* errmid = (_errmid*)pBuf;
+			const int	infoL = sizeof(errmid->info);		// 512
+
+			CString sData = "**Delay Mon**<br>";
+			CString sMap = m_sLastMapInfo;
+			sMap.Replace(MAPN_REALTIMEJANGO, "");
+			sMap.Replace("IBXXXX00", "");
+			sMap.Replace(MAPN_SISECATCH1, "");
+			sMap.Replace("IB", "");
+			if (m_sWin.IsEmpty())
+			{
+				m_sCpu = m_sysInfo->GetCPUInfo();	m_sCpu.TrimLeft();
+				m_sMem = m_sysInfo->GetMemoryInfo();
+			}
+
+			sData += sMap + "<br>" + m_sCpu + "<br>" + m_sMem + "<br>";
+			sData += sBuf;
+
+			if (sData.GetLength() >= infoL)
+				sData = sData.Left(infoL - 1);
+
+			sprintf(errmid->usid, Axis::userID);
+			strcpy(errmid->optn, "111");
+			sprintf(errmid->yymd, "%04d%02d%02d", curr.GetYear(), curr.GetMonth(), curr.GetDay());
+			sprintf(errmid->hmss, "%02d%02d%02d", curr.GetHour(), curr.GetMinute(), curr.GetSecond());
+
+			if (m_ipAddr.IsEmpty())
+			{
+				::gethostname(errmid->ipad, sizeof(errmid->ipad));
+				if (lstrcmp(errmid->ipad, "") != 0)
+				{
+					const HOSTENT FAR* lphostent = ::gethostbyname(errmid->ipad);
+					if (lphostent)
+					{
+						sprintf(errmid->ipad, "%s", inet_ntoa(*((struct in_addr*)lphostent->h_addr)));
+					}
+				}
+				m_ipAddr.Format("%s", errmid->ipad);
+			}
+			const int ipadL = min(sizeof(errmid->ipad), m_ipAddr.GetLength());
+			sprintf(errmid->ipad, "%s", m_ipAddr.Left(ipadL));
+			sprintf(errmid->info, sData);
+
+			const bool bret = sendTR("pihoerpt", pBuf, dLen, US_PASS, 'd');
+			delete[] pBuf;
+		}
+			CATCH(CFileException, e)
+		{
+		}
+		END_CATCH;
+	}
+	finder.Close();
+#endif
+
 }
 
 void CMainFrame::SetLastMaps(CString sRemoveMap, CString sInsertMap)
@@ -19179,7 +19967,11 @@ void CMainFrame::TotalSetup(UINT id)
 	if (!id)
 		id = IDD_ESETUP;
 
+#ifdef DF_USE_CPLUS17
 	CTotalSetup dlg(m_tMenu.get(), id, 0, this);
+#else
+	CTotalSetup dlg(m_tMenu, id, this);
+#endif
 	dlg.DoModal();
 
 	if (dlg.IsApplied(IDD_ESETUP))
@@ -19262,17 +20054,27 @@ void CMainFrame::load_tickInfo()
 	**/
 
 	CProfile profile(pkAxisTicker);
+#ifdef DF_USE_CPLUS17
 	ShowControlBar(m_tInfo1.get(), profile.GetInt(szGeneral, "view1", 1), FALSE);
 	ShowControlBar(m_tInfo2.get(), profile.GetInt(szGeneral, "view2", 1), FALSE);
-
-	//È­ï¿½ï¿½ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½
+#else
+	ShowControlBar(m_tInfo1, profile.GetInt(szGeneral, "view1", 1), FALSE);
+	ShowControlBar(m_tInfo2, profile.GetInt(szGeneral, "view2", 1), FALSE);
+#endif
+	//È­¸é¸ñ·Ï¹Ù Àû¿ë
+#ifdef DF_USE_CPLUS17
 	ShowControlBar(m_bar2.get(), profile.GetInt(szGeneral, "screenbar", 1), FALSE);
 	if (profile.GetInt(szGeneral, "screenbar", 1) && (m_bar0->GetStyle() & WS_VISIBLE))
 		ShowControlBar(m_bar0.get(), TRUE, FALSE);
+#else
+	ShowControlBar(m_bar2, profile.GetInt(szGeneral, "screenbar", 1), FALSE);
+	if (profile.GetInt(szGeneral, "screenbar", 1) && (m_bar0->GetStyle() & WS_VISIBLE))
+		ShowControlBar(m_bar0, TRUE, FALSE);
+#endif
 
 	saveToolStatus();
 	SetSDIChangeHeight();
-	//È­ï¿½ï¿½ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+	//È­¸é¸ñ·Ï¹Ù Àû¿ë ³¡
 	
 	if (m_bSDI)
 	{
@@ -19284,9 +20086,9 @@ void CMainFrame::load_tickInfo()
 void CMainFrame::processMapVersionInfo(WPARAM wParam, LPARAM lParam)
 {
 	/**
-	ï¿½ï¿½È­ï¿½ï¿½ ï¿½Ç½Ã°ï¿½ Update
-  : FEV_VERS ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-    lParam   : È­ï¿½ï¿½ï¿½ \t È­ï¿½ï¿½ï¿½ \t ...
+	¸ÊÈ­¸é ½Ç½Ã°£ Update
+  : FEV_VERS ¸Þ½ÃÁö·Î Àü´Þ
+    lParam   : È­¸é¸í \t È­¸é¸í \t ...
     wParam : lParam length 
 	**/
 
@@ -19323,7 +20125,7 @@ void CMainFrame::processMapVersionInfo(WPARAM wParam, LPARAM lParam)
 			if (IsExistMap(maps[i]))
 			{
 				ShowMngInfo(
-					Format("[%s] %s È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.", maps[i], GetMapName(maps[i])), 0);
+					Format("[%s] %s È­¸éÀÌ º¯°æµÇ¾ú½À´Ï´Ù.", maps[i], GetMapName(maps[i])), 0);
 			}
 		}
 	}
@@ -19397,16 +20199,241 @@ CString CMainFrame::GetMapName(const char* mapName)
 	return m_tMenu->GetDesc(Format("IB%s00", mapName));
 }
 
+//CString CMainFrame::get_glb_addr(char* macaddr, char* ip)
+//{
+//	OutputDebugString("GLB -------get_glb_addr------\n");
+//	CString file;
+//	file.Format("%s\\exe\\axisglb.dll", Axis::home);
+//
+//	typedef long (WINAPI* GETGLBFUNC)(char*, char*, int, char*, int, bool);
+//	HMODULE hModule = LoadLibrary(file);
+//	CString ips("");
+//
+//	if (hModule)
+//	{
+//		GETGLBFUNC func = (GETGLBFUNC)GetProcAddress(hModule, "axGetGLB");
+//		if (func)
+//		{
+//			typedef struct {
+//				char user[12];
+//				char pass[8];
+//				char dats[10];
+//				char cpas[30];
+//				char uips[15];
+//				char madr[16];
+//				char fill[32];
+//			} axglbM;
+//
+//			typedef struct {
+//				char result;  // R: ok  X: failed (ip´Â ÁØ´Ù) ===> X, R ÀÌ¿ÜÀÇ ÇÃ·¡±×ÀÏ °æ¿ì ÃßÈÄ ¸Þ½ÃÁö Ã³¸® °¡´É.
+//				char ip[16];
+//				char ecod[1];
+//				char verx[32];
+//			} axglbRcv;
+//
+//			axglbM* mid{};
+//			mid = new axglbM;
+//			//axglbRcv* mod{};
+//			//mod = new axglbRcv;
+//			char* pdata{};
+//			pdata = new char[sizeof(axglbRcv) + 50];
+//			memset(pdata, ' ', sizeof(axglbRcv) + 50);
+//			axglbRcv* mod = (axglbRcv*)pdata;
+//
+//			if (m_bUseNewLogin)
+//			{
+//				CString str = m_axConnect->GetSignInfo();
+//
+//				Axis::userID = m_axConnect->GetUserID();
+//				m_pass = m_axConnect->GetPassword();
+//				m_cpass = m_axConnect->GetCPass();
+//
+//				memset(mid, ' ', sizeof(axglbM));
+//				memset(mod, ' ', sizeof(axglbRcv));
+//				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
+//				FormatCopy(mid->user, Axis::userID);
+//				FormatCopy(mid->pass, "");
+//				CopyMemory(mid->dats, str, str.GetLength());
+//				FormatCopy(mid->cpas, "");
+//				FormatCopy(mid->uips, ip);
+//				FormatCopy(mid->madr, macaddr);
+//
+//				if (m_regkey.Find("STAFF") >= 0)
+//					FormatCopy(mid->fill, "HTS_HOT_STAFF_0001");   //vc2019
+//				else
+//					FormatCopy(mid->fill, "HTS_HOT_0001");
+//
+//				int len = func((char*)(const char*)(Axis::home + "\\" + TABDIR),
+//					(char*)mid, sizeof(axglbM), (char*)mod, sizeof(axglbRcv), (bool)!Axis::isCustomer);
+//
+//				ips = CString(mod->ip, sizeof(mod->ip));
+//				ips.TrimRight();
+//				m_slog.Format("GLB IP = [%s]\n", ips);
+//				OutputDebugString(m_slog);
+//				WriteLog(m_slog);
+//
+//			}
+//			else
+//			{
+//				CString str = m_axConnectOld->GetSignInfo();
+//
+//				Axis::userID = m_axConnectOld->GetUserID();
+//				m_pass = m_axConnectOld->GetPassword();
+//				m_cpass = m_axConnectOld->GetCPass();
+//
+//				memset(mid, ' ', sizeof(axglbM));
+//				memset(mod, ' ', sizeof(axglbRcv));
+//				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
+//				FormatCopy(mid->user, Axis::userID);
+//				FormatCopy(mid->pass, "");
+//				CopyMemory(mid->dats, str, str.GetLength());
+//				FormatCopy(mid->cpas, "");
+//				FormatCopy(mid->uips, ip);
+//				FormatCopy(mid->madr, macaddr);
+//
+//				if (m_regkey.Find("STAFF") >= 0)
+//					FormatCopy(mid->fill, "HTS_HOT_STAFF_0001");   //vc2019
+//				else
+//					FormatCopy(mid->fill, "HTS_HOT_0001");
+//
+//				int len = func((char*)(const char*)(Axis::home + "\\" + TABDIR),
+//					(char*)mid, sizeof(axglbM), (char*)mod, sizeof(axglbRcv), (bool)!Axis::isCustomer);
+//
+//				ips = CString(mod->ip, sizeof(mod->ip));
+//				ips.TrimRight();
+//				WriteLog(m_slog);
+//			}
+//
+//			m_axis->WriteProfileString(INFORMATION, "Server", ips);
+//		}
+//		FreeLibrary(hModule);
+//	}
+//
+//	return ips;
+//}
+//
+//CString CMainFrame::get_glb_addr_Index(char* macaddr, char* ip)
+//{
+//	OutputDebugString("GLB -------get_glb_addr_Index------\n");
+//
+//
+//	CString file;
+//	file.Format("%s\\exe\\axisglb.dll", Axis::home);
+//
+//	typedef long (WINAPI* GETGLBFUNC)(char*, char*, int, char*, int, int, bool);
+//	HMODULE hModule = LoadLibrary(file);
+//	CString ips("");
+//
+//	if (hModule)
+//	{
+//		GETGLBFUNC func = (GETGLBFUNC)GetProcAddress(hModule, "axGetGLB_Index");
+//		if (func)
+//		{
+//			typedef struct {
+//				char user[12];
+//				char pass[8];
+//				char dats[10];
+//				char cpas[30];
+//				char uips[15];
+//				char madr[16];
+//				char fill[32];
+//			} axglbM;
+//
+//			typedef struct {
+//				char result;  // R: ok  X: failed (ip´Â ÁØ´Ù) ===> X, R ÀÌ¿ÜÀÇ ÇÃ·¡±×ÀÏ °æ¿ì ÃßÈÄ ¸Þ½ÃÁö Ã³¸® °¡´É.
+//				char ip[16];
+//				char ecod[1];
+//				char verx[32];
+//			} axglbRcv;
+//
+//			axglbM* mid{};
+//			mid = new axglbM;
+//			//axglbRcv* mod{};
+//			//mod = new axglbRcv;
+//			char* pdata{};
+//			pdata = new char[sizeof(axglbRcv) + 50];
+//			memset(pdata, ' ', sizeof(axglbRcv) + 50);
+//			axglbRcv* mod = (axglbRcv*)pdata;
+//
+//			if (m_bUseNewLogin)
+//			{
+//				CString str = m_axConnect->GetSignInfo();
+//
+//				Axis::userID = m_axConnect->GetUserID();
+//				m_pass = m_axConnect->GetPassword();
+//				m_cpass = m_axConnect->GetCPass();
+//
+//				memset(mid, ' ', sizeof(axglbM));
+//				memset(mod, ' ', sizeof(axglbRcv));
+//				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
+//				FormatCopy(mid->user, Axis::userID);
+//				FormatCopy(mid->pass, "");
+//				CopyMemory(mid->dats, str, str.GetLength());
+//				FormatCopy(mid->cpas, "");
+//				FormatCopy(mid->uips, ip);
+//				FormatCopy(mid->madr, macaddr);
+//				if (m_regkey.Find("STAFF") >= 0)
+//					FormatCopy(mid->fill, "HTS_HOT_STAFF_0001");   //vc2019
+//				else
+//					FormatCopy(mid->fill, "HTS_HOT_0001");
+//
+//				int len = func((char*)(const char*)(Axis::home + "\\" + TABDIR),
+//					(char*)mid, sizeof(axglbM), (char*)mod, sizeof(axglbRcv), m_iGlbIndex, (bool)!Axis::isCustomer);
+//
+//				ips = CString(mod->ip, sizeof(mod->ip));
+//				ips.TrimRight();
+//				m_slog.Format("GLB IP = [%s]\n", ips);
+//				OutputDebugString(m_slog);
+//				WriteLog(m_slog);
+//			}
+//			else
+//			{
+//				CString str = m_axConnectOld->GetSignInfo();
+//
+//				Axis::userID = m_axConnectOld->GetUserID();
+//				m_pass = m_axConnectOld->GetPassword();
+//				m_cpass = m_axConnectOld->GetCPass();
+//
+//				memset(mid, ' ', sizeof(axglbM));
+//				memset(mod, ' ', sizeof(axglbRcv));
+//				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
+//				FormatCopy(mid->user, Axis::userID);
+//				FormatCopy(mid->pass, "");
+//				CopyMemory(mid->dats, str, str.GetLength());
+//				FormatCopy(mid->cpas, "");
+//				FormatCopy(mid->uips, ip);
+//				FormatCopy(mid->madr, macaddr);
+//				if (m_regkey.Find("STAFF") >= 0)
+//					FormatCopy(mid->fill, "HTS_HOT_STAFF_0001");   //vc2019
+//				else
+//					FormatCopy(mid->fill, "HTS_HOT_0001");
+//
+//				int len = func((char*)(const char*)(Axis::home + "\\" + TABDIR),
+//					(char*)mid, sizeof(axglbM), (char*)mod, sizeof(axglbRcv), m_iGlbIndex, (bool)!Axis::isCustomer);
+//
+//				ips = CString(mod->ip, sizeof(mod->ip));
+//				ips.TrimRight();
+//				WriteLog(m_slog);
+//			}
+//
+//			m_axis->WriteProfileString(INFORMATION, "Server", ips);
+//		}
+//		FreeLibrary(hModule);
+//	}
+//
+//	return ips;
+//}
+
 CString CMainFrame::get_glb_addr(char* macaddr, char* ip)
 {
-OutputDebugString("GLB -------get_glb_addr------\n");
+	OutputDebugString("GLB -------get_glb_addr------\n");
 	CString file;
 	file.Format("%s\\exe\\axisglb.dll", Axis::home);
 
-	typedef long (WINAPI *GETGLBFUNC)(char*, char*, int, char*, int, bool);
+	typedef long (WINAPI* GETGLBFUNC)(char*, char*, int, char*, int, bool);
 	HMODULE hModule = LoadLibrary(file);
 	CString ips("");
-	
+
 	if (hModule)
 	{
 		GETGLBFUNC func = (GETGLBFUNC)GetProcAddress(hModule, "axGetGLB");
@@ -19423,26 +20450,26 @@ OutputDebugString("GLB -------get_glb_addr------\n");
 			} axglbM;
 
 			typedef struct {
-				char result;  // R: ok  X: failed (ipï¿½ï¿½ ï¿½Ø´ï¿½) ===> X, R ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+				char result;  // R: ok  X: failed (ip´Â ÁØ´Ù) ===> X, R ÀÌ¿ÜÀÇ ÇÃ·¡±×ÀÏ °æ¿ì ÃßÈÄ ¸Þ½ÃÁö Ã³¸® °¡´É.
 				char ip[16];
 				char ecod[1];
 				char verx[32];
-			} axglbRcv; 
+			} axglbRcv;
 
 			axglbM* mid{};   mid = new axglbM;
 			axglbRcv* mod{}; mod = new axglbRcv;
 
-			if(m_bUseNewLogin)
+			if (m_bUseNewLogin)
 			{
 				CString str = m_axConnect->GetSignInfo();
 
 				Axis::userID = m_axConnect->GetUserID();
 				m_pass = m_axConnect->GetPassword();
-				m_cpass  = m_axConnect->GetCPass();
+				m_cpass = m_axConnect->GetCPass();
 
 				memset(mid, ' ', sizeof(axglbM));
 				memset(mod, ' ', sizeof(axglbRcv));
-				//ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ - 2012.10.07
+				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
 				FormatCopy(mid->user, Axis::userID);
 				FormatCopy(mid->pass, "");
 				CopyMemory(mid->dats, str, str.GetLength());
@@ -19457,7 +20484,7 @@ OutputDebugString("GLB -------get_glb_addr------\n");
 
 				OutputDebugString("GLB -------get_glb_addr------  HTS_HOT_0001\n");
 
-				int len =  func((char*)(const char*)(Axis::home + "\\" + TABDIR), 
+				int len = func((char*)(const char*)(Axis::home + "\\" + TABDIR),
 					(char*)mid, sizeof(axglbM), (char*)mod, sizeof(axglbRcv), (bool)!Axis::isCustomer);
 
 				m_slog.Format("GLB   [%s]\n", mod->ip);
@@ -19469,14 +20496,14 @@ OutputDebugString("GLB -------get_glb_addr------\n");
 			else
 			{
 				CString str = m_axConnectOld->GetSignInfo();
-				
+
 				Axis::userID = m_axConnectOld->GetUserID();
 				m_pass = m_axConnectOld->GetPassword();
-				m_cpass  = m_axConnectOld->GetCPass();
-				
+				m_cpass = m_axConnectOld->GetCPass();
+
 				memset(mid, ' ', sizeof(axglbM));
 				memset(mod, ' ', sizeof(axglbRcv));
-				//ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ - 2012.10.07
+				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
 				FormatCopy(mid->user, Axis::userID);
 				FormatCopy(mid->pass, "");
 				CopyMemory(mid->dats, str, str.GetLength());
@@ -19488,15 +20515,15 @@ OutputDebugString("GLB -------get_glb_addr------\n");
 					FormatCopy(mid->fill, "HTS_HOT_STAFF_0001");   //vc2019
 				else
 					FormatCopy(mid->fill, "HTS_HOT_0001");
-				
-				int len =  func((char*)(const char*)(Axis::home + "\\" + TABDIR), 
+
+				int len = func((char*)(const char*)(Axis::home + "\\" + TABDIR),
 					(char*)mid, sizeof(axglbM), (char*)mod, sizeof(axglbRcv), (bool)!Axis::isCustomer);
-				
+
 				ips = CString(mod->ip, sizeof(mod->ip));
 				ips.TrimRight();
 			}
 
-			m_axis->WriteProfileString(INFORMATION, "Server", ips);	
+			m_axis->WriteProfileString(INFORMATION, "Server", ips);
 		}
 		FreeLibrary(hModule);
 	}
@@ -19506,16 +20533,16 @@ OutputDebugString("GLB -------get_glb_addr------\n");
 
 CString CMainFrame::get_glb_addr_Index(char* macaddr, char* ip)
 {
-OutputDebugString("GLB -------get_glb_addr_Index------\n");
+	OutputDebugString("GLB -------get_glb_addr_Index------\n");
 
 
 	CString file;
 	file.Format("%s\\exe\\axisglb.dll", Axis::home);
-	
-	typedef long (WINAPI *GETGLBFUNC)(char*, char*, int, char*, int, int, bool);
+
+	typedef long (WINAPI* GETGLBFUNC)(char*, char*, int, char*, int, int, bool);
 	HMODULE hModule = LoadLibrary(file);
 	CString ips("");
-	
+
 	if (hModule)
 	{
 		GETGLBFUNC func = (GETGLBFUNC)GetProcAddress(hModule, "axGetGLB_Index");
@@ -19530,28 +20557,28 @@ OutputDebugString("GLB -------get_glb_addr_Index------\n");
 				char madr[16];
 				char fill[32];
 			} axglbM;
-			
+
 			typedef struct {
-				char result;  // R: ok  X: failed (ipï¿½ï¿½ ï¿½Ø´ï¿½) ===> X, R ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+				char result;  // R: ok  X: failed (ip´Â ÁØ´Ù) ===> X, R ÀÌ¿ÜÀÇ ÇÃ·¡±×ÀÏ °æ¿ì ÃßÈÄ ¸Þ½ÃÁö Ã³¸® °¡´É.
 				char ip[16];
 				char ecod[1];
 				char verx[32];
-			} axglbRcv; 
-			
+			} axglbRcv;
+
 			axglbM* mid{};  mid = new axglbM;
 			axglbRcv* mod{}; mod = new  axglbRcv;
-			
-			if(m_bUseNewLogin)
+
+			if (m_bUseNewLogin)
 			{
 				CString str = m_axConnect->GetSignInfo();
-				
+
 				Axis::userID = m_axConnect->GetUserID();
 				m_pass = m_axConnect->GetPassword();
-				m_cpass  = m_axConnect->GetCPass();
-				
-				memset(mid, ' ', sizeof(mid));
-				memset(mod, ' ', sizeof(mod));
-				//ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ - 2012.10.07
+				m_cpass = m_axConnect->GetCPass();
+
+				memset(mid, ' ', sizeof(axglbM));
+				memset(mod, ' ', sizeof(axglbRcv));
+				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
 				FormatCopy(mid->user, Axis::userID);
 				FormatCopy(mid->pass, "");
 				CopyMemory(mid->dats, str, str.GetLength());
@@ -19563,24 +20590,24 @@ OutputDebugString("GLB -------get_glb_addr_Index------\n");
 					FormatCopy(mid->fill, "HTS_HOT_STAFF_0001");   //vc2019
 				else
 					FormatCopy(mid->fill, "HTS_HOT_0001");
-				
-				int len =  func((char*)(const char*)(Axis::home + "\\" + TABDIR), 
+
+				int len = func((char*)(const char*)(Axis::home + "\\" + TABDIR),
 					(char*)mid, sizeof(axglbM), (char*)mod, sizeof(axglbRcv), m_iGlbIndex, (bool)!Axis::isCustomer);
-				
+
 				ips = CString(mod->ip, sizeof(mod->ip));
 				ips.TrimRight();
 			}
 			else
 			{
 				CString str = m_axConnectOld->GetSignInfo();
-				
+
 				Axis::userID = m_axConnectOld->GetUserID();
 				m_pass = m_axConnectOld->GetPassword();
-				m_cpass  = m_axConnectOld->GetCPass();
-				
-				memset(mid, ' ', sizeof(mid));
-				memset(mod, ' ', sizeof(mod));
-				//ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ - 2012.10.07
+				m_cpass = m_axConnectOld->GetCPass();
+
+				memset(mid, ' ', sizeof(axglbM));
+				memset(mod, ' ', sizeof(axglbRcv));
+				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
 				FormatCopy(mid->user, Axis::userID);
 				FormatCopy(mid->pass, "");
 				CopyMemory(mid->dats, str, str.GetLength());
@@ -19592,19 +20619,19 @@ OutputDebugString("GLB -------get_glb_addr_Index------\n");
 					FormatCopy(mid->fill, "HTS_HOT_STAFF_0001");   //vc2019
 				else
 					FormatCopy(mid->fill, "HTS_HOT_0001");
-				
-				int len =  func((char*)(const char*)(Axis::home + "\\" + TABDIR), 
+
+				int len = func((char*)(const char*)(Axis::home + "\\" + TABDIR),
 					(char*)mid, sizeof(axglbM), (char*)mod, sizeof(axglbRcv), m_iGlbIndex, (bool)!Axis::isCustomer);
-				
+
 				ips = CString(mod->ip, sizeof(mod->ip));
 				ips.TrimRight();
 			}
-			
-			m_axis->WriteProfileString(INFORMATION, "Server", ips);	
+
+			m_axis->WriteProfileString(INFORMATION, "Server", ips);
 		}
 		FreeLibrary(hModule);
 	}
-	
+
 	return ips;
 }
 
@@ -19876,7 +20903,7 @@ void CMainFrame::SetUserInfo()
 	if (pos >= 0)
 	{
 #if 0
-		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½È£È­ ï¿½ï¿½ï¿½ï¿½
+		// Á÷¿ø¸¸ µð·ºÅä¸® ¾ÏÈ£È­ Àû¿ë
 		if (Axis::isCustomer)
 		{
 			Axis::userNM = Axis::userID.Mid(pos + 1);
@@ -19933,33 +20960,33 @@ void CMainFrame::DoFunc(int funcID)
 {
 	switch (funcID - CTRL_FUNC)
 	{
-	case 1: // È¯ï¿½æ¼³ï¿½ï¿½
+	case 1: // È¯°æ¼³Á¤
 		TotalSetup();
 		break;
-	case 2: // ï¿½Î¼ï¿½
+	case 2: // ÀÎ¼â
 		printImg();
 		break;
-	case 3: // È­ï¿½ï¿½ï¿½ï¿½ï¿½
+	case 3: // È­¸éÀá±Ý
 		LockProg();
 		break;
-	case 4: // ï¿½ï¿½ï¿½Âºï¿½Ð¹ï¿½È£ï¿½ï¿½ï¿½ï¿½
+	case 4: // °èÁÂºñ¹Ð¹øÈ£ÀúÀå
 		AcctPasswordConfig();
 		break;
-	case 5: // ï¿½ï¿½ï¿½ï¿½ï¿½ WORKSPACE
+	case 5: // »ç¿ëÀÚ WORKSPACE
 		//ShowUScreenMenu();
 		saveUserScreen();
 		break;
-	case 6: // ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½
+	case 6: // Áõ±Ç°è»ê±â
 		ExecuteCalculator();
 		break;
-	case 7: // ï¿½Ø¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç½Ã°ï¿½Æ¼Ä¿
+	case 7: // ÇØ¿ÜÁö¼ö ½Ç½Ã°£Æ¼Ä¿
 		/*RunForeignMap();*/
 		RunNewRealTick();
 		break;
-	case 8: // ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½)
+	case 8: // ÀÌ¹ÌÁöÀúÀå(ÇöÀçÈ­¸é)
 		saveImg();
 		break;
-	case 9: // ï¿½ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½
+	case 9: // ¿¢¼¿½Ã¼¼¿¬µ¿
 		m_mapHelper->ChangeChild(MAPN_LINKEXCEL);
 		break;
 	case 11: //EP
@@ -19986,7 +21013,7 @@ void CMainFrame::GoHomepage()
 
 void CMainFrame::UnderConstruction()
 {
-	Axis::MessageBox(this, "ï¿½Øºï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.", MB_ICONINFORMATION);
+	Axis::MessageBox(this, "ÁØºñÁßÀÔ´Ï´Ù.", MB_ICONINFORMATION);
 }
 
 void CMainFrame::RecalcFrame()
@@ -20029,14 +21056,23 @@ CRect CMainFrame::GetWndRect()
 
 CWnd* CMainFrame::GetClock()
 {
+#ifdef DF_USE_CPLUS17
 	return m_Nclock.get();
+#else
+	return m_Nclock;
+#endif
+	
 }
 
 void CMainFrame::GetLocalIP()
 {
+	if (m_ipAddr.GetLength() > 0)
+		return;
 	//m_ipAddr = "172.17.2.74";
 	//return;
 	char szHostName[64] = {0};
+	m_slog.Format("GetLocalIP");
+	WriteLog(m_slog);
 
 	::gethostname(szHostName, sizeof(szHostName));
 
@@ -20052,7 +21088,10 @@ void CMainFrame::GetLocalIP()
 		CSocket	sock;
 		sock.Create();
 
-		if (sock.Connect(serverips, port))
+		m_slog.Format("GetLocalIP serverips =[%s] [%s]", serverips, szHostName);
+		WriteLog(m_slog);
+
+		if (serverips.GetLength() > 0 && sock.Connect(serverips, port))
 		{
 			IN_ADDR	in{};
 			SOCKADDR_IN sockAddr{};
@@ -20090,7 +21129,7 @@ void CMainFrame::InitFirewall()
 // 	m_Npnx.m_strCurrentPath =	Axis::home + "\\exe";
 // 
 // //	m_Npnx.m_strCustomerID =	"ibkistest";
-// 	m_Npnx.m_strCustomerID =	"ibkis";					//** npn_ï¿½ï¿½Ã¼ï¿½ï¿½.conf
+// 	m_Npnx.m_strCustomerID =	"ibkis";					//** npn_¾÷Ã¼¸í.conf
 // 	
 // 	m_Npnx.m_strModulePath =	Axis::home + "\\exe";
 // 	m_Npnx.m_hWnd = GetSafeHwnd();
@@ -20122,7 +21161,7 @@ void CMainFrame::InitFirewall()
 	if( npenkAppInstall5WIN::eErr_True != dwErr )
 	{
 		CString ssErrMsg;
-		ssErrMsg.Format( _T("ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ %x\n"), dwErr );
+		ssErrMsg.Format( _T("¿¡·¯ ¸Þ¼¼Áö %x\n"), dwErr );
 		OutputDebugString(ssErrMsg);
 	}
 	else
@@ -20194,7 +21233,7 @@ LRESULT CMainFrame::OnPhonePad(WPARAM wParam, LPARAM lParam)
 		sendDllMessage(child->m_hWnd, (long) ddd.operator LPCTSTR());
 		if (!stopDllMessage)
 		{
-			//MessageBox("ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ô·Â¶ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			//MessageBox("ºñ¹Ð¹øÈ£ ÀÔ·Â¶õÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
 		}
 		
 	}	
@@ -20248,7 +21287,7 @@ void CMainFrame::ReadPhonePad(int fill)
 	return;
 			
 
-	//==============ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½============
+	//==============Æ÷Æ® ¿­±â============
 	if(PHONEPAD_PortOpen(0))
 	{
 		PHONEPAD_InitDevice();
@@ -20267,16 +21306,16 @@ void CMainFrame::ReadPhonePad(int fill)
 			
 		}
 		
-		MessageBox("ï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(Port Open Success)!!","IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+		MessageBox("ÆùÆÐµå ¿¬°á ¼º°ø(Port Open Success)!!","IBKÅõÀÚÁõ±Ç");
 	}
 	else
 	{
 		//char * tmp = "0423";
 		//PostMessage(WM_PHONEPAD,0,(long)tmp);
-		MessageBox("ï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(Port Open Failure)!!","IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+		MessageBox("ÆùÆÐµå ¿¬°á ½ÇÆÐ(Port Open Failure)!!","IBKÅõÀÚÁõ±Ç");
 		return;
 	}
-	//==============ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½============
+	//==============ºñ¹Ð¹øÈ£ ÀÐ¾î¿À±â ½ÃÀÛ============
 	// TODO: Add your control notification handler code here
 	char * temp = NULL;
 	int  loop=1;
@@ -20297,14 +21336,14 @@ void CMainFrame::ReadPhonePad(int fill)
 		case 1: 
 			loop = 0; 
 			temp = PHONEPAD_GetPassWDSTR();
-			break;     //  ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ô·Â¿Ï·ï¿½
+			break;     //  ºñ¹Ð¹øÈ£ ÀÔ·Â¿Ï·á
 			
 		case 2: 
-			MessageBox("ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.","IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+			MessageBox("½Ã°£À» ÃÊ°úÇÏ¿´½À´Ï´Ù.","IBKÅõÀÚÁõ±Ç");
 			m_phone_dlgs->CloseWindow();
 			//m_phone_dlgs = NULL;
 			return; 
-			break;       //  ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ô·ï¿½ï¿½ï¿½ï¿½
+			break;       //  ºñ¹Ð¹øÈ£ ÀÔ·ÂÃë¼Ò
 		}
 		Sleep(300);
 		
@@ -20315,10 +21354,10 @@ void CMainFrame::ReadPhonePad(int fill)
 	{
 		m_phone_dlgs->CloseWindow();
 		//m_phone_dlgs = NULL;
-		MessageBox("ï¿½Ô·ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.","IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+		MessageBox("ÀÔ·Â ½Ã°£ÀÌ ÃÊ°úµÇ¾ú½À´Ï´Ù.","IBKÅõÀÚÁõ±Ç");
 		
 	}	
-	//ï¿½Þ¾Æ¿ï¿½ ï¿½ï¿½Ð¹ï¿½È£
+	//¹Þ¾Æ¿Â ºñ¹Ð¹øÈ£
 	//AfxMessageBox((LPCTSTR)temp);
 	CString g_pwd = temp;
 	//AfxMessageBox(g_pwd);
@@ -20329,9 +21368,9 @@ void CMainFrame::ReadPhonePad(int fill)
 	//PostMessage(WM_PHONEPAD,0,(long)g_pwd.operator LPCTSTR());
 	//m_stpw.SetWindowText((LPCTSTR)temp);
 	
-	//==============ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½============
+	//==============ºñ¹Ð¹øÈ£ ÀÐ¾î¿À±â ³¡============
 	
-	//==============ï¿½ï¿½Æ® ï¿½Ý±ï¿½============
+	//==============Æ÷Æ® ´Ý±â============
 	PHONEPAD_PortClose();
 
 }
@@ -20384,7 +21423,7 @@ void CMainFrame::SetPwd(CString strpwd)
 		sendDllMessage(child->m_hWnd, (long) dat.operator LPCTSTR());
 		if (!stopDllMessage)
 		{
-			//MessageBox("ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ô·Â¶ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			//MessageBox("ºñ¹Ð¹øÈ£ ÀÔ·Â¶õÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
 		}
 	}	
 
@@ -20419,7 +21458,7 @@ bool CMainFrame::CheckClientWidth(CChildFrame*	child, int preFontSize)
 		const int value = m_preFontSize;
 		if(value>0)
 		{
-			const int ret = MessageBox("Ç¥ï¿½ï¿½ï¿½Ò¼ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï½Ã°Ú½ï¿½ï¿½Ï±ï¿½?","IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",MB_YESNO);
+			const int ret = MessageBox("Ç¥½ÃÇÒ¼ö ÀÖ´Â ¹üÀ§¸¦ ¹þ¾î ³µ½À´Ï´Ù.\n°è¼ÓÁøÇàÇÏ½Ã°Ú½À´Ï±î?","IBKÅõÀÚÁõ±Ç",MB_YESNO);
 			if (ret == IDNO)
 				return false;
 		}
@@ -20430,7 +21469,7 @@ bool CMainFrame::CheckClientWidth(CChildFrame*	child, int preFontSize)
 void CMainFrame::CheckSoundConfig()
 {
 #if 1
-	// ï¿½Æ·ï¿½ ï¿½ï¿½Æ¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Pathï¿½ï¿½ ï¿½ï¿½ï¿½Ô´Âµï¿½ ï¿½Ï´ï¿½!
+	// ¾Æ·¡ ·çÆ¾ÀÌ ½ÇÁ¦ ¼³Á¤ÆÄÀÏÀÇ Path¸¦ ±ú¸Ô´Âµí ÇÏ´Ù!
 	return;
 #else
 	CString ordcfg_path = Format("%s\\%s\\%s\\%s", Axis::home, USRDIR, Axis::user, "ordcfg.ini");
@@ -20447,7 +21486,7 @@ void CMainFrame::CheckSoundConfig()
 		m_waveF[IDX_MSCON]   = profile.GetString(section, "SOUNDFILE_MSCON",   m_waveF[IDX_MSCON]);
 		m_waveF[IDX_REFUSAL] = profile.GetString(section, "SOUNDFILE_REFUSAL", m_waveF[IDX_REFUSAL]);
 		
-		//ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		//ÃÊ±â ¼³Á¤°ª º¯°æ
 		for(int i=0; i<7;i++)
 		{
 			if (m_waveF[i].Find("C:\\Program Files\\IBKS\\HTS"))
@@ -20483,15 +21522,15 @@ void CMainFrame::CheckNewsSetting()
 	CString	file, section, keys, value;
 	bool m_bHk = false;
 	bool m_bMk = false;
-	bool m_bAs = false; //ï¿½Æ½Ã¾Æ°ï¿½ï¿½ï¿½
-	bool m_bHr = false; //ï¿½ì·²ï¿½ï¿½ï¿½ï¿½ï¿½
+	bool m_bAs = false; //¾Æ½Ã¾Æ°æÁ¦
+	bool m_bHr = false; //Çì·²µå°æÁ¦
 	int idx = -1;
 	int bx = -1; int by = -1;
 
 	file.Format("%s\\user\\%s\\%s", Axis::home, Axis::user, TICKSETUP);
 	if(!IsFileExist(file)) return;
 	//if (GetPrivateProfileInt("InitNewsVer", "VER", 0, file)>0) return;
-
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr<_tickitem>item = std::make_unique<_tickitem>();
 	for (int ii = 0; ii < TICKBAR_CNT; ii++)
 	{
@@ -20534,6 +21573,55 @@ void CMainFrame::CheckNewsSetting()
 			}
 		}
 	}
+#else
+	_tickitem* item = new _tickitem;
+	for (int ii = 0; ii < TICKBAR_CNT; ii++)
+	{
+		for (int jj = 0; jj < SPLIT_CNT; jj++)
+		{
+			section.Format("BAR_INFO_%d%d", ii, jj);
+			item->kind = GetPrivateProfileInt(section, "INDEXK", 0, file);
+			switch (item->kind)
+			{
+			case TKIND_NEWS:
+			{
+				bx = ii; by = jj;
+				item->aux = 0;
+				item->sAry.RemoveAll();
+				item->selectN = 0;
+				int hh = 0;
+				for (int kk = 0; ; kk++)
+				{
+					keys.Format("%02d", kk);
+					hh = GetPrivateProfileInt(section, keys, -1, file);
+					idx = kk;
+					if (hh == -1)	break;
+					value.Format("%d", hh);
+					if (hh == 12) m_bHr = true;
+					if (hh == 11) m_bAs = true;
+					if (hh == 10) m_bMk = true;
+					if (hh == 9) m_bHk = true;
+					item->sAry.Add(value);
+				}
+				//keys = _T("AUX");
+				//item->aux = GetPrivateProfileInt(section, keys, 0, file);
+
+				//if (!item->sAry.GetSize())	item->sAry.Add("1");
+			}
+			break;
+
+			default:
+				//AfxMessageBox("Tick infomation load Error!");
+				continue;
+			}
+		}
+	}
+
+	// 2011.07.22 leak! by warship
+	delete item; item = NULL;
+#endif
+	
+	
 
 	if ((bx==-1) ||(by==-1)||(idx==-1)) return;
 	if (GetPrivateProfileInt("InitNewsVer", "VER", 0, file)<=0)
@@ -20586,7 +21674,7 @@ void CMainFrame::CheckNewsSetting()
 		}
 	}
 
-	//IR GO  , ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+	//IR GO  , ÄÁ½´¸ÓÅ¸ÀÓÁî ´º½º Ãß°¡
 	CString slog;
 	if(GetPrivateProfileInt("InitNewsVer", "VER", 0, file) != 2)
 	{
@@ -20620,7 +21708,7 @@ void CMainFrame::CheckNewsSetting()
 							stmp.Format("%c", wb[kk]);
 							if(wb[kk] == NULL)
 							{
-								if(atoi(str) > 0 && atoi(str) <= 15)  //ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ç¸ï¿½ 15ï¿½ï¿½ ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+								if(atoi(str) > 0 && atoi(str) <= 15)  //´º½º Ãß°¡µÇ¸é 15¸¦ ´õ Å©°Ô ÇØÁà¾ß ÇÔ
 								{
 									keys.Format("%s", str);
 									ivalue = GetPrivateProfileInt(section, keys, -1, file);
@@ -20689,7 +21777,7 @@ BOOL CMainFrame::IsHelpMenu(const char *MapName)
 
 CString CMainFrame::Variant(int nComm, CString strData)
 {
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ð½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½ï¿½
+	//À§Àúµå´Â ÇöÀç ¾µ¼ö¾ø´Â ÄÁÆ®·ÑÀÓ ¸¸¾à ¾²·Á¸é À§´Ð½º ÇÃ·§Æû ´ã´çÀÚ¿Í ÇùÀÇ ÇØ¾ßÇÔ
 	CString strRet(_T(""));
 	const char* pRet = NULL;
 		
@@ -20831,7 +21919,7 @@ bool CMainFrame::SetToolAccount(CString acnt, int wparam)
 		
 		for (int jj = 0; jj<sary.GetSize(); jj++)
 		{
-			sdat = sary.GetAt(jj)+"\t"+dat;//+"\nACNM\t\"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
+			sdat = sary.GetAt(jj)+"\t"+dat;//+"\nACNM\t\"Á¤¹®ÀÏ";
 			
 			m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_EMPTY, (void *)NULL,
 								(BYTE *)(VTS_I4 VTS_I4), MAKELONG(setFDC, m_activeKey), (LPARAM)(const char*)sdat);
@@ -20839,7 +21927,7 @@ bool CMainFrame::SetToolAccount(CString acnt, int wparam)
 		/*
 		for (int jj = 0; jj<sary.GetSize(); jj++)
 		{
-			sdat = sary.GetAt(jj)+"\t"+dat;//+"\nACNM\t\"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
+			sdat = sary.GetAt(jj)+"\t"+dat;//+"\nACNM\t\"Á¤¹®ÀÏ";
 
 			m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_EMPTY, (void *)NULL,
 								(BYTE *)(VTS_I4 VTS_I4), MAKELONG(setFDC, m_activeKey), (LPARAM)(const char*)sdat);
@@ -20864,7 +21952,7 @@ bool CMainFrame::SetToolAccount(CString acnt, int wparam)
 	/*
 	else
 	{
-		//DLLï¿½Î°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½É»ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½
+		//DLLÀÎ°æ¿ì Á»´õ ½É»ç¼÷°íÃ³¸®
 		stopDllMessage = false;
 		CString dat;
 		dat = acnt;
@@ -20872,7 +21960,7 @@ bool CMainFrame::SetToolAccount(CString acnt, int wparam)
 		//sendDllMessage(child->m_hWnd, (long) dat.operator LPCTSTR());
 		if (!stopDllMessage)
 		{
-			//MessageBox("ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ô·Â¶ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			//MessageBox("ºñ¹Ð¹øÈ£ ÀÔ·Â¶õÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
 		}
 	}	
 	*/
@@ -20924,7 +22012,7 @@ void CMainFrame::PopupPosWeb(CString url, int left, int top, int cx, int cy)
 	pWEBApp->put_Top(top);//VARIANT_TRUE);
 	pWEBApp->put_ToolBar(VARIANT_FALSE);
 	pWEBApp->put_StatusBar(VARIANT_FALSE);
-	//pWEBApp->put_Title("IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+	//pWEBApp->put_Title("IBKÅõÀÚÁõ±Ç °øÁö");
 	hr = pWEBApp->Navigate(bstr, &vFlags, &vTargetFrameName, &vPostData, &vHeaders);
 	if (HomePage.IsEmpty())	pWEBApp->GoHome();
 	pWEBApp->put_Visible(VARIANT_TRUE);
@@ -20964,11 +22052,11 @@ void CMainFrame::ReadNotice()
 
 	const bool find = false;
 	struct	_grid {
-		char	url[255];		 /* ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½			 */
-		char    width[5];                /* ï¿½ï¿½ï¿½ï¿½ï¿½                       */
-		char    height[5];                 /* ï¿½ï¿½ï¿½ç°¡                       */
-		char    use[1];                 /* ï¿½ï¿½ï¿½Ï´ï¿½ï¿½      (9999V99)      */
-		char	cookie[20];				//ï¿½ï¿½Å°ï¿½ï¿½
+		char	url[255];		 /* Á¾¸ñÄÚµå			 */
+		char    width[5];                /* Á¾¸ñ¸í                       */
+		char    height[5];                 /* ÇöÀç°¡                       */
+		char    use[1];                 /* ÀüÀÏ´ëºñ      (9999V99)      */
+		char	cookie[20];				//ÄíÅ°¸í
 	};
 
 	struct  _urlData {
@@ -21027,7 +22115,7 @@ void CMainFrame::ReadNotice()
 					PopupPosWeb(url, left, top, atoi(width), atoi(height));
 					
 					left += atoi(width);
-					left += 10; //ï¿½ï¿½ï¿½ï¿½
+					left += 10; //°£°Ý
 					
 				}				
 				delete[] dat;
@@ -21361,16 +22449,16 @@ void CMainFrame::RunPhonePad()
 
 	if(!IsFileExist(strPhonepad))
 	{
-		Axis::MessageBox(this,"ï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.\nï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½Ï¼Å¿ï¿½.",MB_ICONINFORMATION);
+		Axis::MessageBox(this,"ÆùÆÐµå ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Ò½À´Ï´Ù.\nÆùÆÐµå ÇÁ·Î±×·¥À» ¼³Ä¡ÇÏ¼Å¿ä.",MB_ICONINFORMATION);
 		return;
 	}
-	 //ï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½ï¿½Þ½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
-	//HTSï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½ï¿½Ä¡ï¿½Ï¸ï¿½ ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-	//ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ÛºÎ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ EXEUPDATE.INI ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½ç¼³Ä¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ì¼± ï¿½Ö¼ï¿½
+	 //ÆùÆÐµå ÇÁ·Î±×·¥Àº ÃÖÃÊÇÇ¾¾ ¹è±Þ½Ã ¼³Ä¡ ÇÏ´Â »çÇ×
+	//HTS¿¡¼­ ÆùÆÐµå µå¶óÀÌ¹ö ¼³Ä¡ÇÏ¸é ÆÄ¿öº£ÀÌ½º ÆùÆÐµå µå¶óÀÌ¹ö¿Í ¹®Á¦°¡ »ý±â´Â Çö»óÀÌ ÀÖÀ½
+	//ÇöÀç  Á¤º¸½Ã½ºÅÛºÎ¿¡¼­ ÀüÁ÷¿ø ÇÇ¾¾ÀÇ EXEUPDATE.INI ¸¦ ±³Ã¼ÇØ¼­ µå¶óÀÌ¹ö Àç¼³Ä¡ ÇÏÁö ¾ÊÁö¸¸ ¿ì¼± ÁÖ¼®
 
 	/*if(!IsFileExist(strPhonepad))
 	{
-		Axis::MessageBox(this,"ï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.\nï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½Õ´Ï´ï¿½.",MB_ICONINFORMATION);
+		Axis::MessageBox(this,"ÆùÆÐµå ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Ò½À´Ï´Ù.\nÆùÆÐµå ÇÁ·Î±×·¥À» ¼³Ä¡ÇÕ´Ï´Ù.",MB_ICONINFORMATION);
 
 		CString filePath;
 		filePath.Format("%s/exe/Call_Man_Setup.exe", Axis::home);
@@ -21387,7 +22475,7 @@ void CMainFrame::RunPhonePad()
 
 		if(nUpdate == 1)
 		{
-			Axis::MessageBox(this,"ï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Õ´Ï´ï¿½.\nï¿½ï¿½ï¿½Ðµï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½Õ´Ï´ï¿½.",MB_ICONINFORMATION);
+			Axis::MessageBox(this,"ÆùÆÐµå ÇÁ·Î±×·¥ÀÌ ¾÷µ¥ÀÌÆ®°¡ ÇÊ¿äÇÕ´Ï´Ù.\nÆùÆÐµå ÇÁ·Î±×·¥À» ¼³Ä¡ÇÕ´Ï´Ù.",MB_ICONINFORMATION);
 
 			CString filePath;
 			filePath.Format("%s/exe/Call_Man_Setup.exe", Axis::home);
@@ -21695,7 +22783,7 @@ void CMainFrame::UploadFile()
 		if (fileN.Find(".ini") >= 0 || fileN.Find(".mmo") >= 0)
 			file.Format("%s\\%s\\%s\\%s", Axis::home, USRDIR, Axis::user, fileN);
 		else
-		{   //ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ - ï¿½ï¿½ï¿½ï¿½ï¿½
+		{   //½ÅÂ÷Æ® ¾ÐÃà¾÷·Îµå½Ã ¼öÁ¤ ÇÊ¿ä - ±è´ö±â
 			if (fileN.Find("IB7") >= 0 || fileN.Find("ib7") >= 0)
 				file.Format("%s\\gex\\%s\\%s", Axis::home, Axis::user, fileN);
 // 			else if(fileN.Find("Chart.zip") >= 0)
@@ -21713,7 +22801,7 @@ void CMainFrame::UploadFile()
 		if (fileL > UPMAXSIZE)
 		{
 			hFile.Close();
-			str.Format("%sï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½î¸¦ ï¿½Ê°ï¿½ ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.", fileN);
+			str.Format("%sÀÌ Àü¼Û »çÀÌÁî¸¦ ÃÊ°ú ÇÏ¿´½À´Ï´Ù.", fileN);
 			Axis::MessageBox(this, str, MB_ICONSTOP);
 			continue;
 		}
@@ -21756,7 +22844,7 @@ CString CMainFrame::Compress(CString target, CString path)
 	if (_taccess(srcFile, 04))	// can read?
 	{
 		CString	str;
-		str.Format("%s\t%s", srcFile, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+		str.Format("%s\t%s", srcFile, "ÆÄÀÏÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
 		//m_errfile.Add(str);
 		return _T("");
 	}
@@ -21818,7 +22906,7 @@ void CMainFrame::CompressChart(CString path)
 			else
 				cp++;
 
-			zipfile = Compress(cp, path);		// ï¿½ï¿½ï¿½ï¿½ï¿½ È¯ï¿½æ¼³ï¿½ï¿½
+			zipfile = Compress(cp, path);		// »ç¿ëÀÚ È¯°æ¼³Á¤
 			
 			if (!zipfile.IsEmpty())
 			{
@@ -21854,11 +22942,15 @@ void CMainFrame::SendConfig(int igubn)
 	sdat.Format("%04d%02d%02d%02d%02d%02d", time.GetYear(), time.GetMonth(), time.GetDay(), time.GetHour(), time.GetMinute(), time.GetSecond());
 
 	CopyMemory(uini.gubn, "I", sizeof(uini.gubn));
-	CopyMemory(uini.item.usid, Axis::userID, sizeof(uini.item.usid));   //ï¿½ï¿½ï¿½Ìµï¿½
+	CopyMemory(uini.item.usid, Axis::userID, sizeof(uini.item.usid));   //¾ÆÀÌµð
+#ifdef DF_USE_CPLUS17
+	CopyMemory(uini.item.senm, "OPEN", strlen("OPEN"));		    //¼½¼Ç¸í
+#else
+	CopyMemory(uini.item.senm, "OPEN", sizeof(uini.item.senm));		    //¼½¼Ç¸í
+#endif
 
-	CopyMemory(uini.item.senm, "OPEN", strlen("OPEN"));		    //ï¿½ï¿½ï¿½Ç¸ï¿½
-	CopyMemory(uini.item.skey, sdat, sizeof(uini.item.skey));			//ï¿½ï¿½Â¥
-	CopyMemory(uini.item.date, sdat.Left(8), sizeof(uini.item.date));   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+	CopyMemory(uini.item.skey, sdat, sizeof(uini.item.skey));			//³¯Â¥
+	CopyMemory(uini.item.date, sdat.Left(8), sizeof(uini.item.date));   //¾÷µ¥ÀÌÆ® ÀÏÀÚ
 
 	if(igubn == 0)
 	{
@@ -21866,11 +22958,15 @@ void CMainFrame::SendConfig(int igubn)
 			return;
 
 		sval.Format("%d", m_iClickCROWDBanner);
+#ifdef DF_USE_CPLUS17
 		CopyMemory(uini.item.innm, "CROWD", strlen("CROWD"));
-		CopyMemory(uini.item.valu, sval, sizeof(uini.item.valu));		//CROWD Å¬ï¿½ï¿½È½ï¿½ï¿½
+#else
+		CopyMemory(uini.item.innm, "CROWD", sizeof(uini.item.innm));
+#endif
+		CopyMemory(uini.item.valu, sval, sizeof(uini.item.valu));		//CROWD Å¬¸¯È½¼ö
 
 CString s;
-s.Format("Sendconfig Main Sendconfig Å¬ï¿½ï¿½ï¿½ï¿½ m_iClickCROWDBanner=[%d] \n",m_iClickCROWDBanner);
+s.Format("Sendconfig Main Sendconfig Å¬¶ó¿ìµå m_iClickCROWDBanner=[%d] \n",m_iClickCROWDBanner);
 OutputDebugString(s);
 	}
 	else if(igubn == 1)
@@ -21879,8 +22975,13 @@ OutputDebugString(s);
 			return;
 
 		sval.Format("%d", m_iClickEPBBanner);
+#ifdef DF_USE_CPLUS17
 		CopyMemory(uini.item.innm, "E-PB", strlen("E-PB"));
-		CopyMemory(uini.item.valu, sval, sizeof(uini.item.valu));		//E-PB Å¬ï¿½ï¿½È½ï¿½ï¿½
+#else
+		CopyMemory(uini.item.innm, "E-PB", sizeof(uini.item.innm));
+#endif
+		
+		CopyMemory(uini.item.valu, sval, sizeof(uini.item.valu));		//E-PB Å¬¸¯È½¼ö
 
 CString s;
 s.Format("Sendconfig Main Sendconfig EPB m_iClickEPBBanner=[%d] \n",m_iClickEPBBanner);
@@ -21911,8 +23012,14 @@ void CMainFrame::SendForceIP()
 	CopyMemory(uini.gubn, "I", sizeof(uini.gubn));
 	CopyMemory(uini.item.usid, Axis::userID, sizeof(uini.item.usid));
 	CopyMemory(uini.item.innm, fname, sizeof(uini.item.innm));
+#ifdef DF_USE_CPLUS17
 	CopyMemory(uini.item.senm, "FORCEIP", strlen("FORCEIP"));
 	CopyMemory(uini.item.skey, "IP", strlen("IP"));
+#else
+	CopyMemory(uini.item.senm, "FORCEIP", sizeof(uini.item.senm));
+	CopyMemory(uini.item.skey, "IP", sizeof(uini.item.skey));
+#endif
+	
 	CopyMemory(uini.item.valu, sval, sval.GetLength());
 	CopyMemory(uini.item.date, sdat, sizeof(uini.item.date));
 	
@@ -21945,7 +23052,11 @@ void CMainFrame::SendLastStat(CString vsN, CString sval)
 	CopyMemory(uini.gubn, "I", sizeof(uini.gubn));
 	CopyMemory(uini.item.usid, Axis::userID, sizeof(uini.item.usid));
 	CopyMemory(uini.item.innm, fname, sizeof(uini.item.innm));
+#ifdef DF_USE_CPLUS17
 	CopyMemory(uini.item.senm, "LASTSTAT", strlen("LASTSTAT"));
+#else
+	CopyMemory(uini.item.senm, "LASTSTAT", sizeof(uini.item.senm));
+#endif
 	CopyMemory(uini.item.skey, vsN, sizeof(uini.item.skey));
 	CopyMemory(uini.item.valu, sval, sizeof(uini.item.valu));
 	CopyMemory(uini.item.date, sdat, sizeof(uini.item.date));
@@ -22069,8 +23180,8 @@ void CMainFrame::SendFile(CString file)
 		(BYTE *)(VTS_I4 VTS_I4), (long)sndB, fSize);
 }
 
-//2012.08.22 ï¿½ï¿½ï¿½ï¿½ï¿½ - 2000ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü°ï¿½ï¿½ï¿½È¸ï¿½ï¿½ ï¿½ó¸¶³ï¿½ ï¿½Ï´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
-//ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ë¸®ï¿½ï¿½ ï¿½Ô²ï¿½ ï¿½Û¾ï¿½.2000ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Ó½ï¿½)
+//2012.08.22 ±è´ö±â - 2000¹ø¿¡¼­ ÀÜ°íÁ¶È¸¸¦ ¾ó¸¶³ª ÇÏ´ÂÁö Àü¼Û.
+//¹Ú¿µÅÂ ´ë¸®¿Í ÇÔ²² ÀÛ¾÷.2000¹ø ¸Ê ¼öÁ¤(ÀÓ½Ã)
 void CMainFrame::Send2000()
 {
 	struct	_pidouini_mid	uini;
@@ -22111,8 +23222,14 @@ void CMainFrame::Send2000()
 	CopyMemory(uini.gubn, "I", sizeof(uini.gubn));
 	CopyMemory(uini.item.usid, Axis::userID, sizeof(uini.item.usid));
 	CopyMemory(uini.item.innm, fname, sizeof(uini.item.innm));
+#ifdef DF_USE_CPLUS17
 	CopyMemory(uini.item.senm, "PIBOJNGO", strlen("PIBOJNGO"));
 	CopyMemory(uini.item.skey, "click", strlen("click"));
+#else
+	CopyMemory(uini.item.senm, "PIBOJNGO", sizeof(uini.item.senm));
+	CopyMemory(uini.item.skey, "click", sizeof(uini.item.skey));
+#endif
+
 	CopyMemory(uini.item.valu, sval, sizeof(uini.item.valu));
 	CopyMemory(uini.item.date, sdat, sizeof(uini.item.date));
 	
@@ -22171,7 +23288,7 @@ CString CMainFrame::GetCodeName(CString code)
 	//	}
 
 	//}
-	//else if (codeL == 9)				// ï¿½ï¿½ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+	//else if (codeL == 9)				// ½ÅÁÖÀÎ¼ö±Ç Ãß°¡
 	//{
 	//	_shjcode   hjcode; 
 	//	for (int ii = 0; ii < m_hjcode.GetSize(); ii++)
@@ -22338,7 +23455,7 @@ void CMainFrame::loadingHJcode()
 	//	}
  //   }
 	//
-	////ï¿½ÌºÎºï¿½ ï¿½ß°ï¿½
+	////ÀÌºÎºÐ Ãß°¡
 	////QSortCArray( m_hjcode, CompareChar ); 
 	//fileH.Close();
 }
@@ -22529,7 +23646,7 @@ void CMainFrame::processSecureTool(char *data, int dlen)
 {
 	const struct _pidouini_item *mod = (struct _pidouini_item*)data;
 
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°Ù´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½! (Disableï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ OK)
+	// º¸¾ÈÇÁ·Î±×·¥À» »ç¿ëÇÏÁö ¾Ê°Ù´Ù°í µ¿ÀÇÇÏÁö ¾Ê¾ÒÀ¸¸é! (Disable¿¡ ´ëÇÑ OK)
 	if (memcmp(mod->valu, "OK", 2)!=0)
 		PostMessage(WM_SECUREDLG, 0, 0);
 }
@@ -22570,9 +23687,16 @@ LRESULT CMainFrame::OnSecureDlg(WPARAM wParam, LPARAM lParam)
 			memset(&mid, 0, sizeof(mid));
 			mid.gubn[0] = 'I';
 			memcpy(mid.item.usid, (LPCSTR)Axis::userID, Axis::userID.GetLength());
+#ifdef DF_USE_CPLUS17
 			memcpy(mid.item.innm, "AGREEMENT",strlen("AGREEMENT"));
 			memcpy(mid.item.senm, "SECURETOOLS", strlen("SECURETOOLS"));
 			memcpy(mid.item.skey, "DISABLE", strlen("DISABLE"));
+#else
+			memcpy(mid.item.innm, "AGREEMENT", 9);
+			memcpy(mid.item.senm, "SECURETOOLS", 11);
+			memcpy(mid.item.skey, "DISABLE", 7);
+#endif
+			
 			sprintf(mid.item.valu, "OK - %s", time.Format("[%Y/%m/%d][%H:%M:%S]"));
 			sendTR("pidouini", (char*)&mid, sizeof(mid), 0, 'p');
 		}
@@ -22614,9 +23738,14 @@ void CMainFrame::os_report()
 	memset(&mid, 0, sizeof(mid));
 	mid.gubn[0] = 'I';
 	memcpy(mid.item.usid, (LPCSTR)Axis::userID, Axis::userID.GetLength());
+#ifdef DF_USE_CPLUS17
 	memcpy(mid.item.innm, "INFO", strlen("INFO"));
 	memcpy(mid.item.senm, "OS", strlen("OS"));
-
+#else
+	memcpy(mid.item.innm, "INFO", 8);
+	memcpy(mid.item.senm, "OS", 10);
+#endif
+	
 	memcpy(mid.item.skey, "VERSION", 7);
 // 	sprintf(mid.item.valu, "VER[%d.%d] BUILD[%d] PLATFORM[%d] OS[%s] OS BIT[%s] CPU[%d] CPU NUMBER[%d] MEMORY PHYS[%dM] SKIN [%s]", 
 // 		info.dwMajorVersion, info.dwMinorVersion, info.dwBuildNumber,
@@ -22634,7 +23763,7 @@ void CMainFrame::os_report()
 }
 
 // 2014.03.17 dkkim
-// 64 bit ï¿½ï¿½ï¿½ï¿½
+// 64 bit ±¸ºÐ
 CString CMainFrame::IsWow64()
 {
 	CString sResult = "UNKNOWN";
@@ -22667,12 +23796,12 @@ void CMainFrame::checkFirewall()
 	CRegKey reg;
 
 	const LPCTSTR keys[]  = {
-		_T("Software\\IBK_STAFF\\AXIS Workstation V04.00\\Information"),			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
-		_T("Software\\IBKMAC_STAFF\\AXIS Workstation V04.00\\Information"),			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		_T("Software\\IBK_STAFF\\AXIS Workstation V04.00\\Information"),			// °³¹ß Á÷¿ø¿ë 
+		_T("Software\\IBKMAC_STAFF\\AXIS Workstation V04.00\\Information"),			// ¸®¾ó Á÷¿ø¿ë
 		NULL
 	};
 
-	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ HTSï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½ */
+	/* Á÷¿ø¿ë HTS°¡ ¼³Ä¡µÇ¾î ÀÖÀ»°æ¿ì ¹æÈ­º®¼³Á¤À» °­Á¦ ÇØÁ¦ÇÑ´Ù */
 	for(int n=0; keys[n]!=NULL; ++n)
 	{
 		if (reg.Open(HKEY_CURRENT_USER, keys[n])==ERROR_SUCCESS)
@@ -22683,7 +23812,7 @@ void CMainFrame::checkFirewall()
 		}
 	}
 
-	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½ */
+	/* Á÷¿øÀÌ ·Î±×ÀÎÇÑ °æ¿ì ¹æÈ­º® ¼³Á¤À» °­Á¦ ÇØÁ¦ÇÑ´Ù */
 	if (!Axis::isCustomer)
 	{
 		AfxGetApp()->WriteProfileInt(INFORMATION, "PCFirewall", 0);
@@ -22764,7 +23893,7 @@ void CMainFrame::LoadSecureTools()
 		
 		if(m_axConnect)
 		{
-			m_axConnect->SetGuide("ï¿½Þ¸ï¿½ ï¿½ï¿½È£ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½...");
+			m_axConnect->SetGuide("¸Þ¸ð¸® º¸È£ ÇÁ·Î±×·¥À» ¼³Á¤ÇÕ´Ï´Ù...");
 		}
 		
 		dwError = STSDKEX_IsInstalled();
@@ -22777,7 +23906,7 @@ void CMainFrame::LoadSecureTools()
 		if(AOSRESTART == 1)
 			AfxGetApp()->WriteProfileInt(INFORMATION, "AOSRESTART", 0);
 		
-		m_axConnect->SetGuide("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½...");
+		m_axConnect->SetGuide("º¸¾È ÇÁ·Î±×·¥À» ¼³Á¤ÇÕ´Ï´Ù...");
 		
 		if(m_bSdkInitialized || initASTx())
 		{
@@ -22789,7 +23918,7 @@ void CMainFrame::LoadSecureTools()
 		if(m_bNoProtect)
 			return;
 		
-		m_axConnect->SetGuide("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½...");
+		m_axConnect->SetGuide("º¸¾È ÇÁ·Î±×·¥À» ÇØÁ¦ÇÕ´Ï´Ù...");
 		
 		if(uninitASTx())
 		{
@@ -22801,16 +23930,16 @@ void CMainFrame::LoadSecureTools()
 	
 	if(m_axConnect)
 	{
-		m_axConnect->SetGuide("ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½...");
+		m_axConnect->SetGuide("¹æÈ­º® ÇÁ·Î±×·¥À» ¼³Á¤ÇÕ´Ï´Ù...");
 	}
 	
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é¿¡ï¿½Ô´ï¿½ ï¿½ï¿½ï¿½È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ÈµÇ°ï¿½ ï¿½ï¿½
+	//³»ºÎÁ÷¿øµé¿¡°Ô´Â º¸¾È¸ðµâ ½ÇÇà ¾ÈµÇ°Ô ÇÔ
 	const BOOL pcFirewall = AfxGetApp()->GetProfileInt(INFORMATION, "PCFirewall", 0);
 	(pcFirewall && Axis::isCustomer) ? startFW() : stopFW();
 	
 	if(m_axConnect)
 	{
-		m_axConnect->SetGuide("Å°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½...");
+		m_axConnect->SetGuide("Å°º¸µå º¸¾È ÇÁ·Î±×·¥À» ¼³Á¤ÇÕ´Ï´Ù...");
 	}
 	
 	const CAxisApp *app = (CAxisApp*)m_axis;
@@ -22826,14 +23955,14 @@ LONG CMainFrame::OnSecureChange( WPARAM wp, LPARAM lp )
 	{
 		if(m_axConnect)
 		{
-			m_axConnect->SetGuide("È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			m_axConnect->SetGuide("È¯°æ ¼³Á¤À» Àû¿ëÇÏ¿´½À´Ï´Ù.");
 		}
 	}
 	else
 	{
 		if(m_axConnectOld)
 		{
-			m_axConnectOld->SetGuide("È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			m_axConnectOld->SetGuide("È¯°æ ¼³Á¤À» Àû¿ëÇÏ¿´½À´Ï´Ù.");
 		}
 	}
 
@@ -22858,8 +23987,8 @@ void CMainFrame::LoadHotkeySetting()
 			if (!RegisterHotKey(m_hWnd, 0x1212, 0, keycode))
 			{
 				CString msg;
-				msg.Format("ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ö´ï¿½ Å°[%s]ï¿½Ô´Ï´ï¿½.\r\nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï½Ã±ï¿½ ï¿½Ù¶ï¿½ï¿½Ï´ï¿½.", buff);
-				MessageBox(msg, "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", MB_OK|MB_ICONINFORMATION);
+				msg.Format("´Ù¸¥ ÇÁ·Î±×·¥¿¡¼­ ÀÌ¹Ì »ç¿ëÇÏ°í ÀÖ´Â Å°[%s]ÀÔ´Ï´Ù.\r\nÀçÁöÁ¤ ÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.", buff);
+				MessageBox(msg, "IBKÅõÀÚÁõ±Ç", MB_OK|MB_ICONINFORMATION);
 			}
 		}
 	}
@@ -23101,7 +24230,7 @@ void CMainFrame::processTran( char *data, int dlen )
 			fwrite(mod->data, 1, atoi(data_size), fp);
 			fclose(fp);
 			
-			if (atoi(seqn)==atoi(max_seqn))	// ï¿½ï¿½ï¿½Ï¹Þ±ï¿½ ï¿½Ï·ï¿½
+			if (atoi(seqn)==atoi(max_seqn))	// ÆÄÀÏ¹Þ±â ¿Ï·á
 			{
 				CString newpath = dstpath;
 				newpath.Replace(".exp", "");
@@ -23186,9 +24315,9 @@ BOOL CMainFrame::ChangeTabView( LPCSTR mapN, int key )
 BOOL CMainFrame::ClearGex()
 {
 	if (MessageBox(
-		"ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ë´Ï´ï¿½.\n"
-		"(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½)\n\n"
-		"ï¿½Ê±ï¿½È­ ï¿½Ï½Ã°Ú½ï¿½ï¿½Ï±ï¿½?", "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", MB_YESNO)==IDYES)
+		"¸ðµç Â÷Æ®¼³Á¤ÀÌ ÃÊ±âÈ­ µË´Ï´Ù.\n"
+		"(ÇöÀç ¿­¸°È­¸éÀº Àû¿ëµÇÁö ¾Ê½À´Ï´Ù)\n\n"
+		"ÃÊ±âÈ­ ÇÏ½Ã°Ú½À´Ï±î?", "IBKÅõÀÚÁõ±Ç", MB_YESNO)==IDYES)
 	{
 		CString org_path = Axis::home + "\\gex\\" + Axis::user;
 		CString new_path = Axis::home + "\\gex\\" + Axis::user + "." + CTime::GetCurrentTime().Format("%Y%m%d_%H%M%S");
@@ -23290,8 +24419,8 @@ void CMainFrame::CheckEncryptDirectory()
 	SetUserInfo();
 
 	CString src, dst, enc;
+	//enc.Format("%08u", HashKey<LPCSTR>(Axis::userNM));
 	enc.Format("%08u", HashDataAXIS((LPCSTR)Axis::userNM));
-
 #if 0
 	if (Axis::isCustomer)
 	{
@@ -23344,13 +24473,13 @@ void CMainFrame::CheckEncryptDirectory()
 // 	switch(lCode)
 // 	{
 // 	case SBSDK_CALLBACK_DRIVERFAILED :
-// 		AfxMessageBox(_T("ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½."));
+// 		AfxMessageBox(_T("µå¶óÀÌ¹ö¸¦ Á¤»óÀûÀ¸·Î ½ÇÇàÇÏÁö ¸øÇß½À´Ï´Ù."));
 // 		break;
 // 	case SBSDK_CALLBACK_DETECT_DEBUG :
 // 		{
-// 			AfxMessageBox(_T("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ï¿ï¿½ HTSï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.\nPCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Ö½Ã±ï¿½ ï¿½Ù¶ï¿½ï¿½Ï´ï¿½."));
+// 			AfxMessageBox(_T("µð¹ö°Å ½ÇÇàÀ» Å½ÁöÇß½À´Ï´Ù.º¸¾ÈÀ§ÇèÀÌ ¹ß»ýÇÏ¿© HTS¸¦ Á¾·áÇÕ´Ï´Ù.\nPC¸¦ Á¡°ËÇÏ¿© ÁÖ½Ã±â ¹Ù¶ø´Ï´Ù."));
 // 			
-// 			// ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½
+// 			// ÇÁ·Î±×·¥ Á¾·á ÄÚµå
 // 			//theApp.quitApplication();
 // 			//AfxGetMainWnd()->PostMessage(WM_CLOSE);
 // 			DWORD processId = 0;
@@ -23373,9 +24502,9 @@ void CMainFrame::CheckEncryptDirectory()
 // 				memAccess.Format("[%s]",phpf->szProcessName);
 // 			}
 // 			
-// 			AfxMessageBox(_T(memAccess + " ï¿½Þ¸ð¸®¿ï¿½ ï¿½ã°¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ãµï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ï¿ï¿½ HTSï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.\nPCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Ö½Ã±ï¿½ ï¿½Ù¶ï¿½ï¿½Ï´ï¿½."));
+// 			AfxMessageBox(_T(memAccess + " ¸Þ¸ð¸®¿¡ Çã°¡µÇÁö ¾ÊÀº Á¢±ÙÀ» ½ÃµµÇß½À´Ï´Ù.º¸¾ÈÀ§ÇèÀÌ ¹ß»ýÇÏ¿© HTS¸¦ Á¾·áÇÕ´Ï´Ù.\nPC¸¦ Á¡°ËÇÏ¿© ÁÖ½Ã±â ¹Ù¶ø´Ï´Ù."));
 // 			
-// 			// ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½
+// 			// ÇÁ·Î±×·¥ Á¾·á ÄÚµå
 // 			//theApp.quitApplication();
 // 			//AfxGetMainWnd()->PostMessage(WM_CLOSE);
 // 			DWORD processId = 0;
@@ -23384,11 +24513,11 @@ void CMainFrame::CheckEncryptDirectory()
 // 		}
 // 		break;
 // 	case SBSDK_CALLBACK_BLACKLIST :
-// 		AfxMessageBox(_T("ï¿½Ç¼ï¿½ï¿½Úµï¿½ï¿½ ï¿½Ç½ÉµÇ´ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½."));
+// 		AfxMessageBox(_T("¾Ç¼ºÄÚµå·Î ÀÇ½ÉµÇ´Â ÇÁ·Î±×·¥À» Â÷´ÜÇß½À´Ï´Ù."));
 // 		break;
 // 	default :
 // 		{
-// 			//theApp.messageBoxFormat(_T("ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½É¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½(lCode=0x%x)"), lCode);
+// 			//theApp.messageBoxFormat(_T("ÇØÅ· ¹æÁö ±â´É¿¡ ¹®Á¦°¡ ¹ß»ýÇß½À´Ï´Ù(lCode=0x%x)"), lCode);
 // 		}
 // 		break;
 // 	} // end of switch
@@ -23400,20 +24529,20 @@ void CMainFrame::CheckEncryptDirectory()
 // {
 // 	if(isVerifyTrustSDK() == FALSE)
 // 	{
-// 		//AfxMessageBox(_T("[SB] ï¿½Þ¸ð¸®ºï¿½È£ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½."));
+// 		//AfxMessageBox(_T("[SB] ¸Þ¸ð¸®º¸È£¸ðµâ °ËÁõ¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù."));
 // 		return FALSE;
 // 	}
 // 
-// 	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ Ã¢ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+// 	// ¾÷µ¥ÀÌÆ® »óÅÂ Ã¢ÀÌ º¸ÀÌµµ·Ï ¼³Á¤
 // 	Aossdk_SetModeUI(TRUE);
 // 
-// 	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½(Sync Mode) ï¿½ï¿½ï¿½ï¿½: AOS Secure Browser ï¿½Ýµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø¾ï¿½ ï¿½ï¿½ 
+// 	// ¾÷µ¥ÀÌÆ® µ¿±â ¸ðµå(Sync Mode) ¼³Á¤: AOS Secure Browser ¹Ýµå½Ã µ¿±â ¸ðµå·Î µ¿ÀÛ ÇØ¾ß ÇÔ 
 // 	Aossdk_SetModeAsync(FALSE);
 // 
 // 	DWORD dwErrorCode = 0;
 // 	BOOL bResult = FALSE;
 // 	// "20A06A69C9F10BAF085E02416745AEBA7BE57FEE8BCA4F29"
-// 	// AOS Secure Browser ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+// 	// AOS Secure Browser ¾÷µ¥ÀÌÆ®
 // 	bResult = Aossdk_StartAosSDKA( 
 // 					"e9",
 // 					"20A06A69C9F10BAF085E02416745AEBA7BE57FEE8BCA4F29",
@@ -23424,7 +24553,7 @@ void CMainFrame::CheckEncryptDirectory()
 // 	if(bResult == FALSE)
 // 	{
 // 		CString emsg;
-// 		emsg.Format(_T("[SB] ï¿½Þ¸ð¸®ºï¿½È£ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. [0x%X])"), dwErrorCode);
+// 		emsg.Format(_T("[SB] ¸Þ¸ð¸®º¸È£¸ðµâ ¾÷µ¥ÀÌÆ®¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù. [0x%X])"), dwErrorCode);
 // 		//MessageBox(emsg);
 // 		return FALSE;
 // 	}
@@ -23433,7 +24562,7 @@ void CMainFrame::CheckEncryptDirectory()
 // 	if(m_pAosSB == NULL)
 // 	{
 // 		CString emsg;
-// 		emsg.Format(_T("[SB] ï¿½Þ¸ð¸®ºï¿½È£ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. (0x%X)"), dwErrorCode);
+// 		emsg.Format(_T("[SB] ¸Þ¸ð¸®º¸È£¸ðµâ »ý¼º¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù. (0x%X)"), dwErrorCode);
 // 		//MessageBox(emsg);
 // 		return FALSE;
 // 	}
@@ -23473,21 +24602,21 @@ void CMainFrame::CheckEncryptDirectory()
 // 		CString csmsg;
 // 		if(dwResult == SBSDK_ERROR_DETECT_DEBUG)
 // 		{
-// 			csmsg = _T("[SB] ï¿½Þ¸ð¸®ºï¿½È£ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+// 			csmsg = _T("[SB] ¸Þ¸ð¸®º¸È£¸ðµâÀÌ µð¹ö°ÅÅøÀ» °¨ÁöÇÏ¿´½À´Ï´Ù.");
 // 			
-// 			// ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½
+// 			// ÇÁ·Î±×·¥ Á¾·á ÄÚµå
 // 			//theApp.quitApplication();
 // 		}
 // 		else
 // 		{
-// 			csmsg.Format(_T("[SB] ï¿½Þ¸ð¸®ºï¿½È£ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½à¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ (0x%X)"), dwResult);
+// 			csmsg.Format(_T("[SB] ¸Þ¸ð¸®º¸È£¸ðµâ ½ÇÇà¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù (0x%X)"), dwResult);
 // 		}
 // 		
 // 		AfxMessageBox(csmsg);
 // 		return FALSE;
 // 	}
 // 	
-// 	OutputDebugString("AOS ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½\n");
+// 	OutputDebugString("AOS °¨½Ã Å¸ÀÌ¸Ó ½ÃÀÛ\n");
 // 	SetTimer(TM_AOS_ALIVE,30000,NULL);
 // 
 // 	return TRUE;
@@ -23509,8 +24638,8 @@ void CMainFrame::CheckEncryptDirectory()
 // 	IAosVerify*	pAosVerify = getAosVerify();
 // 	if(pAosVerify)
 // 	{
-// 		// AOS SDKï¿½ï¿½ È£ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Code Sign ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
-// 		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò´ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½Ë»ï¿½
+// 		// AOS SDK¸¦ È£ÃâÇÏ´Â ½ÇÇà ÆÄÀÏÀÌ Code Sign µÇ¾î ÀÖÀ» °æ¿ì ÇöÀç ¸ðµâÀÌ
+// 		// º¯Á¶µÇÁö ¾Ê¾Ò´ÂÁö ÀÚÃ¼ °Ë»ç
 // #ifdef _UNICODE
 // 		bResult = pAosVerify->VerifyTrustSelfW(szSignedName);
 // #else
@@ -23528,7 +24657,7 @@ void CMainFrame::CheckEncryptDirectory()
 // 	IAosVerify*	pAosVerify = getAosVerify();
 // 	if(pAosVerify)
 // 	{
-// 		// AOS SDK ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò´ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
+// 		// AOS SDK ¸ðµâÀÌ º¯Á¶µÇÁö ¾Ê¾Ò´ÂÁö °Ë»ç
 // 		bResult = pAosVerify->VerifyTrustSDK();
 // 	}
 // 	
@@ -23542,7 +24671,7 @@ void CMainFrame::CheckEncryptDirectory()
 // 	IAosVerify*	pAosVerify = getAosVerify();
 // 	if(pAosVerify)
 // 	{
-// 		// AOS SDK ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
+// 		// AOS SDK ¸ðµâÀÌ ÇöÀç ½ÇÇà ÁßÀÎÁö °Ë»ç
 // 		bResult = pAosVerify->IsRunningPd(dwServiceCode);
 // 
 // // 		CString s;
@@ -23658,16 +24787,16 @@ void CMainFrame::AddCodehistoryToInter(int igroup, char* pdata)
 
 LRESULT CMainFrame::OnIBKWine( WPARAM wParam, LPARAM lParam )
 {
-	// ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½á¿¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½Ã³ï¿½ï¿½ - dkkim 2016.01.11
+	// ¿ÍÀÎ¼­ºñ½º Á¾·á¿¡µû¶ó ÁÖ¼®Ã³¸® - dkkim 2016.01.11
 // 	CString str;
-// 	str.Format("WM_IBK ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Ò½ï¿½ï¿½Ï´ï¿½. ( wParam = %d, lParam = %d )", wParam, lParam);
+// 	str.Format("WM_IBK ¸Þ½ÃÁö¸¦ ¹Þ¾Ò½À´Ï´Ù. ( wParam = %d, lParam = %d )", wParam, lParam);
 // 	OutputDebugString(str);
 // 	
 // 	HWND hwnd = m_winechartHwnd = (HWND)wParam;
 // 	int n = ((int)lParam % 17);
 // 	
 // 	::SendMessage(hwnd,  WM_IBK, n, 0);
-// 	str.Format("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ [ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ : %d ]", n);	
+// 	str.Format("ÀÎÁõ Á¤º¸ Àü¼Û ¿Ï·á [ °ËÁõ ¼ýÀÚ : %d ]", n);	
 // 	OutputDebugString(str);
 // 
 // 	if(m_miniWid == NULL || !m_miniWid->GetSafeHwnd())
@@ -23689,10 +24818,10 @@ LRESULT CMainFrame::OnIBKWine( WPARAM wParam, LPARAM lParam )
 LRESULT CMainFrame::OnIBKCode( WPARAM wParam, LPARAM lParam )
 {
 // 	CString str;
-// 	str.Format("WM_IBK_CODE ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Ò½ï¿½ï¿½Ï´ï¿½. ( wParam = %d, lParam = %d )", wParam, lParam);
+// 	str.Format("WM_IBK_CODE ¸Þ½ÃÁö¸¦ ¹Þ¾Ò½À´Ï´Ù. ( wParam = %d, lParam = %d )", wParam, lParam);
 // 	OutputDebugString(str);
 // 
-// 	str.Format("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: %06d", wParam);
+// 	str.Format("Á¾¸ñ¼³Á¤: %06d", wParam);
 // 	OutputDebugString(str);
 
 // 	CChildFrame*	child;
@@ -23869,9 +24998,9 @@ WriteLog("CMainFrame::QueryPihoitgyList  nItgy=[%d] ", nItgy);
 	}
 
 	if(m_bUseNewLogin)
-		m_axConnect->SetGuide("ï¿½ï¿½ï¿½á¼º ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.");
+		m_axConnect->SetGuide("¹«°á¼º °ËÁõÀ» ½ÃÀÛÇÕ´Ï´Ù.");
 	else
-		m_axConnectOld->SetGuide("ï¿½ï¿½ï¿½á¼º ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.");
+		m_axConnectOld->SetGuide("¹«°á¼º °ËÁõÀ» ½ÃÀÛÇÕ´Ï´Ù.");
 
 	struct	pihoitgy_mid	mid;
 	
@@ -24190,18 +25319,18 @@ void CMainFrame::ParsePihoitgyList(char* dat, int len)
 	if(cnt > 0)
 	{
 		if(m_bUseNewLogin)
-			m_axConnect->SetGuide("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.");
+			m_axConnect->SetGuide("°ËÁõ µ¥ÀÌÅ¸¸¦ Àü¼ÛÇÕ´Ï´Ù.");
 		else
-			m_axConnectOld->SetGuide("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.");
+			m_axConnectOld->SetGuide("°ËÁõ µ¥ÀÌÅ¸¸¦ Àü¼ÛÇÕ´Ï´Ù.");
 
 		QueryPihoitgy();
 	}
 	else
 	{
 		if(m_bUseNewLogin)
-			m_axConnect->SetGuide("ï¿½ï¿½ï¿½á¼º ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			m_axConnect->SetGuide("¹«°á¼º °ËÁõ ´ë»óÀÌ ¾ø½À´Ï´Ù.");
 		else
-			m_axConnectOld->SetGuide("ï¿½ï¿½ï¿½á¼º ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			m_axConnectOld->SetGuide("¹«°á¼º °ËÁõ ´ë»óÀÌ ¾ø½À´Ï´Ù.");
 		OutputDebugString("PIHOITGY LIST COUNT 0\n");
 		if(m_bCertLogin)
 			signOnCert();
@@ -24236,9 +25365,9 @@ void CMainFrame::ParsePihoitgy(char* dat, int len)
 	if(cnt == 0)
 	{
 		if(m_bUseNewLogin)
-			m_axConnect->SetGuide("ï¿½ï¿½ï¿½á¼º ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+			m_axConnect->SetGuide("¹«°á¼º °ËÁõÀ» ¿Ï·áÇß½À´Ï´Ù.");
 		else
-			m_axConnectOld->SetGuide("ï¿½ï¿½ï¿½á¼º ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+			m_axConnectOld->SetGuide("¹«°á¼º °ËÁõÀ» ¿Ï·áÇß½À´Ï´Ù.");
 
 		if(m_bCertLogin)
 			signOnCert();
@@ -24283,9 +25412,9 @@ void CMainFrame::ParsePihoitgy(char* dat, int len)
 	}
 
 	if(m_bUseNewLogin)
-		m_axConnect->SetGuide("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½ï¿½âµ¿ ï¿½Ë´Ï´ï¿½.");
+		m_axConnect->SetGuide("ÆÄÀÏÀÌ º¯Á¶µÇ¾î Àç±âµ¿ µË´Ï´Ù.");
 	else
-		m_axConnectOld->SetGuide("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½ï¿½âµ¿ ï¿½Ë´Ï´ï¿½.");
+		m_axConnectOld->SetGuide("ÆÄÀÏÀÌ º¯Á¶µÇ¾î Àç±âµ¿ µË´Ï´Ù.");
 
 	m_axis->WriteProfileInt(WORKSTATION, "itgy", 1);
 
@@ -24323,7 +25452,7 @@ void CMainFrame::UpdateInfo(bool rsc)
 			while (fgets(buf, sizeof(buf), fp) != NULL)
 			{
 				bool	match  = false;
-				//ï¿½Æ·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.ï¿½Æ¸ï¿½ï¿½ï¿½ ï¿½Ñ±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½å¹®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½
+				//¾Æ·¡¿¡¼­ µ¥ÀÌÅ¸°¡ ±úÁö´Â Çö»ó ¼öÁ¤.¾Æ¸¶µµ ÇÑ±ÛÆ÷ÇÔ Àå¹®ÀÇ ÆÄÀÏÀÌ¸§ÀÌ ¹®Á¦ÀÎµí
 				//dkkim 2016.03.22
 				//sscanf(buf, "%s %s %s %s %s", name, ver, vkey, size, path);
 				CString line(buf);
@@ -24410,16 +25539,16 @@ void CMainFrame::UpdateInfo(bool rsc)
 
 LRESULT CMainFrame::OnIBKWineS( WPARAM wParam, LPARAM lParam )
 {
-	// ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½á¿¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½Ã³ï¿½ï¿½ - dkkim 2016.01.11
+	// ¿ÍÀÎ¼­ºñ½º Á¾·á¿¡µû¶ó ÁÖ¼®Ã³¸® - dkkim 2016.01.11
 // 	CString str;
-// 	str.Format("WM_IBKWINES ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Ò½ï¿½ï¿½Ï´ï¿½. ( wParam = %d, lParam = %d )", wParam, lParam);
+// 	str.Format("WM_IBKWINES ¸Þ½ÃÁö¸¦ ¹Þ¾Ò½À´Ï´Ù. ( wParam = %d, lParam = %d )", wParam, lParam);
 // 	OutputDebugString(str);
 // 	
 // 	HWND hwnd = m_wineSchartHwnd = (HWND)wParam;
 // 	int n = ((int)lParam % 17);
 // 	
 // 	::SendMessage(hwnd,  WM_IBKWINES, n, 0);
-// 	str.Format("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ [ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ : %d ]", n);	
+// 	str.Format("ÀÎÁõ Á¤º¸ Àü¼Û ¿Ï·á [ °ËÁõ ¼ýÀÚ : %d ]", n);	
 // 	OutputDebugString(str);
 // 	
 // 	if(m_miniWid == NULL || !m_miniWid->GetSafeHwnd())
@@ -24440,7 +25569,7 @@ LRESULT CMainFrame::OnIBKWineS( WPARAM wParam, LPARAM lParam )
 
 LRESULT CMainFrame::OnIBKCodeS( WPARAM wParam, LPARAM lParam )
 {
-	// ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½á¿¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½Ã³ï¿½ï¿½ - dkkim 2016.01.11
+	// ¿ÍÀÎ¼­ºñ½º Á¾·á¿¡µû¶ó ÁÖ¼®Ã³¸® - dkkim 2016.01.11
 // 	CChildFrame*	child;
 // 	CSChild*	schild;
 // 	
@@ -24474,14 +25603,14 @@ LRESULT CMainFrame::OnIBKCodeS( WPARAM wParam, LPARAM lParam )
 
 LRESULT CMainFrame::OnIBKWineSNews( WPARAM wParam, LPARAM lParam )
 {
-	// ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½á¿¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½Ã³ï¿½ï¿½ - dkkim 2016.01.11
+	// ¿ÍÀÎ¼­ºñ½º Á¾·á¿¡µû¶ó ÁÖ¼®Ã³¸® - dkkim 2016.01.11
 	//ShowNews();
 	return 0;
 }
 
 LRESULT CMainFrame::OnIBKWineSKiup( WPARAM wParam, LPARAM lParam )
 {
-	// ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½á¿¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½Ã³ï¿½ï¿½ - dkkim 2016.01.11
+	// ¿ÍÀÎ¼­ºñ½º Á¾·á¿¡µû¶ó ÁÖ¼®Ã³¸® - dkkim 2016.01.11
 // 	CString strCode;
 // 
 // 	strCode.Format("1301\t%06d",wParam);
@@ -24550,16 +25679,16 @@ LRESULT CMainFrame::OnLoadSecure( WPARAM wParam, LPARAM lParam )
 	{
 		if(m_axConnect)
 		{
-			//m_axConnect->SetGuide("ï¿½ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½...");
+			//m_axConnect->SetGuide("º¸¾È¼³Á¤À» Àû¿ëÁßÀÔ´Ï´Ù...");
 			m_axConnect->SetStatus(SM_RSM);
 
 			LoadSecureTools();
 
 			m_axConnect->SetStatus(SM_NO);
 
-			//m_axConnect->SetGuide("ï¿½ï¿½ï¿½È¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			//m_axConnect->SetGuide("º¸¾È¼³Á¤ Àû¿ëÀ» ¿Ï·áÇÏ¿´½À´Ï´Ù.");
 
-			m_axConnect->SetGuide("ï¿½Î±ï¿½ï¿½ï¿½ ï¿½Øºï¿½ ï¿½Ï·ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			m_axConnect->SetGuide("·Î±×ÀÎ ÁØºñ°¡ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
 
 			if(!m_auto)
 				m_axConnect->SetEditFocus();
@@ -24569,16 +25698,16 @@ LRESULT CMainFrame::OnLoadSecure( WPARAM wParam, LPARAM lParam )
 	{
 		if(m_axConnectOld)
 		{
-			//m_axConnect->SetGuide("ï¿½ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½...");
+			//m_axConnect->SetGuide("º¸¾È¼³Á¤À» Àû¿ëÁßÀÔ´Ï´Ù...");
 			m_axConnectOld->SetStatus(SM_RSM);
 			
 			LoadSecureTools();
 			
 			m_axConnectOld->SetStatus(SM_NO);
 			
-			//m_axConnect->SetGuide("ï¿½ï¿½ï¿½È¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			//m_axConnect->SetGuide("º¸¾È¼³Á¤ Àû¿ëÀ» ¿Ï·áÇÏ¿´½À´Ï´Ù.");
 			
-			m_axConnectOld->SetGuide("ï¿½Î±ï¿½ï¿½ï¿½ ï¿½Øºï¿½ ï¿½Ï·ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			m_axConnectOld->SetGuide("·Î±×ÀÎ ÁØºñ°¡ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
 			
 			if(!m_auto)
 				m_axConnectOld->SetEditFocus();
@@ -24617,14 +25746,24 @@ void CMainFrame::RunTOP10()
 			else
 				m_top10->ShowWindow(SW_SHOW);
 
-		//	m_top10->ShowWindow(SW_SHOW);  //20191205 top10ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		//	m_top10->ShowWindow(SW_SHOW);  //20191205 top10¹è³Ê Å¬¸¯½Ã Åä±Û µ¿ÀÛ
 		}
 	}
 	else
 	{
+#ifdef DF_USE_CPLUS17
 		m_top10 = std::make_unique<CTOP10Dialog>(this);  
 		if (!m_top10->Create(IDD_TOP10))
 			m_top10 = NULL;
+#else
+		m_top10 = new CTOP10Dialog(this);
+		if (!m_top10->Create(IDD_TOP10))
+		{
+			delete m_top10;
+			m_top10 = NULL;
+		}
+#endif
+	
 	}
 
 }
@@ -24758,12 +25897,12 @@ LRESULT CMainFrame::OnTop10( WPARAM wParam, LPARAM lParam )
 	return 0;
 }
 
-//ASTx ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
+//ASTx °ü·Ã ÇÔ¼ö
 BOOL CMainFrame::installASTx()
 {
 	CString strMasterURL;
 
-//	if(IsWow64() == TRUE) //20191212 ASTX ï¿½ï¿½Ä¡ 
+//	if(IsWow64() == TRUE) //20191212 ASTX ¼³Ä¡ 
 	if(IsWow64() == "64 Bit") 
 	{
 		// x64
@@ -24779,7 +25918,7 @@ BOOL CMainFrame::installASTx()
 // 	BOOL bHideUpdateUI = IsDlgButtonChecked(IDC_CHK_HIDE_UPDATEUI);
 // 	if( bHideUpdateUI )
 // 		dwUIMode = STSDKEX_UI_MODE_HIDE;
-	strMasterURL.Empty();  //url ï¿½Ö¼Ò¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¸ï¿½ï¿½ï¿½ ï¿½Ë¾Æ¼ï¿½ ï¿½Ù²ï¿½ï¿½Ø´Ù°ï¿½ ï¿½ï¿½
+	strMasterURL.Empty();  //url ÁÖ¼Ò¸¦ ºó°ªÀ¸·Î ¿Ã¸®¸é ¾Ë¾Æ¼­ ¹Ù²ãÁØ´Ù°í ÇÔ
 	DWORD dwError = STSDKEX_IsInstalled();
 	switch( dwError )
 	{
@@ -24798,7 +25937,7 @@ BOOL CMainFrame::installASTx()
 				else
 				{
 					CString szMsg;
-					szMsg.Format(_T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.\r\n(result=0x%08x, %s)"), dwError, Err2Str(dwError));
+					szMsg.Format(_T("¾÷µ¥ÀÌÆ®Áß ¿À·ù°¡ ¹ß»ýÇß½À´Ï´Ù.\r\n(result=0x%08x, %s)"), dwError, Err2Str(dwError));
 					AfxMessageBox(szMsg);
 					return FALSE;
 				}
@@ -24807,7 +25946,7 @@ BOOL CMainFrame::installASTx()
 		break;
 	}
 
-	//astx ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+	//astx ¼³Ä¡ÈÄ Àç½ÃÀÛ
 	const int AOSRESTART = AfxGetApp()->GetProfileInt(INFORMATION, "AOSRESTART", 0);
 	if(AOSRESTART == 0 && dwError == STSDKEX_ERROR_SUCCESS)
 	{
@@ -24832,281 +25971,281 @@ CString CMainFrame::Err2Str(DWORD dwErrCode)
 	{
 	case STSDKEX_ERROR_SUCCESS:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½");
+			strErr = _T("¼º°ø");
 		}
 		break;
 	case STSDKEX_ERROR_UNINITIALIZE_FAILED:
 		{
-			strErr = _T("UNINITIALIZEï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("UNINITIALIZE¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_LOADLIBRARY_FAILED:
 		{
-			strErr = _T("SDK ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½Ï´Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("SDK ¸ðµâÀ» ·ÎµåÇÏ´Âµ¥ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_GETPROCADDRESS_FAILED:
 		{
-			strErr = _T("SDK ï¿½ï¿½â¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("SDK ¸ðµâ¿¡¼­ ÀÎÅÍÆäÀÌ½º¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_FUNCTION_START_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û½ï¿½Å°ï¿½Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("±â´ÉÀ» ½ÃÀÛ½ÃÅ°´Âµ¥ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_FUNCTION_STOP_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("±â´ÉÀ» Á¾·á½ÃÅ°´Âµ¥ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_ALREADY_INSTALLED:
 		{
-			strErr = _T("ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½Ä¡ï¿½Ç¾ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("Á¦Ç°ÀÌ ÀÌ¹Ì ¼³Ä¡µÇ¾î ÀÖ½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_NOT_INITIALIZED:
 		{
-			strErr = _T("ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("ÃÊ±âÈ­ µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_BAD_PARAMETER:
 		{
-			strErr = _T("ï¿½Ä¶ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Ì»ï¿½ï¿½Õ´Ï´ï¿½.");
+			strErr = _T("ÆÄ¶ó¹ÌÅÍ°¡ ÀÌ»óÇÕ´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_INITIALIZE_FAILED:
 		{
-			strErr = _T("ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("ÃÊ±âÈ­¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_NOT_LOADLIBRARY:
 		{
-			strErr = _T("SDK ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("SDK ¸ðµâÀÌ ·ÎµåµÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_REMAIN_SHAREDCOUNT:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("±â´ÉÀ» ´Ù¸¥ °÷¿¡¼­ »ç¿ëÁßÀÌ¹Ç·Î Á¾·áÇÒ ¼ö°¡ ¾ø½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_FUNCTION_ALREADY_STOPPED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
+			strErr = _T("±â´ÉÀÌ ÀÌ¹Ì Á¾·áµÈ »óÅÂÀÔ´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_INVALID_CUSTOMER_ID:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ IDï¿½ï¿½ ï¿½ß¸ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("°í°´»ç ID°¡ Àß¸ø µÇ¾ú½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_INVALID_FUNCTION_CODE:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ ï¿½Úµå°¡ ï¿½ß¸ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("±â´É ÄÚµå°¡ Àß¸ø µÇ¾ú½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_PRODUCT_NOT_INSTALLED:
 		{
-			strErr = _T("ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("Á¦Ç°ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_DRIVER_RULE_NOT_VERIFYED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("µå¶óÀÌ¹ö ·êÀÌ À¯È¿ÇÏÁö ¾Ê½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_NOT_PROTECTED_HWND:
 		{
-			strErr = _T("ï¿½ï¿½È£ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ Edit Controlï¿½Ô´Ï´ï¿½.");
+			strErr = _T("º¸È£ÇÏÁö ¾Ê´Â Edit ControlÀÔ´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_NOT_PROPERTY_HWND:
 		{
-			strErr = _T("ï¿½Ó¼ï¿½ï¿½ï¿½ ï¿½ï¿½È¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("¼Ó¼ºÀÌ À¯È¿ÇÏÁö ¾Ê½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_INVALID_PROCESS_ID:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ IDï¿½ï¿½ ï¿½ß¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("ÇÁ·Î¼¼½º ID°¡ Àß¸ø ÁöÁ¤µÇ¾ú½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_DOWNLOAD_SETTING_FAILED:
 		{
-			strErr = _T("ï¿½Ù¿ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("´Ù¿î·ÎµåÇÒ ÆÄÀÏ¼ÂÀ» ±¸¼ºÇÏ´Âµ¥ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_DOWNLOAD_UPDATESETUP:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½Â¾ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿Ã¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("¾÷µ¥ÀÌÆ® ÇÁ·Î±×·¥ ¼Â¾÷À» ¹Þ¾Æ¿Ã¼ö ¾ø½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_CHECK_UPDATEMODULE:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("¾÷µ¥ÀÌÆ® ÇÁ·Î±×·¥ ¸ðµâ °ËÁõÀÌ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_SIGN_NOT_VERIFYED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¹Ù¸ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("¼­¸íÀÌ ¿Ã¹Ù¸£°Ô µÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_FUNCTION_FAILED:
 		{
-			strErr = _T("ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("ÇÔ¼ö¸¦ ¼öÇàÇÏ´Âµ¥ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_INVALID_SUB_FUNCTION_CODE:
 		{
-			strErr = _T("ï¿½ï¿½Å·ï¿½ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î±ï¿½ï¿½ ï¿½Úµå°¡ ï¿½ß¸ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("ÇØÅ·º¸È£ ±â´ÉÀÇ ¼¼ºÎ±â´É ÄÚµå°¡ Àß¸ø µÇ¾ú½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_FUNCTION_NOT_RUNNING:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("±â´ÉÀÌ µ¿ÀÛÁßÀÌÁö ¾Ê½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_FUNCTION_ALREADY_STARTED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
+			strErr = _T("±â´ÉÀÌ ÀÌ¹Ì µ¿ÀÛÁßÀÎ »óÅÂÀÔ´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_CUSTOMER_POLICY_DOWNLOAD_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½Ù¿ï¿½Îµï¿½ ï¿½Ï´Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("°í°´»ç Á¤Ã¥ÆÄÀÏ(±â´É)À» ´Ù¿î·Îµå ÇÏ´Âµ¥ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_OPTION_POLICY_DOWNLOAD_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½(ï¿½É¼ï¿½)ï¿½ï¿½ ï¿½Ù¿ï¿½Îµï¿½ ï¿½Ï´Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("°í°´»ç Á¤Ã¥ÆÄÀÏ(¿É¼Ç)À» ´Ù¿î·Îµå ÇÏ´Âµ¥ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_INVALID_EXCEPTION_PROCESS_LIST:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ß¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("¿¹¿ÜÇÁ·Î¼¼½º ¸®½ºÆ®°¡ Àß¸ø ÁöÁ¤µÇ¾ú½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_NOT_ABLE_BECAUSE_PRIORITY_RULE:
 		{
-			strErr = _T("ï¿½ì¼±ï¿½ï¿½ï¿½ï¿½(ï¿½æµ¹ ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½ï¿½ï¿½ï¿½, Superï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("¿ì¼±¼øÀ§(Ãæµ¹ ÇÁ·Î±×·¥ Á¸Àç, Super·ê)¿¡ µû¶ó »óÀ§ ·êÀÌ Á¸ÀçÇÏ¿© ¿äÃ»À» ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_CONNECT_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½á¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("±â´É ¿¬°á¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 	case STSDKEX_ERROR_FUNCTION_CALL_FAILED:
 		{
-			strErr = _T("ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ È£ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("½Ã½ºÅÛ ÇÔ¼ö È£Ãâ¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_STSESS_EXEC_FAILED:
 		{
-			strErr = _T("STSESS ï¿½ï¿½ï¿½à¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("STSESS ½ÇÇà¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_STSESS_TIMEOUT_FAILED:
 		{
-			strErr = _T("STSESS ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Timeout ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("STSESS ½ÇÇàÀÌ Timeout µÇ¾ú½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_ASDSVC_NOT_RUNNING:
 		{
-			strErr = _T("AsdSvc ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("AsdSvc °¡ ½ÇÇàÁßÀÌÁö ¾Ê½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_ASTX_UPDATING:
 		{
-			strErr = _T("ASTx ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
+			strErr = _T("ASTx ¾÷µ¥ÀÌÆ® ÁßÀÔ´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_NULL_CUSTOMER_ID:
 		{
-			strErr = _T("CUSTOMER IDï¿½ï¿½ NULLï¿½Ô´Ï´ï¿½.");
+			strErr = _T("CUSTOMER ID°¡ NULLÀÔ´Ï´Ù.");
 		}
 		break;
 		
 	case STSDKEX_ERROR_GET_ACTIVE_CONSOLE_SESSION_ID:
 		{
-			strErr = _T("ActiveConsoleSessionIdï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("ActiveConsoleSessionId¸¦ ¾òÁö ¸øÇß½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_CALL_AFTER_INIT:
 		{
-			strErr = _T("STSDKEX_Initialize()ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½Ç¾ï¿½ï¿½ ï¿½Õ´Ï´ï¿½.");
+			strErr = _T("STSDKEX_Initialize()º¸´Ù ¸ÕÀú È£ÃâµÇ¾î¾ß ÇÕ´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_CALL_NOT_IMPLEMENTED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½Ô¼ï¿½ï¿½Ô´Ï´ï¿½.");
+			strErr = _T("Áö¿øÇÏÁö ¾Ê´Â ÇÔ¼öÀÔ´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_PB_NULL_CALLBACK:
 		{
-			strErr = _T("ï¿½Ý¹ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ NULLï¿½Ô´Ï´ï¿½.");
+			strErr = _T("ÄÝ¹éÇÔ¼ö°¡ NULLÀÔ´Ï´Ù.");
 		}
 		break;
 		
 	case STSDKEX_ERROR_PB_NULL_HSBCTL:
 		{
-			strErr = _T("HSBCTLï¿½ï¿½ NULLï¿½Ô´Ï´ï¿½.");
+			strErr = _T("HSBCTLÀÌ NULLÀÔ´Ï´Ù.");
 		}
 		break;
 		
 	case STSDKEX_ERROR_PB_COMPATIBLITY_MODE:
 		{
-			strErr = _T("È£È¯ï¿½ï¿½ ï¿½ï¿½å°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("È£È¯¼º ¸ðµå°¡ ¼³Á¤µÇ¾î ÀÖ½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_PB_CREATEOPTIONS_FAILED:
 		{
-			strErr = _T("CreateOptionsï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("CreateOptionsÀÌ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_PB_COPYDRIVER_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ç¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("µå¶óÀÌ¹ö º¹»ç¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_PB_HSBDRV_INITIALIZE_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("µå¶óÀÌ¹ö ÃÊ±âÈ­¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_PB_HSBDRV_START_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("µå¶óÀÌ¹ö ±¸µ¿¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_PB_HSBDRV_INSERTEXCEPTIONPROCESS_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("µå¶óÀÌ¹ö ¿¹¿ÜÇÁ·Î¼¼½º ¼³Á¤¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_PB_HSBDRV_GETDRIVERVERSION_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½È®ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("µå¶óÀÌ¹ö ¹öÀüÈ®ÀÎ¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 
 	case STSDKEX_ERROR_PB_HSBDRV_LOADDRIVER_FAILED:
 		{
-			strErr = _T("ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½Îµå¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			strErr = _T("µå¶óÀÌ¹ö ·Îµå¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 		}
 		break;
 
@@ -25120,13 +26259,16 @@ BOOL CMainFrame::initASTx()
 #ifdef _DEBUG
 	return FALSE;
 #endif
+	m_slog.Format("[AStx][initASTx] start m_bSdkInitialized=[%d]\n ", m_bSdkInitialized);
+	WriteLog(m_slog);
+
 	DWORD dwError = STSDKEX_ERROR_SUCCESS;
 
 	m_strCustomerID = "ibkstock";
 	
 	if(TRUE == m_bSdkInitialized)
 	{
-		OutputDebugString(_T("already initialized"));
+		OutputDebugString(_T("[AStx][initASTx] already initialized"));
 		return FALSE;
 	}
 	
@@ -25137,7 +26279,7 @@ BOOL CMainFrame::initASTx()
 		return FALSE;
 	}	
 	
-	// ï¿½ñµ¿±ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// ºñµ¿±â ¸ðµå ¼³Á¤
 	dwError = STSDKEX_SetEnvOptionA(STSDKEX_ENV_OPTION_ASYNC,  "on");
 	
 	if( dwError != STSDKEX_ERROR_SUCCESS )
@@ -25146,8 +26288,8 @@ BOOL CMainFrame::initASTx()
 		return FALSE;
 	}
 	
-	// ï¿½ï¿½ï¿½ È£ï¿½ï¿½ Timeout ï¿½Ã°ï¿½ï¿½ï¿½ Milisecond ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
-	dwError = STSDKEX_SetEnvOptionA(STSDKEX_ENV_OPTION_FUNCTIMEOUT,  "180000"); // 3ï¿½ï¿½	
+	// ±â´É È£Ãâ Timeout ½Ã°£À» Milisecond ´ÜÀ§·Î ¼³Á¤ÇÕ´Ï´Ù.
+	dwError = STSDKEX_SetEnvOptionA(STSDKEX_ENV_OPTION_FUNCTIMEOUT,  "180000"); // 3ºÐ	
 	
 	if( dwError != STSDKEX_ERROR_SUCCESS )
 	{
@@ -25155,7 +26297,7 @@ BOOL CMainFrame::initASTx()
 		return FALSE;
 	}
 	
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// µ¶¸³½ÇÇà¸ðµå ¼³Á¤
 	dwError = STSDKEX_SetEnvOptionA(STSDKEX_ENV_OPTION_STANDALONE,  "on");
 	
 	if( dwError != STSDKEX_ERROR_SUCCESS )
@@ -25165,7 +26307,7 @@ BOOL CMainFrame::initASTx()
 	}
 	
 	
-	// ï¿½Ý¹ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+	// ÄÝ¹éÇÔ¼ö¸¦ ¼³Á¤ÇÕ´Ï´Ù.
 	STSDKEX_SetEventCallback(STSDKEX_EventCallback);
 	
 	// Initialize
@@ -25178,6 +26320,9 @@ BOOL CMainFrame::initASTx()
 	}
 
 	m_bSdkInitialized = TRUE;
+
+	m_slog.Format("[AStx][initASTx] ¸Þ¸ð¸® º¸¾È ½ÇÇà Á¤»ó  m_bSdkInitialized=[%d]\n ", m_bSdkInitialized);
+	WriteLog(m_slog);
 
 	return TRUE;
 }
@@ -25195,7 +26340,7 @@ BOOL CMainFrame::uninitASTx()
 	
 	USES_CONVERSION;
 	
-	// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// ±â´É Á¾·á
 	DWORD dwResult = STSDKEX_ERROR_FUNCTION_FAILED;
 
 	dwResult = STSDKEX_StopFuncA(T2A(LPSTR(LPCTSTR(m_strCustomerID))), STSDKEX_FUNC_CODE_PB|STSDKEX_FUNC_CODE_FW|STSDKEX_FUNC_CODE_PCSCAN);
@@ -25203,6 +26348,9 @@ BOOL CMainFrame::uninitASTx()
 	STSDKEX_Unintialize();
 	
 	m_bSdkInitialized = FALSE;
+
+	m_slog.Format("[AStx][initASTx] ¸Þ¸ð¸® º¸¾È ½ÇÇà Á¾·á m_bSdkInitialized=[%d]\n ", m_bSdkInitialized);
+	WriteLog(m_slog);
 
 	return TRUE;
 }
@@ -25213,7 +26361,7 @@ BOOL CMainFrame::startPB()
 	
 	if(FALSE == m_bSdkInitialized)
 	{
-		OutputDebugString("ASTxï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
+		OutputDebugString("ASTx°¡ ÃÊ±âÈ­ µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
 		return FALSE;
 	}
 	
@@ -25225,12 +26373,13 @@ BOOL CMainFrame::startPB()
 	
 	if( STSDKEX_ERROR_SUCCESS == dwResult || STSDKEX_ERROR_NOT_ABLE_BECAUSE_PRIORITY_RULE == dwResult || STSDKEX_ERROR_FUNCTION_ALREADY_STARTED == dwResult )
 	{
-		OutputDebugString("[ASTx]ï¿½ï¿½Å·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÛµÇ¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+		OutputDebugString("[ASTx]ÇØÅ·¹æÁö ±â´ÉÀÌ Á¤»óÀûÀ¸·Î ½ÃÀÛµÇ¾ú½À´Ï´Ù.");
+		WriteLog("[ASTx]ÇØÅ·¹æÁö ±â´ÉÀÌ Á¤»óÀûÀ¸·Î ½ÃÀÛµÇ¾ú½À´Ï´Ù. [¸Þ¸ð¸®] startPB()"); 
 	}
 	else
 	{
 		CString szMsg;
-		szMsg.Format(_T("ï¿½ï¿½Å·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\r\n(result=0x%08x, %s)"), dwResult, Err2Str(dwResult));
+		szMsg.Format(_T("ÇØÅ·¹æÁö ±â´É ½ÃÀÛÁß ¹®Á¦°¡ ¹ß»ýÇÏ¿´½À´Ï´Ù.\r\n(result=0x%08x, %s)"), dwResult, Err2Str(dwResult));
 		AfxMessageBox(szMsg);
 	}
 
@@ -25244,7 +26393,7 @@ BOOL CMainFrame::stopPB()
 	if(FALSE == m_bSdkInitialized)
 	{
 		//AfxMessageBox(_T("[OnButtonStopPB] not SDKInitialized"));
-		OutputDebugString("[ASTx] SDKï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
+		OutputDebugString("[ASTx] SDK°¡ ÃÊ±âÈ­ µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
 		return FALSE;
 	}
 	
@@ -25256,16 +26405,18 @@ BOOL CMainFrame::stopPB()
 	
 	if( STSDKEX_ERROR_SUCCESS == dwResult )
 	{
-		OutputDebugString("[ASTx] ï¿½ï¿½Å·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+		OutputDebugString("[ASTx] ÇØÅ·¹æÁö ±â´ÉÀÌ Á¾·á µÇ¾ú½À´Ï´Ù.");
+		WriteLog("[ASTx]ÇØÅ·¹æÁö ±â´ÉÀÌ Á¾·á µÇ¾ú½À´Ï´Ù. [¸Þ¸ð¸®] stopPB()");
 	}
 	else if( STSDKEX_ERROR_FUNCTION_ALREADY_STOPPED == dwResult )
 	{
-		OutputDebugString("[ASTx] ï¿½ï¿½Å·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.");
+		OutputDebugString("[ASTx] ÇØÅ·¹æÁö ±â´ÉÀÌ µ¿ÀÛÁßÀÌÁö ¾Ê½À´Ï´Ù.");
+		WriteLog("[ASTx]ÇØÅ·¹æÁö ±â´ÉÀÌ µ¿ÀÛÁßÀÌÁö ¾Ê½À´Ï´Ù. [¸Þ¸ð¸®] stopPB()");
 	}
 	else
 	{
 		CString szMsg;
-		szMsg.Format(_T("ï¿½ï¿½Å·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\r\n(result=0x%08x, %s)"), dwResult, Err2Str(dwResult));
+		szMsg.Format(_T("ÇØÅ·¹æÁö ±â´É Á¾·áÁß ¹®Á¦°¡ ¹ß»ýÇÏ¿´½À´Ï´Ù.\r\n(result=0x%08x, %s)"), dwResult, Err2Str(dwResult));
 		AfxMessageBox(szMsg);
 	}
 
@@ -25286,12 +26437,13 @@ BOOL CMainFrame::startFW()
 	
 	if( STSDKEX_ERROR_SUCCESS == dwResult || STSDKEX_ERROR_NOT_ABLE_BECAUSE_PRIORITY_RULE == dwResult || STSDKEX_ERROR_FUNCTION_ALREADY_STARTED == dwResult )
 	{
-		OutputDebugString("[ASTx] ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½âµ¿ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+		OutputDebugString("[ASTx] ¹æÈ­º® ±â´ÉÀÌ Á¤»óÀûÀ¸·Î ±âµ¿µÇ¾ú½À´Ï´Ù.");
+		WriteLog("[ASTx]¹æÈ­º® ±â´ÉÀÌ Á¤»óÀûÀ¸·Î ±âµ¿µÇ¾ú½À´Ï´Ù. [¹æÈ­º®] startFW()");
 	}
 	else
 	{
 		CString szMsg;
-		szMsg.Format(_T("ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\r\n(result=0x%08x, %s)"), dwResult, Err2Str(dwResult));
+		szMsg.Format(_T("¹æÈ­º® ±â´É ½ÃÀÛÁß ¹®Á¦°¡ ¹ß»ýÇÏ¿´½À´Ï´Ù.\r\n(result=0x%08x, %s)"), dwResult, Err2Str(dwResult));
 		AfxMessageBox(szMsg);
 	}
 
@@ -25312,18 +26464,20 @@ BOOL CMainFrame::stopFW()
 	
 	if( STSDKEX_ERROR_SUCCESS == dwResult )
 	{
-		OutputDebugString(_T("[ASTx] ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½."));
+		OutputDebugString(_T("[ASTx] ¹æÈ­º® ±â´ÉÀÌ Á¾·á µÇ¾ú½À´Ï´Ù."));
+		WriteLog("[ASTx]¹æÈ­º® ±â´ÉÀÌ Á¾·á µÇ¾ú½À´Ï´Ù. [¹æÈ­º®] stopFW()");
 		return TRUE;
 	}
 	else if( STSDKEX_ERROR_FUNCTION_ALREADY_STOPPED == dwResult )
 	{
-		OutputDebugString(_T("[ASTx] ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½."));
+		OutputDebugString(_T("[ASTx] ¹æÈ­º® ±â´ÉÀÌ ÀÌ¹Ì µ¿ÀÛÁßÀÌÁö ¾Ê½À´Ï´Ù."));
+		WriteLog("[ASTx]¹æÈ­º® ±â´ÉÀÌ ÀÌ¹Ì µ¿ÀÛÁßÀÌÁö ¾Ê½À´Ï´Ù. [¹æÈ­º®] stopFW()");
 		return TRUE;
 	}
 	else
 	{
 		CString szMsg;
-		szMsg.Format(_T("ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\r\n(result=0x%08x, %s)"), dwResult, Err2Str(dwResult));
+		szMsg.Format(_T("¹æÈ­º® ±â´É Á¾·áÁß ¹®Á¦°¡ ¹ß»ýÇÏ¿´½À´Ï´Ù.\r\n(result=0x%08x, %s)"), dwResult, Err2Str(dwResult));
 		AfxMessageBox(szMsg);
 	}
 
@@ -25431,19 +26585,21 @@ BOOL CMainFrame::startAK()
 {
 	if(FALSE == m_bSdkInitialized)
 	{
-		OutputDebugString("[ASTx] ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
+		OutputDebugString("[ASTx] ÃÊ±âÈ­ µÇÁö¾Ê¾Ò½À´Ï´Ù.");
+		WriteLog("[ASTx]ÃÊ±âÈ­ µÇÁö¾Ê¾Ò½À´Ï´Ù. [Å°º¸µåº¸¾È] startAK()");
 		return FALSE;
 	}
 	
 	// StSdk_GetMkd8Object function call, get interface.
-	// StSdk_GetMkd8Object ï¿½Ô¼ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½Ï¿ï¿½ Interfaceï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½É´Ï´ï¿½.
+	// StSdk_GetMkd8Object ÇÔ¼ö¸¦ È£ÃâÇÏ¿© Interface¸¦ ¾ò¾î ¿É´Ï´Ù.
 	DWORD dwErrorCode = STSDKEX_ERROR_SUCCESS;
 	
 	g_pIAstxAkSDK = STSDKEX_GetMkd8ObjectA( m_strCustomerID, &dwErrorCode );
 	
 	if( g_pIAstxAkSDK == NULL )
 	{
-		OutputDebugString("[ASTx] AK SDK ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+		OutputDebugString("[ASTx] AK SDK ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
+		WriteLog("[ASTx]AK SDK ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù. [Å°º¸µåº¸¾È] startAK()");
 		return FALSE;
 	}
 
@@ -25453,7 +26609,8 @@ BOOL CMainFrame::startAK()
 	const DWORD dwErr = g_pIAstxAkSDK->Initialize(dwInitMode, AKSDK_Callback);
 	if( dwErr != STSDKEX_ERROR_SUCCESS )
 	{
-		OutputDebugString("[ASTx] AK ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+		OutputDebugString("[ASTx] AK ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
+		WriteLog("[ASTx] AK ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù [Å°º¸µåº¸¾È] startAK()");
 		return FALSE;
 	}
 	
@@ -25462,7 +26619,7 @@ BOOL CMainFrame::startAK()
 // 	DWORD dwErr1 = g_pIAstxAkSDK->ProtectEditControl(hwnd1);
 // 	if( dwErr1 != 0 ) 
 // 	{
-// 		OutputDebugString("[ASTx] AK ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+// 		OutputDebugString("[ASTx] AK ºñ¹Ð¹øÈ£ ¿¡µðÆ® ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
 // 		return FALSE;
 // 	}
 // 
@@ -25470,12 +26627,12 @@ BOOL CMainFrame::startAK()
 // 	DWORD dwErr2 = g_pIAstxAkSDK->ProtectEditControl(hwnd2);
 // 	if( dwErr2 != 0 ) 
 // 	{
-// 		OutputDebugString("[ASTx] AK ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+// 		OutputDebugString("[ASTx] AK ÀÎÁõ¹øÈ£ ¿¡µðÆ® ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
 // 		return FALSE;
 // 	}
 // 
 // 	m_axConnect->SetAK(g_pIAstxAkSDK);
-
+	WriteLog("[ASTx]¹æÈ­º® ±â´ÉÀÌ Á¤»óÀûÀ¸·Î ±âµ¿µÇ¾ú½À´Ï´Ù. [Å°º¸µåº¸¾È] startAK()");
 	return TRUE;
 }
 
@@ -25492,6 +26649,7 @@ BOOL CMainFrame::stopAK()
 		}
 		
 		g_pIAstxAkSDK = NULL;
+		WriteLog("[ASTx]Å°º¸µå º¸¾È±â´ÉÀÌ  Á¤»óÀûÀ¸·Î Á¾·áµÇ¾ú½À´Ï´Ù. [Å°º¸µåº¸¾È] stopAK()");
 	}
 
 	return TRUE;
@@ -25557,7 +26715,7 @@ LRESULT CMainFrame::OnLockPass( WPARAM wParam, LPARAM lParam )
 
 	if (m_iCErrCnt >= 5)
 	{
-		AfxMessageBox("ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ 5È¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ HTSï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ë´Ï´ï¿½.\r\n ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ß±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ ï¿½Ù½ï¿½ ï¿½Ãµï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½");
+		AfxMessageBox("ÀüÀÚ¼­¸í ºñ¹Ð¹øÈ£ 5È¸ ¿À·ù·Î HTS°¡ Á¾·áµË´Ï´Ù.\r\n ÀÎÁõ¼­¸¦ Àç¹ß±Þ ¹ÞÀ¸½Ã°í ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä");
 		this->SendMessage(WM_CLOSE, 0, 0);
 		return 0;
 	}
@@ -25710,7 +26868,7 @@ CRect CMainFrame::getPBArrRect(CWnd* pdlg, int iwidth, int iheight)
 //	int index;
 	CPBRect* pArrRect = NULL;
 
-	if(m_arrOrdRect.GetSize() == 0 ) //ï¿½Üµï¿½(ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½È°ï¿½ï¿½
+	if(m_arrOrdRect.GetSize() == 0 ) //´Üµ¶(ÃÖÃÊ)À¸·Î ¶ß°Ô µÈ°æ¿ì
 	{
 		
 		CRect mRc;
@@ -25736,7 +26894,7 @@ CRect CMainFrame::getPBArrRect(CWnd* pdlg, int iwidth, int iheight)
 		return rect;
 	}
 
-	//ï¿½Ì¹ï¿½ PB ï¿½ï¿½ï¿½Ì¾Ë·Î±×°ï¿½ ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â°ï¿½ï¿½
+	//ÀÌ¹Ì PB ´ÙÀÌ¾Ë·Î±×°¡ ¶°ÀÖ´Â »óÅÂÀÎ´ë ¶Ç ³»·Á¿Â°æ¿ì
 	CRect beforeRect;
 	for(int ii = 0 ; ii < m_arrOrdRect.GetSize() ; ii++)
 	{
@@ -25762,11 +26920,11 @@ CRect CMainFrame::getPBArrRect(CWnd* pdlg, int iwidth, int iheight)
 			}
 		}
 		else 
-			beforeRect = m_arrOrdRect.GetAt(ii)->rect;  //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ PBDlgï¿½ï¿½ postion
+			beforeRect = m_arrOrdRect.GetAt(ii)->rect;  //°¡Àå ¸¶Áö¸· Á¸ÀçÇÏ´Â PBDlgÀÇ postion
 	}
 	
 	if(!CompareRect(pArrRect->MainRect, GetWndRect()))
-	{//ï¿½Ë¾ï¿½Ã¢ï¿½ï¿½ ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ HTS ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½
+	{//ÆË¾÷Ã¢ÀÌ ¶°ÀÖ´Â »óÅÂ¿¡¼­ HTS ¸ÞÀÎÀüÃ¼¸¦ ¿Å°åÀ»¶§
 		beforeRect = getBasePBRect(iwidth, iheight);
 		m_arrOrdRect.RemoveAll();
 	}
@@ -25843,6 +27001,7 @@ bool CMainFrame::CompareRect(CRect aRect, CRect bRect)
 
 void CMainFrame::ReadAxisGlb()
 {
+	OutputDebugString("CMainFrame::ReadAxisGlb ");
 	m_arrGlb.RemoveAll();
 
 	CString	keys, secs, slog;
@@ -25876,7 +27035,7 @@ OutputDebugString(slog);
 	}
 }
 
-void CMainFrame::GetASTxInstall()  //20191212 ASTx ï¿½ï¿½Ä¡Ã¼Å©
+void CMainFrame::GetASTxInstall()  //20191212 ASTx ¼³Ä¡Ã¼Å©
 {
 	m_DInstallASTx = STSDKEX_IsInstalled();
 }
@@ -25916,8 +27075,8 @@ void CMainFrame::LoadNoTwoPOP_NoSaveLast()
 }
 
 
-//ï¿½Î¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ È­ï¿½ï¿½ï¿½Î°ï¿½ï¿½ 
-//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ä¿ï¿½ ï¿½È¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½
+//µÎ¹ø ¿­¸®Áö ¾Ê´Â È­¸éÀÎ°æ¿ì 
+//ÇöÀç ¿­·ÁÀÖ´ÂÁö È®ÀÎÈÄ¿¡ ¾È¿­·Á ÀÖÀ¸¸é ¿­°í ¿­·ÁÀÖÀ¸¸é Æ÷Ä¿½º¸¦ ÁØ´Ù
 bool CMainFrame::IsNoTwopop(CString strmap)
 {  
 CString slog;
@@ -26007,7 +27166,7 @@ void   CMainFrame::signOnSimpleAuth(char* pdata)
 m_slog.Format("[QRCODE] signOnSimpleAuth [%d][%s]", strlen(pdata), pdata);
 OutputDebugString(m_slog);
 
-	m_axConnect->SetGuide(_T("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ ï¿½Ô´Ï´ï¿½."));
+	m_axConnect->SetGuide(_T("»ç¿ëÀÚÁ¤º¸ È®ÀÎ Áß ÀÔ´Ï´Ù."));
 	BOOL rc = FALSE;
 
 	CString	str;
@@ -26024,7 +27183,7 @@ OutputDebugString(m_slog);
 		char	cpas[30]{};
 		char	uips[15]{};
 		char	madr[16]{};
-		char    sdat[7476]{};         /* ï¿½ï¿½ï¿½ï¿½ DNï¿½ï¿½ */
+		char    sdat[7476]{};         /* ÀÎÁõ DN°ª */
 	} signPC;
 
 	m_step = axOPENSIGN;
@@ -26066,7 +27225,7 @@ OutputDebugString(m_slog);
 	}
 
 
-	CopyMemory(signPC.sdat, pdata, strlen(pdata));   //ï¿½ï¿½ï¿½â°¡ ï¿½Ù½ï¿½ï¿½Ì´ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½. 
+	CopyMemory(signPC.sdat, pdata, strlen(pdata));   //¿©±â°¡ ÇÙ½ÉÀÌ´Ù. ÀÎÁõ¼­°ªÀ» ³Ö¾îÁà¾ß ÇÑ´Ù. 
 
 	int nBytes = sizeof(i_pc);
 	CopyMemory(wb, (char *)&signPC, nBytes);
@@ -26082,7 +27241,7 @@ OutputDebugString(m_slog);
 		m_axConnect->SetChoice(true);
 		m_axMisc->GetGuide(AE_ESIGNON, str);
 		//m_axConnect->SetGuide(str);
-		MessageBox(str, "IBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.", MB_OK);
+		MessageBox(str, "IBKÅõÀÚÁõ±Ç.", MB_OK);
 		return;
 	}
 
@@ -26168,7 +27327,7 @@ void CMainFrame::SendCBSerachTR()
 		char usid[8];
 	};
 
-	char igubn = 'S';   //ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½ S  ï¿½Ê¿ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½ Q
+	char igubn = 'S';   //¸ÞÀÎ¿¡¼­ È£Ãâ½Ã S  ¸Ê¿¡¼­ È£Ãâ½Ã Q
 	struct _pibfjinf *pPibfjinf;
 	pdata = new char[sizeof(struct _pibfjinf) + 1];
 	memset(pdata, 0x00, sizeof(struct _pibfjinf));
@@ -26186,13 +27345,13 @@ OutputDebugString(slog);
 	sendTR("pibfjinf", pdata, sizeof(struct _pibfjinf), 0, 'C');
 }
 */
-//1 ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½
-//2 ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½
-//3 ï¿½Ú½ï¿½ï¿½ï¿½, ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½
+//1 ÄÚ½ºÇÇ ¹ßµ¿
+//2 ÄÚ½º´Ú ¹ßµ¿
+//3 ÄÚ½ºÇÇ, ÄÚ½º´Ú ¹ßµ¿
 /*
 void CMainFrame::ParseRTSMessage(char* pdata, int len)
 {
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ CBï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ñ´ï¿½
+	//³»·ÁÁØ µ¥ÀÌÅÍ¸¦ º¸°í CBÀÎÁö È®ÀÎÇÑ´Ù
 	int iGubn = 0;
 	CString sgubn;
 	sgubn.Format("%s", pdata);
@@ -26201,27 +27360,27 @@ void CMainFrame::ParseRTSMessage(char* pdata, int len)
 	slog.Format("[cb]  ParseRTSMessage = [%s] [%s]\n ", pdata, sgubn);
 	OutputDebugString(slog);
 
-	if(sgubn == "+1")		//1 ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½
+	if(sgubn == "+1")		//1 ÄÚ½ºÇÇ ¹ßµ¿
 	{
-		PBMngShow("ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½", 1);
+		PBMngShow("ÄÚ½ºÇÇ ¹ßµ¿", 1);
 	}
-	else if(sgubn == "+2")  //2 ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½
+	else if(sgubn == "+2")  //2 ÄÚ½º´Ú ¹ßµ¿
 	{
-		PBMngShow("ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½", 2);
+		PBMngShow("ÄÚ½º´Ú ¹ßµ¿", 2);
 	}
-	else if(sgubn == "+3")  //3 ï¿½Ú½ï¿½ï¿½ï¿½, ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½
+	else if(sgubn == "+3")  //3 ÄÚ½ºÇÇ, ÄÚ½º´Ú ¹ßµ¿
 	{
-		PBMngShow("ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½", 1);
-		PBMngShow("ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ßµï¿½", 2);
+		PBMngShow("ÄÚ½ºÇÇ ¹ßµ¿", 1);
+		PBMngShow("ÄÚ½º´Ú ¹ßµ¿", 2);
 	}
 }
 */
 /*
-		//20200402 ï¿½ï¿½ï¿½ß¸ï¿½ï¿½ï¿½ï¿½  //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ°ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ì°¡ ï¿½ï¿½ï¿½ï¿½
+		//20200402 ´ÙÁß¸ð´ÏÅÍ  //¸ð´ÏÅÍ ¹è¿­À» º¯°æÇÑ°æ¿ì ¹ß»ýÇÏ´Â °æ¿ì°¡ ¸¹À½
 		CString slog;
 		int iWidth = 0;
 		int iHeight = 0;
-		int iMonitorCount = GetSystemMetrics(SM_CMONITORS);   //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		int iMonitorCount = GetSystemMetrics(SM_CMONITORS);   //¸ð´ÏÅÍ °³¼ö
 
 		DISPLAY_DEVICE dd;
 		DEVMODE dm;
@@ -26265,12 +27424,12 @@ case 0:
 m_mapHelper->CreateChild("AM070101",0,0,CenterPOS,CPoint(400,400));
 }
 break;
-case 1:  //ï¿½Ú½ï¿½ï¿½ï¿½
+case 1:  //ÄÚ½ºÇÇ
 {
 m_mapHelper->CreatePopup("IB0000E1",1,WK_POPUP, 5);	//centerpos = 5
 }
 break;
-case 2:  //ï¿½Ú½ï¿½ï¿½ï¿½
+case 2:  //ÄÚ½º´Ú
 {
 m_mapHelper->CreatePopup("IB0000E1",1,WK_POPUP, 5);	//centerpos = 5
 }
@@ -26328,7 +27487,7 @@ void CMainFrame::PBMngShow(CString strMsg, int iGubn)
 
 
 
-//XCERE ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½-> ï¿½ï¿½ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+//XCERE »ç¿ë½Ã ÇÊ¿äÇÑ ¸ðµâ-> Æú´õÈ¯°æ ±¸¼º 
 #define DF_XECURE_FILE  "xc32_win64.zip"
 #define DF_XECURE_FOLDER  "xc32_win64"
 void CMainFrame::UnzipXecure()
@@ -26344,7 +27503,7 @@ void CMainFrame::UnzipXecure()
 		sCopyfile.Format("%s\\\%s", Axis::home, DF_XECURE_FILE);
 		CopyFile(xcure_path, sCopyfile, true);
 		int ierr = GetLastError();
-		strguide = "HTS XCURE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½";
+		strguide = "HTS XCURE ¾÷µ¥ÀÌÆ®Áß";
 			
 		//unzip
 		const int	pos = sCopyfile.ReverseFind('.');
@@ -26442,6 +27601,20 @@ UINT AFXAPI CMainFrame::HashDataAXIS(LPCSTR key)
 	return nHash;
 }
 
+void CMainFrame::Delete_AsisICon()
+{
+	CString fname;
+	fname = Axis::home + "\\tab\\ICON.bat";
+	CFileFind finder;
+	if (finder.FindFile(fname))
+	{
+		m_slog.Format("[axis] Delete_AsisICon");
+		OutputDebugString(m_slog);
+		ShellExecute(NULL, _T("open"), fname, NULL, NULL, SW_SHOWNORMAL);
+		::DeleteFile(fname);
+	}
+}
+
 //CString ip;
 //	ip.Format("%s", ipaddr);
 //	ip.TrimLeft(), ip.TrimRight();
@@ -26484,7 +27657,7 @@ UINT AFXAPI CMainFrame::HashDataAXIS(LPCSTR key)
 //	
 //	if (!m_hInsta)
 //	{
-//		TRACE("PCIDENTITYï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½1");
+//		TRACE("PCIDENTITYÄÁÆ®·Ñ »ý¼º ½ÇÆÐ1");
 //		return 0;
 //	}
 //	
@@ -26602,4 +27775,199 @@ UINT AFXAPI CMainFrame::HashDataAXIS(LPCSTR key)
 						sRet.Format("%s", vsRet.boolVal == VARIANT_TRUE ? "TRUE" : "FALSE");
 
 						TRACE(sRet);*/
+
+
+//CString CMainFrame::get_glb_addr(char* macaddr, char* ip)
+//{
+//OutputDebugString("GLB -------get_glb_addr------\n");
+//	CString file;
+//	file.Format("%s\\exe\\axisglb.dll", Axis::home);
+//
+//	typedef long (WINAPI *GETGLBFUNC)(char*, char*, int, char*, int, bool);
+//	HMODULE hModule = LoadLibrary(file);
+//	CString ips("");
+//	
+//	if (hModule)
+//	{
+//		GETGLBFUNC func = (GETGLBFUNC)GetProcAddress(hModule, "axGetGLB");
+//		if (func)
+//		{
+//			typedef struct {
+//				char user[12];
+//				char pass[8];
+//				char dats[10];
+//				char cpas[30];
+//				char uips[15];
+//				char madr[16];
+//				char fill[32];
+//			} axglbM;
+//
+//			typedef struct {
+//				char result;  // R: ok  X: failed (ip´Â ÁØ´Ù) ===> X, R ÀÌ¿ÜÀÇ ÇÃ·¡±×ÀÏ °æ¿ì ÃßÈÄ ¸Þ½ÃÁö Ã³¸® °¡´É.
+//				char ip[16];
+//				char ecod[1];
+//				char verx[32];
+//			} axglbRcv; 
+//
+//			axglbM mid{};
+//			axglbRcv mod{};
+//
+//			if(m_bUseNewLogin)
+//			{
+//				CString str = m_axConnect->GetSignInfo();
+//
+//				Axis::userID = m_axConnect->GetUserID();
+//				m_pass = m_axConnect->GetPassword();
+//				m_cpass  = m_axConnect->GetCPass();
+//
+//				memset(&mid, ' ', sizeof(mid));
+//				memset(&mod, ' ', sizeof(mod));
+//				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
+//				FormatCopy(mid.user, Axis::userID);
+//				FormatCopy(mid.pass, "");
+//				CopyMemory(mid.dats, str, str.GetLength());
+//				FormatCopy(mid.cpas, "");
+//				FormatCopy(mid.uips, ip);
+//				FormatCopy(mid.madr, macaddr);
+//
+//				FormatCopy(mid.fill, "HTS_vc2019");
+//
+//				int len =  func((char*)(const char*)(Axis::home + "\\" + TABDIR), 
+//					(char*)&mid, sizeof(axglbM), (char*)&mod, sizeof(axglbRcv), (bool)!Axis::isCustomer);
+//
+//				ips = CString(mod.ip, sizeof(mod.ip));
+//				ips.TrimRight();
+//			}
+//			else
+//			{
+//				CString str = m_axConnectOld->GetSignInfo();
+//				
+//				Axis::userID = m_axConnectOld->GetUserID();
+//				m_pass = m_axConnectOld->GetPassword();
+//				m_cpass  = m_axConnectOld->GetCPass();
+//				
+//				memset(&mid, ' ', sizeof(mid));
+//				memset(&mod, ' ', sizeof(mod));
+//				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
+//				FormatCopy(mid.user, Axis::userID);
+//				FormatCopy(mid.pass, "");
+//				CopyMemory(mid.dats, str, str.GetLength());
+//				FormatCopy(mid.cpas, "");
+//				FormatCopy(mid.uips, ip);
+//				FormatCopy(mid.madr, macaddr);
+//
+//				FormatCopy(mid.fill, "HTS_vc2019");
+//				
+//				int len =  func((char*)(const char*)(Axis::home + "\\" + TABDIR), 
+//					(char*)&mid, sizeof(axglbM), (char*)&mod, sizeof(axglbRcv), (bool)!Axis::isCustomer);
+//				
+//				ips = CString(mod.ip, sizeof(mod.ip));
+//				ips.TrimRight();
+//			}
+//
+//			m_axis->WriteProfileString(INFORMATION, "Server", ips);	
+//		}
+//		FreeLibrary(hModule);
+//	}
+//
+//	return ips;
+//}
+//
+//CString CMainFrame::get_glb_addr_Index(char* macaddr, char* ip)
+//{
+//OutputDebugString("GLB -------get_glb_addr_Index------\n");
+//
+//
+//	CString file;
+//	file.Format("%s\\exe\\axisglb.dll", Axis::home);
+//	
+//	typedef long (WINAPI *GETGLBFUNC)(char*, char*, int, char*, int, int, bool);
+//	HMODULE hModule = LoadLibrary(file);
+//	CString ips("");
+//	
+//	if (hModule)
+//	{
+//		GETGLBFUNC func = (GETGLBFUNC)GetProcAddress(hModule, "axGetGLB_Index");
+//		if (func)
+//		{
+//			typedef struct {
+//				char user[12];
+//				char pass[8];
+//				char dats[10];
+//				char cpas[30];
+//				char uips[15];
+//				char madr[16];
+//				char fill[32];
+//			} axglbM;
+//			
+//			typedef struct {
+//				char result;  // R: ok  X: failed (ip´Â ÁØ´Ù) ===> X, R ÀÌ¿ÜÀÇ ÇÃ·¡±×ÀÏ °æ¿ì ÃßÈÄ ¸Þ½ÃÁö Ã³¸® °¡´É.
+//				char ip[16];
+//				char ecod[1];
+//				char verx[32];
+//			} axglbRcv; 
+//			
+//			axglbM mid{};
+//			axglbRcv mod{};
+//			
+//			if(m_bUseNewLogin)
+//			{
+//				CString str = m_axConnect->GetSignInfo();
+//				
+//				Axis::userID = m_axConnect->GetUserID();
+//				m_pass = m_axConnect->GetPassword();
+//				m_cpass  = m_axConnect->GetCPass();
+//				
+//				memset(&mid, ' ', sizeof(mid));
+//				memset(&mod, ' ', sizeof(mod));
+//				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
+//				FormatCopy(mid.user, Axis::userID);
+//				FormatCopy(mid.pass, "");
+//				CopyMemory(mid.dats, str, str.GetLength());
+//				FormatCopy(mid.cpas, "");
+//				FormatCopy(mid.uips, ip);
+//				FormatCopy(mid.madr, macaddr);
+//
+//				FormatCopy(mid.fill, "HTS_vc2019");
+//				
+//				int len =  func((char*)(const char*)(Axis::home + "\\" + TABDIR), 
+//					(char*)&mid, sizeof(axglbM), (char*)&mod, sizeof(axglbRcv), m_iGlbIndex, (bool)!Axis::isCustomer);
+//				
+//				ips = CString(mod.ip, sizeof(mod.ip));
+//				ips.TrimRight();
+//			}
+//			else
+//			{
+//				CString str = m_axConnectOld->GetSignInfo();
+//				
+//				Axis::userID = m_axConnectOld->GetUserID();
+//				m_pass = m_axConnectOld->GetPassword();
+//				m_cpass  = m_axConnectOld->GetCPass();
+//				
+//				memset(&mid, ' ', sizeof(mid));
+//				memset(&mod, ' ', sizeof(mod));
+//				//º¸¾È»óÀÇ ÀÌÀ¯·Î ºñ¹Ð¹øÈ£ Á¦°Å - 2012.10.07
+//				FormatCopy(mid.user, Axis::userID);
+//				FormatCopy(mid.pass, "");
+//				CopyMemory(mid.dats, str, str.GetLength());
+//				FormatCopy(mid.cpas, "");
+//				FormatCopy(mid.uips, ip);
+//				FormatCopy(mid.madr, macaddr);
+//
+//				FormatCopy(mid.fill, "HTS_vc2019");
+//				
+//				int len =  func((char*)(const char*)(Axis::home + "\\" + TABDIR), 
+//					(char*)&mid, sizeof(axglbM), (char*)&mod, sizeof(axglbRcv), m_iGlbIndex, (bool)!Axis::isCustomer);
+//				
+//				ips = CString(mod.ip, sizeof(mod.ip));
+//				ips.TrimRight();
+//			}
+//			
+//			m_axis->WriteProfileString(INFORMATION, "Server", ips);	
+//		}
+//		FreeLibrary(hModule);
+//	}
+//	
+//	return ips;
+//}
 #endif

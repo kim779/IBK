@@ -58,14 +58,13 @@ public:
 	class CTreeWnd* GetTreeWnd();
 
 	void	SetParam(_param *pParam);
-	int		GetParamKey() { return m_param.key; }
+	int	GetParamKey() { return m_param.key; }
 	CString GetParamName() { return CString(m_param.name, m_param.name.GetLength());}
 	CRect	GetParamRect() { return m_param.rect; }
 	BOOL	GetViewType() { return m_bAllType; }
 	void    doRTMx(LPARAM lParam);
 	CString GetMarketTime() { return m_strMarketTime; };	//KSJ 2012.11.26 장운영시간 
 	void	uploadBackup();			//2016.07.12 KSJ 관심종목 설정과 같이 'b' 보내줌
-
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CMainWnd)

@@ -4518,7 +4518,7 @@ bool CJongmukDlg::SearchJongmok(CString sName, bool bAddAll)
 		if (!bAddAll)
 		{
 			vector<HCODEX*> vData;
-			std::copy(_vSCODE.begin(), _vSCODE.end(), vData.begin());
+			std::copy(_vSCODE.begin(), _vSCODE.end(), std::back_inserter(vData));
 			ListRemoveAll();
 			CodeListSome(vData);
 		}
@@ -4649,14 +4649,21 @@ bool CJongmukDlg::SearchJongmok(CString sName, bool bAddAll)
 			{
 				auto it = std::remove_if(vSearch.begin(), vSearch.end(), [&](const auto hjc)->bool{
 					name = CString(hjc->hnam, sizeof(hjc->hnam)).Mid(1);
-					if (name.GetLength() < ii+1)
+					name.Trim();
+					if (name.GetLength() < ii)
 						return true;
 					CString strUpperS, strUpperO;
 					strUpperS = cName;
-					strUpperO = name.GetAt(ii);
-					strUpperS.MakeUpper();
-					strUpperO.MakeUpper();
 
+
+					strUpperO = name.GetAt(ii);
+					strUpperS.MakeUpper();	
+					
+					if (strUpperO.GetAt(0) > 0 && 127 >= strUpperO.GetAt(0))
+					{
+						if (isalpha(strUpperO.GetAt(0)))
+							strUpperO.MakeUpper();
+					}
 					if (strUpperS != strUpperO)
 						return true;
 					return false;

@@ -138,6 +138,7 @@ void CEtfDlg::InitialList(int nETF)
 	m_ListCtrl.DeleteAllItems();
 	m_ListCtrl.SetColumnWidth(1, LVSCW_AUTOSIZE_USEHEADER);	//2015.09.30 KSJ 컬럼사이즈 내용에 맞게 사이즈 조절
 	m_search = FALSE;
+	_vData.clear();
 
 	if(nETF == acETF || nETF == acETFETN)
 	{
@@ -147,13 +148,13 @@ void CEtfDlg::InitialList(int nETF)
 		});
 	}
 
-	//if(nETF == acETN || nETF == acETFETN)
-	//{
-	//	for_each(_vETN.begin(), _vETN.end(), [&](const auto hjc){
-	//		_vData.emplace_back(std::move(std::make_pair( CString(hjc->code, sizeof(hjc->code)).Mid(1),  
-	//		                                              CString(hjc->hnam, sizeof(hjc->hnam)).Mid(1))));
-	//	});		
-	//}
+	if(nETF == acETN || nETF == acETFETN)
+	{
+		for_each(_vETNx.begin(), _vETNx.end(), [&](const auto hjc){
+			_vData.emplace_back(std::move(std::make_pair( CString(hjc->code, sizeof(hjc->code)).Mid(1),  
+			                                              CString(hjc->hnam, sizeof(hjc->hnam)).Mid(1))));
+		});		
+	}
 
 	std::copy(_vData.begin(), _vData.end(), std::back_inserter(_vSelect));
 
@@ -358,14 +359,21 @@ bool CEtfDlg::SearchJongmok(CString sName, bool bAddAll)
 		else			// 그외는 1Byte
 		{
 			for_each(vSearch.begin(), vSearch.end(), [&](const auto item){
-				if (item.second.GetLength() < 1)	return;
+				if (item.second.GetLength() < 1)	
+					return;
+				
 				CString strUpperS, strUpperO;
 				strUpperS = cName;
-				strUpperO = item.second.GetAt(ii);
-				strUpperS.MakeUpper();
-				strUpperO.MakeUpper();
-				
-				if (strUpperS == strUpperO)	vText.emplace_back(item);	;
+
+				if (ii < item.second.GetLength())
+				{
+					//strUpperO = item.second.GetAt(ii);
+					//strUpperS.MakeUpper();
+					//strUpperO.MakeUpper();
+
+					//if (strUpperS == strUpperO)	
+					//	vText.emplace_back(item);
+				}
 			});
 			ii += 1;
 		}

@@ -110,6 +110,43 @@ BOOL CAxisCodeApp::LoadCode()
 		}
 
 	}
+	//else
+	//{
+
+	//	if (string.Format("%s/%s/%s", m_root, TABDIR, HJCODE);
+	//		!file.Open(string, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone))
+	//		return FALSE;
+
+	//	const int size = gsl::narrow_cast<int>(file.GetLength());
+	//	m_hcB = std::make_unique<char[]>(size + 1);
+	//	const int len = file.Read(m_hcB.get(), size);
+	//	file.Close();
+
+	//	if (size > len)
+	//	{
+	//		m_hcB.reset();
+	//		return FALSE;
+	//	}
+
+	//	const int count = len / sizeof(struct hjcode);
+	//	struct	hjcode* hjc = (struct hjcode*)m_hcB.get();
+
+	//	for (int ii = 0; ii < count; ii++, hjc++)
+	//	{
+	//		CString sCode = CString(hjc->code, HCodeLen).Mid(1);
+	//		_mapCODE.emplace(std::move(sCode), hjc);
+	//		if (hjc->ssgb == jmELW)
+	//			continue;
+
+	//		if (hjc->ssgb == jmETN)	//2014.10.28 KSJ ETN Ãß°¡
+	//		{
+	//			_vETN.emplace_back(hjc);
+	//			continue;
+	//		}
+	//		_mapACODE.emplace(std::move(sCode), std::move(std::make_pair(CString(hjc->hnam, HNameLen).Mid(1), 0)));
+	//		_mapNAME.emplace(std::move(CString(hjc->hnam, HNameLen).Mid(1)), std::move(sCode));
+	//	}
+	//}
 	return TRUE;
 }
 

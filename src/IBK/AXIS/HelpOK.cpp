@@ -48,7 +48,13 @@ BOOL CHelpOK::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+#ifdef DF_USE_CPLUS17
 	m_changer = std::make_unique<CControlChanger>(this);
+#else
+	m_changer = new CControlChanger(this);
+#endif
+
+	
 	CString	imgN;
 	imgN.Format("%s\\image\\remote_ok.bmp", Axis::home);
 	m_bitmap = (HBITMAP)LoadImage(AfxGetApp()->m_hInstance,
@@ -94,4 +100,7 @@ HBRUSH CHelpOK::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void CHelpOK::OnDestroy() 
 {
 	CDialog::OnDestroy();
+#ifndef DF_USE_CPLUS17
+	delete m_changer;
+#endif
 }

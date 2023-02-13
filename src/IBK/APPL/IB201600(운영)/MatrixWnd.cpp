@@ -152,6 +152,7 @@ void CMatrixWnd::OnPaint()
 		rcRtg.bottom = rcRtg.top+20;
 	}
 	// Do not call CWnd::OnPaint() for painting messages
+	myPen.DeleteObject();
 }
 
 void CMatrixWnd::OnMouseMove(UINT nFlags, CPoint point) 

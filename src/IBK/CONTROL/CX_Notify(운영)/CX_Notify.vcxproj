@@ -114,7 +114,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/CX_Notify.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/CX_Notify.dll</OutputFile>
       <ImportLibrary>.\Debug\CX_Notify.lib</ImportLibrary>
       <ModuleDefinitionFile>.\CX_Notify.def</ModuleDefinitionFile>
     </Link>

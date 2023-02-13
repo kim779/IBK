@@ -94,10 +94,11 @@ int CSellWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_pGroup =std::make_unique<CComboBox>();
 	m_pGroup->Create(WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CBS_DROPDOWNLIST, 
 						CRect(rcCtrl.left, rcCtrl.top, rcCtrl.right, 200), this, IDC_GROUP);
+	SetWindowTheme(m_pGroup->GetSafeHwnd(), L"", L"");
 	m_pGroupID =std::make_unique<CComboBox>();
 	m_pGroupID->Create(WS_CHILD | WS_CLIPSIBLINGS | CBS_DROPDOWNLIST, 
 						CRect(0, 0, 0, 0), this, IDC_GROUP);
-
+	SetWindowTheme(m_pGroupID->GetSafeHwnd(), L"", L"");
 	rcCtrl.left = rcCtrl.right + 3;
 	rcCtrl.right = rcCtrl.left + SZ_CTRL_4BUTTON;
 
@@ -167,6 +168,7 @@ int CSellWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_pType =std::make_unique<CComboBox>();
 	m_pType->Create(WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CBS_DROPDOWNLIST, 
 						CRect(rcCtrl.left, rcCtrl.top, rcCtrl.right, 200), this, IDC_TYPE);
+	SetWindowTheme(m_pType->GetSafeHwnd(), L"", L"");
 
 	rcCtrl.left = rcCtrl.right + CTRL_SPACE;
 	rcCtrl.right = rcCtrl.left + SZ_COMBO_2WIDTH;
@@ -174,6 +176,7 @@ int CSellWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_pCondition =std::make_unique<CComboBox>();
 	m_pCondition->Create(WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CBS_DROPDOWNLIST, 
 						CRect(rcCtrl.left, rcCtrl.top, rcCtrl.right, 200), this, IDC_CONDITION);
+	SetWindowTheme(m_pCondition->GetSafeHwnd(), L"", L"");
 
 	rcCtrl.left = rcCtrl.right + CTRL_SPACE_W;
 	rcCtrl.right = rcCtrl.left + SZ_CTRL_2STATIC;
@@ -202,7 +205,7 @@ int CSellWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_pCostType =std::make_unique<CComboBox>();
 	m_pCostType->Create(WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CBS_DROPDOWNLIST, 
 						CRect(rcCtrl.left, rcCtrl.top, rcCtrl.right, 200), this, IDC_COSTTYPE);
-
+	SetWindowTheme(m_pCostType->GetSafeHwnd(), L"", L"");
 	rcCtrl.left = rcCtrl.right + 1;
 	rcCtrl.right = rcCtrl.left + SZ_CTRL_6EDIT;
 

@@ -75,8 +75,11 @@ BOOL CAlarm::OnInitDialog()
 	const int width = 15;
 	const int height = 15;
 
-
+#ifdef DF_USE_CPLUS17
 	m_btnClose = std::make_unique< CShapeButton>();
+#else
+	m_btnClose = new CShapeButton;
+#endif
 	m_btnClose->SubclassWindow(GetDlgItem(IDOK)->m_hWnd);
 	m_btnClose->SetImgBitmap("GRAY_Ã¢´Ý±â", 2);
 
@@ -128,5 +131,8 @@ void CAlarm::OnChangeMsg()
 
 void CAlarm::OnDestroy() 
 {
+#ifndef DF_USE_CPLUS17
+	delete m_btnClose;
+#endif
 	CDialog::OnDestroy();
 }

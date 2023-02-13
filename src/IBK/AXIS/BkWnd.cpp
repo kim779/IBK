@@ -104,6 +104,7 @@ LRESULT CBkWnd::OnSetCursorMap(WPARAM wParam, LPARAM lParam)
 		{
 			const _keyRect *pData = (_keyRect *)lParam;
 		
+#ifdef DF_USE_CPLUS17
 			CRect* pRect{};
 			const RECT rc = pData->rect;
 			const auto ft = m_mapCursorMap.find(pData->pStr);
@@ -113,15 +114,32 @@ LRESULT CBkWnd::OnSetCursorMap(WPARAM wParam, LPARAM lParam)
 			}
 			else
 				ft->second->SetRect(rc.left, rc.top, rc.right, rc.bottom);
+#else
+			CRect* pRect{};
+			if (!m_mapCursorMap.Lookup(pData->pStr, (void*&)pRect))
+				pRect = new CRect(pData->rect);
+			else
+				*pRect = CRect(pData->rect);
+			m_mapCursorMap.SetAt(pData->pStr, pRect);
+#endif
 		}
 		break;
 	case SCM_DELETECURSORMAP:
 		{
 			const LPSTR pStr = (LPSTR)lParam;
 
+#ifdef DF_USE_CPLUS17
 			const auto ft = m_mapCursorMap.find(pStr);
 			if (ft != m_mapCursorMap.end())
 				m_mapCursorMap.erase(ft);
+#else
+			CRect *pRect = NULL;
+			if (m_mapCursorMap.Lookup(pStr, (void*&)pRect))
+			{
+				delete pRect;
+				m_mapCursorMap.RemoveKey(pStr);
+			}
+#endif
 		}
 		break;
 	case SCM_DELETEALLCURSORMAP:
@@ -137,6 +155,7 @@ void CBkWnd::OnMouseMove(UINT nFlags, CPoint point)
 {
 	m_hCursor = AfxGetApp()->LoadStandardCursor(IDC_ARROW);
 
+#ifdef DF_USE_CPLUS17
 	for (const auto& [key, rc] : m_mapCursorMap)
 	{
 		if (rc)
@@ -148,6 +167,25 @@ void CBkWnd::OnMouseMove(UINT nFlags, CPoint point)
 			}
 		}
 	}
+
+#else
+	POSITION pos = m_mapCursorMap.GetStartPosition();
+
+	while (pos)
+	{
+		CString sKey;
+		CRect *pRect;
+		m_mapCursorMap.GetNextAssoc(pos, sKey, (void*&)pRect);
+		if (pRect)
+		{
+			if (pRect->PtInRect(point))
+			{
+				m_hCursor = m_hCursorHand;
+				break;
+			}
+		}
+	}
+#endif
 
 	if (!m_bTracking)
 	{
@@ -180,7 +218,21 @@ BOOL CBkWnd::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 
 void CBkWnd::RemoveAllMouseMap()
 {
+#ifdef DF_USE_CPLUS17
 	m_mapCursorMap.clear();
+#else
+	POSITION pos = m_mapCursorMap.GetStartPosition();
+
+	while (pos)
+	{
+		CString sKey;
+		CRect *pRect;
+		m_mapCursorMap.GetNextAssoc(pos, sKey, (void*&)pRect);
+		if (pRect)
+			delete pRect;
+	}
+	m_mapCursorMap.RemoveAll();
+#endif
 }
 
 LRESULT CBkWnd::OnMouseLeave(WPARAM wparam, LPARAM lparam)

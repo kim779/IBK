@@ -106,7 +106,12 @@ BOOL CLockPass::OnInitDialog()
 	pwnd->GetWindowRect(rec);
 	ScreenToClient(rec);
 
+#ifdef DF_USE_CPLUS17
 	m_btn_cert = std::make_unique<CImgBtn>();
+#else
+	m_btn_cert = new CImgBtn();
+#endif
+
 	m_btn_cert->Create("", WS_CHILD | WS_VISIBLE | BS_BITMAP, rec, this, 9898);
 
 	m_btn_cert->m_hBitmap = Axis::GetBitmap("btn_certificate_ok_normal")->operator HBITMAP();
@@ -121,7 +126,12 @@ BOOL CLockPass::OnInitDialog()
 	pwnd->GetWindowRect(rec);
 	ScreenToClient(rec);
 
+#ifdef DF_USE_CPLUS17
 	m_btn_HTS_Close = std::make_unique<CImgBtn>();
+#else
+	m_btn_HTS_Close = new CImgBtn();
+#endif
+
 	m_btn_HTS_Close->Create("HTSÁ¾·á", WS_CHILD | WS_VISIBLE | BS_BITMAP, rec, this, 9897);
 
 	m_btn_HTS_Close->m_hBitmap = Axis::GetBitmap("5BTN")->operator HBITMAP();

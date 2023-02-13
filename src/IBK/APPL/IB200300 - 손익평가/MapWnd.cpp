@@ -518,7 +518,8 @@ void CMapWnd::InitControl()
 	m_pCombo = std::make_unique<CComboBox>();
 	m_pCombo->Create(WS_CHILD|WS_VISIBLE|CBS_AUTOHSCROLL|CBS_HASSTRINGS|CBS_DROPDOWNLIST,
 		CRect(5,5,100,25),this,IDC_COMBO_PORT);
-	
+	SetWindowTheme(m_pCombo->GetSafeHwnd(), L"", L"");
+
 	m_pCombo->SetCurSel(0);
 	CRect wRc;
 	m_pCombo->GetWindowRect(&wRc);

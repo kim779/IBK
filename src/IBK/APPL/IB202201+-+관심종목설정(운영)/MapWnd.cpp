@@ -16,8 +16,8 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+#define TM_DOMINO       999
 #define	idGUIDE		5003
-
 #define SAVELOGFILE
 
 /////////////////////////////////////////////////////////////////////////////
@@ -270,6 +270,7 @@ long CMapWnd::OnMessage(WPARAM wParam, LPARAM lParam)
 			break;
 		case dnGROUPLIST:
 			m_sheet->receiveOub(dnGROUPLIST, CString((char*)lParam, datL));
+			_binitGroup = true;
 			break;
 		case dnGROUPCODE:
 			m_sheet->receiveOub(dnGROUPCODE, CString((char*)lParam, datL));
@@ -1457,64 +1458,8 @@ void CMapWnd::parsingDomino(CString datB)
 	// appendITEMS\t그룹번호\t코드\t코드.....
 	// 그룹번호는 1번부터 시작 새그룹이면 0
 	// 새그룹이면 임의로 그룹이름을 정해서 넣어준다.
-	CString symbol, entry, mapp, entry2, strGroup;
-	while (!datB.IsEmpty())
-	{
-		symbol = parseX(datB, "\t");
-		entry  = parseX(datB, "\n");
-
-		if (symbol == _T("appendCODE"))
-		{
-			m_sheet->updateCode(entry);
-			m_sheet->m_only = true;
-		}
-		else if (symbol == _T("registerCODE") && !entry.IsEmpty())
-		{
-			m_sheet->m_only = true;
-		}
-		else if (symbol == _T("appendGROUP") && !entry.IsEmpty())
-		{
-			m_sheet->updateGroup(entry);
-			m_sheet->m_only = false;
-		}
-		else if (symbol == _T("appendParentGROUP") && !entry.IsEmpty())
-		{
-			m_sheet->updateParentGroup(entry);
-			m_sheet->m_only = false;
-		}
-		else if (symbol == _T("selectGROUP") && !entry.IsEmpty())
-		{
-			m_sheet->selectGroup(atoi(entry));
-			entry2  = parseX(datB, "\t");
-			if ( entry2 != "NO" ) 
-				m_sheet->m_only = true;
-		}
-		else if (symbol == _T("selectGROUPNCODE") && !entry.IsEmpty())
-		{
-			entry2  = parseX(entry, "\t");
-			m_sheet->updateGroupNCode(atoi(entry2), entry);
-			m_sheet->m_only = true;
-		}
-		// 2012.02.10 KSJ
-		else if (symbol == _T("appendITEMS") && !entry.IsEmpty())
-		{
-			strGroup  = parseX(entry, "\t");
-			m_sheet->appendITEMS(atoi(strGroup), entry);
-			m_sheet->m_only = true;
-		}
-		// KSJ
-		if(symbol == _T("map") && !entry.IsEmpty())
-		{
-			m_bOpentoMap = true;
-			if(entry == _T("1"))
-			{
-				m_sheet->m_only = true;
-			}
-		}
-	}
-
-	if (m_sheet->m_only) 
-		m_sheet->RemovePageX();
+	SetTimer(TM_DOMINO, 50, nullptr);
+	_sDomino = datB;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -1625,8 +1570,80 @@ bool CMapWnd::GuideMsg(CString msg, bool question)
 void CMapWnd::OnTimer(UINT nIDEvent) 
 {
 	KillTimer(nIDEvent);
+
 	if (nIDEvent == idGUIDE && !m_guide.IsEmpty())
 		Variant(guideCC, m_guide);
+	else if (nIDEvent == TM_DOMINO)
+	{
+		if (_binitGroup)
+		{
+			CString symbol, entry, mapp, entry2, strGroup;
+			while (!_sDomino.IsEmpty())
+			{
+				symbol = parseX(_sDomino, "\t");
+				entry = parseX(_sDomino, "\n");
+
+				if (symbol == _T("appendCODE"))
+				{
+					m_sheet->updateCode(entry);
+					m_sheet->m_only = true;
+				}
+				else if (symbol == _T("registerCODE") && !entry.IsEmpty())
+				{
+					m_sheet->m_only = true;
+				}
+				else if (symbol == _T("appendGROUP") && !entry.IsEmpty())
+				{
+					m_sheet->updateGroup(entry);
+					m_sheet->m_only = false;
+				}
+				else if (symbol == _T("appendParentGROUP") && !entry.IsEmpty())
+				{
+					m_sheet->updateParentGroup(entry);
+					m_sheet->m_only = false;
+				}
+				else if (symbol == _T("selectGROUP") && !entry.IsEmpty())
+				{
+					m_sheet->selectGroup(atoi(entry));
+					entry2 = parseX(_sDomino, "\t");
+					if (entry2 != "NO")
+						m_sheet->m_only = true;
+				}
+				else if (symbol == _T("selectGROUPNCODE") && !entry.IsEmpty())
+				{
+					entry2 = parseX(entry, "\t");
+					m_sheet->updateGroupNCode(atoi(entry2), entry);
+					m_sheet->m_only = true;
+				}
+				// 2012.02.10 KSJ
+				else if (symbol == _T("appendITEMS") && !entry.IsEmpty())
+				{
+					strGroup = parseX(entry, "\t");
+					m_sheet->appendITEMS(atoi(strGroup), entry);
+					m_sheet->m_only = true;
+				}
+				// KSJ
+				if (symbol == _T("map") && !entry.IsEmpty())
+				{
+					m_bOpentoMap = true;
+					if (entry == _T("1"))
+					{
+						m_sheet->m_only = true;
+					}
+				}
+			}
+
+			if (m_sheet->m_only)
+				m_sheet->RemovePageX();
+			_sDomino.Empty();
+		}
+		else
+		{
+			SetTimer(TM_DOMINO, 50, nullptr);
+		}
+	}
+
+		
 	m_guide = _T("");
 	CWnd::OnTimer(nIDEvent);
 }
@@ -1843,6 +1860,7 @@ void CMapWnd::initSaveFile(char* datB, bool isSequence)
 		}
 		else	
 		{
+			m_sheet->setManageGroup(datB);
 			CString	string = _T(""), gnoS, oldnoS, gnameS, saveS, saveTempS, saveBookS, bookS;
 			const int groupCount = m_sheet->getManageCount();
 			for(int i=1 ; i<= groupCount ; i++)

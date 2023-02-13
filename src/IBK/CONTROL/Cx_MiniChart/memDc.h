@@ -50,6 +50,8 @@ public:
 			m_pDC->BitBlt(m_rect.left, m_rect.top, m_rect.Width(), m_rect.Height(),
 						this, m_rect.left, m_rect.top, SRCCOPY);
 			SelectObject(m_oldBitmap);
+			m_bitmap.DeleteObject();
+			m_pDC->DeleteDC();
 		}
 		else
 		{

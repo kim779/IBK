@@ -124,7 +124,6 @@ BOOL CMPop::OnInitDialog()
 
 	const int width = m_size.cx + xx.cx;
 	const int height = m_size.cy + xx.cy;
-
 	SetWindowPos(NULL, m_pos.x, m_pos.y, width , height, flag);
 	//FitWindow();
 
@@ -191,7 +190,7 @@ void CMPop::OnCancel()
 void CMPop::OnSize(UINT nType, int cx, int cy) 
 {
 	CDialog::OnSize(nType, cx, cy);
-	//FitWindow();	
+	FitWindow();	
 }
 
 void CMPop::FitWindow()

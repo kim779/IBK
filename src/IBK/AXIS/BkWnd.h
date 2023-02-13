@@ -32,7 +32,11 @@ public:
 	HCURSOR		m_hCursor{};
 	HCURSOR		m_hCursorHand{};
 
+#ifdef DF_USE_CPLUS17
 	std::map<CString, std::shared_ptr<CRect>> m_mapCursorMap;
+#else
+	CMapStringToPtr	m_mapCursorMap;
+#endif
 	BOOL		m_bTracking{};
 // Operations
 public:

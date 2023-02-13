@@ -610,8 +610,8 @@ OutputDebugString(slog);
 			BOOL bDragOrder = m_bDragDropOrder;
 			BOOL bDragJung = m_bDragDropJung;
 
-slog.Format("[3006] onnotify  col=[%d] bJumn=[%d] bRsvd=[%d] \n", view->iColumn, bJumn, bRsvd);
-OutputDebugString(slog);
+//slog.Format("[3006] onnotify  col=[%d] bJumn=[%d] bRsvd=[%d] \n", view->iColumn, bJumn, bRsvd);
+//OutputDebugString(slog);
 
 			m_bDragDropOrder = false;
 			m_bDragDropJung = false;
@@ -662,8 +662,8 @@ OutputDebugString(slog);
 				}
 				else
 				{
-slog.Format("[3006] onnotify WP_ORDER col=[%d] bJumn=[%d] bRsvd=[%d] \n", view->iColumn, bJumn, bRsvd);
-OutputDebugString(slog);
+//slog.Format("[3006] onnotify WP_ORDER col=[%d] bJumn=[%d] bRsvd=[%d] \n", view->iColumn, bJumn, bRsvd);
+//OutputDebugString(slog);
 					GetParent()->SendMessage(WM_APP_SIG, WP_ORDER, (LPARAM)&odr);
 				}
 			}
@@ -1254,9 +1254,9 @@ LRESULT CFOHogaWnd::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 void CFOHogaWnd::SetHogaGridRowHeight()
 {
-CString slog;
-slog.Format("[3006]_rowheight SetHogaGridRowHeight [%d] \n", m_iRowHeight);
-OutputDebugString(slog);
+//CString slog;
+//slog.Format("[3006]_rowheight SetHogaGridRowHeight [%d] \n", m_iRowHeight);
+//OutputDebugString(slog);
 
 	m_pGrid->m_iRowHeight = m_iRowHeight;
 	m_pGrid->SetDefCellHeight(m_iRowHeight);

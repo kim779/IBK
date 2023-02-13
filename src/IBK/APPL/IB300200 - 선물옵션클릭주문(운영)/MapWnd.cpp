@@ -956,11 +956,11 @@ long CMapWnd::OnMessage(WPARAM wParam, LPARAM lParam)
 		DoParsex((struct _alertR *)lParam);
 		break;
 	case DLL_NOTICE:
-		//m_Section.Lock();
+		m_Section.Lock();
 		dispatchNotice((char*)lParam);
 		m_pHogaWnd->DispatchNotice((char*)lParam);
 		m_pCtrlWnd->SetMicheg(m_code, m_pHogaWnd->getMichegCount());
-		//m_Section.Unlock();
+		m_Section.Unlock();
 		break;
 	case DLL_TRIGGER:
 		{
@@ -1462,7 +1462,7 @@ void CMapWnd::dispatchAlertX(struct _alertR* alertR)
 				InvalidateRect(m_oRc2);
 			}
 		}
-		else if (data[24])		// 전일대비
+		if (data[24])		// 전일대비
 		{
 			CString val = (char*)data[24];
 			if (m_output3 != val)
@@ -1471,7 +1471,7 @@ void CMapWnd::dispatchAlertX(struct _alertR* alertR)
 				InvalidateRect(m_oRc3);
 			}
 		}
-		else if (data[33])		// 등락율
+		if (data[33])		// 등락율
 		{
 			CString val = (char*)data[33];
 			if (m_output4 != val)
@@ -1480,7 +1480,7 @@ void CMapWnd::dispatchAlertX(struct _alertR* alertR)
 				InvalidateRect(m_oRc4);
 			}
 		}
-		else if (data[27])		// 거래량
+		if (data[27])		// 거래량
 		{
 			CString val = (char*)data[27];
 			if (m_output5 != val)
@@ -1489,7 +1489,7 @@ void CMapWnd::dispatchAlertX(struct _alertR* alertR)
 				InvalidateRect(m_oRc5);
 			}
 		}
-		else if (data[29])		// 시가
+		if (data[29])		// 시가
 		{
 			CString val = (char*)data[29];
 			if (m_output7 != val)
@@ -1498,7 +1498,7 @@ void CMapWnd::dispatchAlertX(struct _alertR* alertR)
 				InvalidateRect(m_oRc7);
 			}
 		}
-		else if (data[30])		// 고가
+		if (data[30])		// 고가
 		{
 			CString val = (char*)data[30];
 			if (m_output8 != val)
@@ -1507,7 +1507,7 @@ void CMapWnd::dispatchAlertX(struct _alertR* alertR)
 				InvalidateRect(m_oRc8);
 			}
 		}
-		else if (data[31])		// 저가
+		if (data[31])		// 저가
 		{
 			CString val = (char*)data[31];
 			if (m_output9 != val)
@@ -1516,7 +1516,7 @@ void CMapWnd::dispatchAlertX(struct _alertR* alertR)
 				InvalidateRect(m_oRc9);
 			}
 		}
-		else if (data[201])		// 미결약정
+		if (data[201])		// 미결약정
 		{
 			CString val = (char*)data[201];
 			if (m_output10 != val)
@@ -2303,8 +2303,6 @@ void CMapWnd::removeRTM()
 
 void CMapWnd::DoParse(CString dataS)
 {
-	dispatchAlert(dataS);
-	m_pHogaWnd->DispatchAlert(dataS);
 }
 
 void CMapWnd::DoParsex(struct _alertR * alertR)

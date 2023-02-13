@@ -28,7 +28,7 @@ CGrp_Base::CGrp_Base(CWnd *pView, class CGrpWnd *pGrpWnd, char *pInfo)
 	m_pView = pView;
 	m_pGrpWnd = pGrpWnd;
 
-	const struct _gInfo *pGInfo = (struct _gInfo*)pInfo;
+	struct _gInfo *pGInfo = (struct _gInfo*)pInfo;
 
 	m_gKind = pGInfo->gKind;
 	m_rKey = pGInfo->rKey;
@@ -76,17 +76,17 @@ CString CGrp_Base::GetDisplayPosHead(CPoint pt)
 		m_pGrpWnd->m_pDataInfo[m_dKey]->GetDataCount() <= 0)
 		return dispStr;
 
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
 
-	const int	xPosition = pt.x - m_DrawRect.left;
-	const double	szOneDay = double(m_DrawRect.Width()) / double(dispDay);
+	int	xPosition = pt.x - m_DrawRect.left;
+	double	szOneDay = double(m_DrawRect.Width()) / double(dispDay);
 	int	dataPos = int(double(xPosition) / szOneDay);
 	dataPos += dispPos;
 
 	CString	stmp, stmp2, sSign, sSign2;
-	const struct _cgBong	*gBong =
+	struct _cgBong	*gBong = 
 		 (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(dataPos);
 	if (m_dIndex == CDI_MIN || m_dIndex == CDI_TICK)
 		dispStr.Format("½Ã°£\t%02d:%02d:%02d", gBong->index.time.hh, 
@@ -102,7 +102,7 @@ CString CGrp_Base::GetExcelHead(int idx)
 {
 	CString	dispStr = _T("");
 	CString	stmp;
-	const struct _cgBong	*gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(idx);
+	struct _cgBong	*gBong = (struct _cgBong *)m_pGrpWnd->m_pDataInfo[m_dKey]->GetGraphData(idx);
 
 	if (idx < 0)
 	{
@@ -126,16 +126,16 @@ CString CGrp_Base::GetExcelHead(int idx)
 
 void CGrp_Base::DrawTickHorizon(CDC* pDC, double Max, double Min, int tickinfo)
 {
-	int	dispCount{};
-	double	dispValue[64]{};
+	int	dispCount;
+	double	dispValue[64];
 	CRect	tickRC = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[tickinfo].tkRect;
 	tickRC.top = m_DrawRect.top;
 
-	const int	tickHeight = tickRC.Height();
+	int	tickHeight = tickRC.Height();
 	double	ValueHeight = Max - Min;
 	if (ValueHeight <= 0)	ValueHeight = 1;
 
-	double	div{};
+	double	div;
 	if (ValueHeight < 5)			div = 1;
 	else if (ValueHeight < 50)		div = 5;
 	else if (ValueHeight < 100)		div = 10;
@@ -155,7 +155,7 @@ void CGrp_Base::DrawTickHorizon(CDC* pDC, double Max, double Min, int tickinfo)
 	else if (ValueHeight < 1000000000)	div = 100000000;
 	else					div = 500000000;
 
-	const int dispTICK = GetTickCount(tickinfo);
+	int dispTICK = GetTickCount(tickinfo);
 	if (dispTICK <= 0)
 		return;
 
@@ -166,25 +166,25 @@ void CGrp_Base::DrawTickHorizon(CDC* pDC, double Max, double Min, int tickinfo)
 		return;
 	}
 
-	const int		sMode = pDC->SetBkMode(TRANSPARENT);
-	const COLORREF	sColor = pDC->SetTextColor(m_pGrpWnd->m_ltColor);
-	const int		style = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[tickinfo].lstyle;
-	const int		width = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[tickinfo].lwidth;
-	const COLORREF	color = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[tickinfo].lcolor;
+	int		sMode = pDC->SetBkMode(TRANSPARENT);
+	COLORREF	sColor = pDC->SetTextColor(m_pGrpWnd->m_ltColor);
+	int		style = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[tickinfo].lstyle;
+	int		width = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[tickinfo].lwidth;
+	COLORREF	color = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[tickinfo].lcolor;
 
 	CRect	textRC;
 	CFont	*sFont = pDC->SelectObject(m_pGrpWnd->m_pFont);
 	CPen	*cPen = m_pApp->GetPen(m_pView, style, width, color);
 	CPen	*sPen = pDC->SelectObject(cPen);
 
-	double	dValue{};
+	double	dValue;
 	CString	dispStr;
 	CPoint	pointS, pointE;
 	CRect	tkSaveRC = tickRC;
 
 	CSize	size;
 	int	maxdigit = 7;
-	constexpr char const *digitStr[10] = {"2,000,000,000", "200,000,000", "20,000,000", 
+	char	*digitStr[10] = {"2,000,000,000", "200,000,000", "20,000,000", 
 		"2,000,000", "200,000", "20,000", "2,000", "200", "20", "2"};
 	for (int ii = 9; ii >= 0; ii--)
 	{
@@ -200,7 +200,7 @@ void CGrp_Base::DrawTickHorizon(CDC* pDC, double Max, double Min, int tickinfo)
 		sUnit = "x1000";
 
 	size = pDC->GetOutputTextExtent(" ");
-	const int	nGap = size.cx;
+	int	nGap = size.cx;
 
 	FormatVariableComma(dispStr, Max, m_pGrpWnd->m_digit, maxdigit);
 	size = pDC->GetOutputTextExtent(dispStr);
@@ -265,7 +265,7 @@ void CGrp_Base::DrawTickHorizon(CDC* pDC, double Max, double Min, int tickinfo)
 }
 
 struct _dispInfo {
-	char	dispStr[10]{};
+	char	dispStr[10];
 	CRect	dispRC;
 	CPoint	dispPt;
 };
@@ -278,17 +278,17 @@ void CGrp_Base::DrawTickBottom(CDC *pDC)
 	CRect	orgRC = m_pGrpWnd->m_pRgnInfo[m_rKey]->gpRect;
 	orgRC.right = m_pGrpWnd->m_ObjRect.right;
 	CRect	tickRC = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].tkRect;
-	const CRect	bottomRC = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].tkRect;
+	CRect	bottomRC = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].tkRect;
 	tickRC.right = m_DrawRect.right;
 	tickRC.left = m_DrawRect.left;
-	const int tickWidth = tickRC.Width();
-	const int tickHeight = tickRC.Height();
+	int tickWidth = tickRC.Width();
+	int tickHeight = tickRC.Height();
 
-	const int		sMode = pDC->SetBkMode(TRANSPARENT);
-	const COLORREF	sColor = pDC->SetTextColor(m_pGrpWnd->m_btColor);
-	const int		style = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].lstyle;
-	const int		width = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].lwidth;
-	const COLORREF	color = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].lcolor;
+	int		sMode = pDC->SetBkMode(TRANSPARENT);
+	COLORREF	sColor = pDC->SetTextColor(m_pGrpWnd->m_btColor);
+	int		style = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].lstyle;
+	int		width = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].lwidth;
+	COLORREF	color = m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkBOTTOM].lcolor;
 
 	CFont	*boldFont = m_pApp->GetFont(m_pView, m_pGrpWnd->m_fPoint, m_pGrpWnd->m_fName, FW_BOLD);
 	CFont	*sFont = pDC->SelectObject(boldFont);
@@ -304,16 +304,16 @@ void CGrp_Base::DrawTickBottom(CDC *pDC)
 	CRect	drawRC;
 	CRect	saveRC(0,0,0,0);
 	int	svYear = 0, svMonth = 0, svDay = 0;
-	int	svHH = 0;
+	int	svHH = 0, svMM = 0;
 	int	savePos = -20;
 	int	gap = 0;
 	pointDAY.y = tickRC.top + int(tickHeight / 5);
 
-	const int	dispPos = m_pGrpWnd->m_dispPos;
-	const int	dispEnd = m_pGrpWnd->m_dispEnd;
-	const int	dispDay = m_pGrpWnd->m_dispDay;
-	const int	endIdx = dispEnd - dispPos - 1;
-	struct _cgBong* cgBong{};
+	int	dispPos = m_pGrpWnd->m_dispPos;
+	int	dispEnd = m_pGrpWnd->m_dispEnd;
+	int	dispDay = m_pGrpWnd->m_dispDay;
+	int	endIdx = dispEnd - dispPos - 1;
+	struct _cgBong	*cgBong;
 
 	for (int ii = 0; ii < dispEnd - dispPos; ii++)
 	{
@@ -409,7 +409,7 @@ void CGrp_Base::DrawTickBottom(CDC *pDC)
 	CRect cmpRC;
 
 	saveRC.SetRectEmpty();
-	const int arSize = arDispInfo.GetSize();
+	int arSize = arDispInfo.GetSize();
 	for (int ii = 0; ii < arSize; ii++)
 	{
 		bText = true;
@@ -543,7 +543,7 @@ void CGrp_Base::DrawTickBottom(CDC *pDC)
 
 			if (bDraw)
 			{
-				const int Pixgap = drawRC.right - m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkRIGHT].tkRect.right;
+				int Pixgap = drawRC.right - m_pGrpWnd->m_pRgnInfo[m_rKey]->tick[ctkRIGHT].tkRect.right;
 				if (Pixgap > 0)	drawRC.OffsetRect(Pixgap*(-1), 0);
 				for (jj = 0; jj < arDispInfo.GetSize(); jj++)
 				{
@@ -579,7 +579,7 @@ void CGrp_Base::DrawTickBottom(CDC *pDC)
 CRect CGrp_Base::DisplayRect(CDC *pDC, int idx, CString dispStr, CPoint dispPt)
 {
 	CRect dispRC = CRect(0, 0, 0, 0);
-	const CSize size = pDC->GetOutputTextExtent(dispStr);
+	CSize size = pDC->GetOutputTextExtent(dispStr);
 	if (idx == 0)
 		dispRC.SetRect(dispPt.x, dispPt.y+2, 
 				dispPt.x + size.cx, dispPt.y + size.cy);
@@ -595,8 +595,8 @@ int CGrp_Base::DrawTickIndex(CDC* pDC, CString dispText, COLORREF tColor, bool b
 	if (dispText.IsEmpty())
 		return 0;
 
-	const int sMode = pDC->SetBkMode(TRANSPARENT);
-	COLORREF sColor{};
+	int sMode = pDC->SetBkMode(TRANSPARENT);
+	COLORREF sColor;
 	if (bColor)	sColor = pDC->SetTextColor(tColor);
 	else		sColor = pDC->SetTextColor(m_tRGB);
 	CFont *sFont = pDC->SelectObject(m_pGrpWnd->m_pFont);
@@ -785,7 +785,7 @@ void CGrp_Base::FormatVariableComma(CString &dispTxt, double dVal, int point, in
 int CGrp_Base::GetTickCount(int dir)
 {
 	int	dispTICK = 5;
-	int	tkHeight{};
+	int	tkHeight;
 
 	CRect	RC;
 	switch (dir)
@@ -816,7 +816,7 @@ int CGrp_Base::GetTickCount(int dir)
 bool CGrp_Base::calculateDisplay(double div, double Max, double Min, double& drawMinValue, 
 		int dispTICK, double* dispValue, int& dispCount)
 {
-	int	index{};
+	int	index;
 	CString	temp;
 	double	mok = Min / div;
 	temp.Format("%f", mok);
@@ -825,7 +825,7 @@ bool CGrp_Base::calculateDisplay(double div, double Max, double Min, double& dra
 	drawMinValue = mok * div;
 	if (drawMinValue < Min)		
 		drawMinValue += div;
-	const int	drawNum = int ((Max - drawMinValue) / div);
+	int	drawNum = int ((Max - drawMinValue) / div);
 	if (drawNum >= dispTICK)
 	{
 		if (drawNum <= dispTICK*2)
@@ -847,7 +847,8 @@ bool CGrp_Base::calculateDisplay(double div, double Max, double Min, double& dra
 	}
 	dispCount = 0;
 	dispValue[dispCount] = drawMinValue;
-	
+	double dVal = 0.0;
+
 	while(1)
 	{
 		if (dispValue[dispCount] > Max + 0.01)

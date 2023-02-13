@@ -47,7 +47,11 @@ public:
 	void	SetToggle()	{ m_toggle = true; }
 
 private:
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr< CToolTipCtrl> m_pToolTip;
+#else
+	CToolTipCtrl*	m_pToolTip;
+#endif
 	BOOL m_bTracking;
 
 	void ActivateTooltip(BOOL bActivate = TRUE);

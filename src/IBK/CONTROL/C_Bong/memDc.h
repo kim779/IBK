@@ -1,4 +1,11 @@
+#if !defined(AFX_MEMDC_H__CA1D3541_7235_11D1_ABBA_00A0243D1382__INCLUDED_)
+#define AFX_MEMDC_H__CA1D3541_7235_11D1_ABBA_00A0243D1382__INCLUDED_
+
+#if _MSC_VER >= 1000
 #pragma once
+#endif // _MSC_VER >= 1000
+// MemDC.h : header file
+//
 
 //////////////////////////////////////////////////
 // CMemDC - memory DC
@@ -10,10 +17,10 @@ public:
 	// constructor sets up the memory DC
 	CMemDC(CDC* pDC) : CDC()
 	{
-		ASSERT(pDC != nullptr);
+		ASSERT(pDC != NULL);
 
 		m_pDC = pDC;
-		m_oldBitmap = nullptr;
+		m_oldBitmap = NULL;
 		m_bMemDC = !pDC->IsPrinting();
               
 		if (m_bMemDC)    // Create a Memory DC
@@ -51,7 +58,7 @@ public:
 		}
 		else
 		{
-			m_hDC = m_hAttribDC = nullptr;
+			m_hDC = m_hAttribDC = NULL;
 		}
 	}
 
@@ -68,3 +75,10 @@ private:
 	CRect    m_rect;
 	BOOL     m_bMemDC;
 };
+
+/////////////////////////////////////////////////////////////////////////////
+
+//{{AFX_INSERT_LOCATION}}
+// Microsoft Developer Studio will insert additional declarations immediately before the previous line.
+
+#endif // !defined(AFX_MEMDC_H__CA1D3541_7235_11D1_ABBA_00A0243D1382__INCLUDED_)

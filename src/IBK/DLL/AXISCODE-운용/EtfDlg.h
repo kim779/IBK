@@ -43,7 +43,7 @@ public:
 							&_vETFcode = ((CAxisCodeApp *)AfxGetApp())->_vETFcode;
 
 	std::vector<std::pair<CString, CString>> 	_vData, _vSelect;
-//	std::vector<HCODE*> &_vETN = ((CAxisCodeApp *)AfxGetApp())->_vETN;
+	std::vector<HCODEX*> &_vETNx = ((CAxisCodeApp *)AfxGetApp())->_vETNx;
 
 	enum tree_class{
 			tree_jjm = 0,

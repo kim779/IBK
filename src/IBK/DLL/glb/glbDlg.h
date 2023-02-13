@@ -16,7 +16,7 @@ class CGlbDlg : public CDialog
 public:
 	CGlbDlg(CWnd* pParent = NULL);   // standard constructor
 	virtual	~CGlbDlg();
-
+//	char* sndB{};
 // Dialog Data
 	//{{AFX_DATA(CGlbDlg)
 	enum { IDD = IDD_GLB };

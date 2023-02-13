@@ -146,6 +146,7 @@ void CNewToolBar::DrawGripper(CDC* pDC, const CRect& rect)
             pDC->LineTo(rect.left+CX_BORDER_GRIPPER+CX_GRIPPER+2,n);
           }
           pDC->SelectObject(pOld);
+          pen.DeleteObject();
         }
         break;
 
@@ -205,6 +206,7 @@ void CNewToolBar::DrawGripper(CDC* pDC, const CRect& rect)
             pDC->LineTo(n,rect.top+CY_BORDER_GRIPPER+CY_GRIPPER+2);
           }
           pDC->SelectObject(pOld);
+          pen.DeleteObject();
         }
         break;
 

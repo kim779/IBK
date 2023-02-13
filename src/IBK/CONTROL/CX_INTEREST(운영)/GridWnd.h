@@ -48,6 +48,8 @@ public:
 
 // Attributes
 public:
+
+	std::vector<std::shared_ptr<_intersx>> m_inters;
 	CString GetTitle() { return m_szTitle; }
 	void SetTitle(CString sztitle) { m_szTitle = sztitle, InvalidateRect(m_rcTitle, FALSE); }
 	BOOL IsExist(CString code) 
@@ -59,7 +61,7 @@ public:
 	
 	CString m_tempCode;
 
-	int		m_nGridNumber;
+	int 	m_nGridNumber;
 
 	CString	m_strWaveFile;
 	BOOL	m_bWaveApply;
@@ -298,7 +300,7 @@ public:
 
 	void	SetInitSortingValue(); //2011.12.20 KSJ 컨트롤을 종료하지 않고 GridWnd의 m_bSorting을 false로 만들어 준다.
 	void	SetColInfo(CString strName, int nRow, CString strEntry);	//2012.11.02 KSJ 종목특이사항 그리기
-	void	saveServer(int gno);
+//	void	saveServer(int gno);
 protected:
 	CString m_strCode;
 	//{{AFX_MSG(CGridWnd)
@@ -402,7 +404,7 @@ protected:
 	CWnd*		m_pToolWnd;
 	CWnd*		m_pTreeWnd;
 	CWnd*		m_pView;
-	int			m_nIndex;
+	int		m_nIndex;
 	CString		m_section;	
 	COLORREF	m_clrFOCUS[2];	// 0 : focus 1 : normal	
 	COLORREF	m_clrTEXT[2];	// 0 : focus 1 : normal
@@ -423,7 +425,7 @@ protected:
 	std::unique_ptr<class CintGrid> m_grid;
 
 	//CArray <_inters*, _inters*> m_inters;					// file_load
-	std::vector<std::shared_ptr<_intersx>> m_inters;
+
 	//CArray <_inters*, _inters*> 		m_arrBaseInters;		// file_load
 	std::vector<std::shared_ptr<_intersx>>	m_arrBaseInters;
 

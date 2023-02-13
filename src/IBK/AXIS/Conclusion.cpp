@@ -63,12 +63,18 @@ CConclusion::~CConclusion()
 if (m_grid)
 	{
 		m_grid->DestroyWindow();
+#ifndef DF_USE_CPLUS17
+		delete m_grid;
+#endif
 	}
 	m_brush.DeleteObject();
 
 	if (m_pGrid)
 	{
 		m_pGrid->DestroyWindow();
+#ifndef DF_USE_CPLUS17
+		delete m_pGrid;
+#endif
 	}
 }
 
@@ -156,14 +162,24 @@ slog.Format("[conclusion] Init start ÀüÃ¼DLG  [%d][%d][%d][%d]   [%d][%d]\n", cl
 	rowN = profile.GetInt(szConclusionList, "rowN", 4);
 	colN = profile.GetInt(szConclusionList, "colN", 7);
 
+#ifdef DF_USE_CPLUS17
 	m_pGrid.reset();
+#else
+	if(m_pGrid != NULL)
+		delete m_pGrid;
+#endif
+
 	LOGFONT lf; 
 	memset(&lf, 0, sizeof(LOGFONT));
 	_tcscpy_s(lf.lfFaceName, sizeof(lf.lfFaceName),_T("±¼¸²Ã¼"));
 	lf.lfHeight = 90;
 	m_font.CreateFontIndirect(&lf);
 
+#ifdef DF_USE_CPLUS17
 	m_pGrid = std::make_unique<class CfxGrid>(&lf);
+#else
+	m_pGrid = new CfxGrid(&lf); 
+#endif
 	m_pGrid->Create(clientRC, this, idGRID, GVSC_VERT|GVSC_HORZ);
 	m_pGrid->Initial(CNT_INIT_ROWS, CNT_COL, 1, 0);
 

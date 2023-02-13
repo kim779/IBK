@@ -500,11 +500,13 @@ public:
 	HICON		m_dtIcon;
 	HHOOK		m_hHook;
 	bool		m_bdnInterest{};
-	bool		m_bWizard{};
-	bool		CreateWizard();
-
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr<class	CAxMisc>	m_axMisc{};
 	std::unique_ptr<CWnd>	m_wizard{};
+#else
+	class	CAxMisc*	m_axMisc;
+	CWnd* m_wizard;
+#endif
 	CRect	m_TOP10Rect;
 	bool	m_b2018;
 	int	    m_n2018Target;
@@ -606,6 +608,7 @@ protected:
 
 	CString	m_strDN;//인증서 DN
 
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr<class CAxGuide> m_axGuide{};
 	std::unique_ptr<class CTTip> m_tip{};
 	std::unique_ptr<class CDtconnect> m_axConnectOld{};
@@ -629,7 +632,32 @@ protected:
 	std::unique_ptr<class CNClock> m_Nclock{};
 	std::unique_ptr<class CChaser> m_chaser{};
 	std::unique_ptr<class CInfofile> m_infofile{};
-
+#else
+	class CAxGuide* m_axGuide;
+	class CTTip* m_tip;
+	class CDtconnect* m_axConnectOld;
+	class CCertLogin* m_axConnect;
+	class CLogoDlg* m_logodlg;
+	class CBmpButton* m_bitmapBtn;
+	class CSdibar* m_sdibar;
+	class CTMenu* m_tMenu;
+	class CDbar1* m_bar1;
+	class CSmain* m_smain;
+	class CTInfo2* m_tInfo2;
+	class CTInfo1* m_tInfo1;
+	class CDbar2* m_bar2;
+	class CDbar3* m_bar3;
+	class CTInfo3* m_tInfo3;
+	class CCoolDialogBar* m_bar0;
+	class CEmpPassChangeDlg* m_EmpPassChangeDlg;
+	class CConclusion* m_conclusion;
+	class CKobaElwNotify* m_kobanotify;
+	class CEConclusion* m_Econclusion;
+	class CNClock* m_Nclock;
+	class CChaser* m_chaser;
+	class CInfofile* m_infofile;
+#endif
+	
 	char*	m_wb;
 	SYSTEMTIME		m_connectT;
 	class CMPop*		m_modal;
@@ -1101,8 +1129,13 @@ protected:
 /////////////////////////////////////////////////////////////////////////////////
 	// 장운영 정보 관련
 	CMapStringToString	m_mapAlarmList;		// 2006.8.23 이인호 => 장운영정보 
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr<class CManageInfo> m_mngInfo;  
 	std::unique_ptr<class CTOP10Dialog> m_top10;
+#else
+	class CManageInfo*	m_mngInfo;	// 장운영정보 화면 2006.8.3
+	class CTOP10Dialog* m_top10; //매수 TOP10 화면 2017.10.27
+#endif
 	bool	m_bSound;	// 알림 및 장운영정보 소리알림 옵션
 	// 2006. 11. 07 장운영 메시지 위치 옵션추가 
 	int		m_nInfoPos;
@@ -1397,7 +1430,13 @@ public:
 	LRESULT OnPhonePad(WPARAM wParam, LPARAM lParam);
 	LRESULT OnRefresh813(WPARAM wParam, LPARAM lParam);
 	LRESULT OnSecureDlg(WPARAM wParam, LPARAM lParam);
+
+#ifdef DF_USE_CPLUS17
 	std::unique_ptr<CMapHelper>m_mapHelper{};
+#else
+	CMapHelper* m_mapHelper;
+#endif
+
 	//IMAX  
 	void	IMAXGroupSet(int key, int triggerN);
 	void	IMAXSkinSet();
@@ -1433,6 +1472,12 @@ public:
 	void CreateFolder(CString strTargetPath);
 	//pc정보저장
 	void SetPCData();
+	//hashkey
+	UINT AFXAPI HashDataAXIS(LPCSTR key);
+	//위자드 create 함수 
+	bool CreateWizard();
+	//as is 바탕화면 아이콘 지우기
+	void Delete_AsisICon();
 protected:
 // #ifdef USE_AHNLAB_SECUREBROWSER
 // 	IAosSB *m_pAosSB;

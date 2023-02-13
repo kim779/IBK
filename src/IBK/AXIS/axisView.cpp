@@ -171,6 +171,7 @@ void CAxisView::OnMouseMove(UINT nFlags, CPoint point)
 {
 	m_hCursor = AfxGetApp()->LoadStandardCursor(IDC_ARROW);
 
+#ifdef DF_USE_CPLUS17
 	for (const auto& [key, rc] : m_mapCursorMap)
 	{
 		if (rc)
@@ -182,6 +183,24 @@ void CAxisView::OnMouseMove(UINT nFlags, CPoint point)
 			}
 		}
 	}
+	
+#else
+	POSITION pos = m_mapCursorMap.GetStartPosition();
+	while (pos)
+	{
+		CString sKey;
+		CRect* pRect;
+		m_mapCursorMap.GetNextAssoc(pos, sKey, (void*&)pRect);
+		if (pRect)
+		{
+			if (pRect->PtInRect(point))
+			{
+				m_hCursor = m_hCursorHand;
+				break;
+			}
+		}
+	}
+#endif
 	
 	if (!m_bTracking)
 	{
@@ -209,12 +228,20 @@ LRESULT CAxisView::OnSetCursorMap(WPARAM wParam, LPARAM lParam)
 			_keyRect *pData = (_keyRect *)lParam;
 			CRect* pRect{};
 
+#ifdef DF_USE_CPLUS17
 			const auto ft = m_mapCursorMap.find(pData->pStr);
 			const RECT rc = pData->rect;
 			if (ft == m_mapCursorMap.end())
 				m_mapCursorMap.emplace(std::make_pair<CString, std::shared_ptr<CRect>>(pData->pStr, std::make_shared<CRect>(rc)));
 			else
 				ft->second->SetRect(rc.left, rc.top, rc.right, rc.bottom);
+#else
+			if (!m_mapCursorMap.Lookup(pData->pStr, (void*&)pRect))
+				pRect = new CRect(pData->rect);
+			else
+				*pRect = CRect(pData->rect);
+			m_mapCursorMap.SetAt(pData->pStr, pRect);
+#endif
 
 		}
 		break;
@@ -223,9 +250,18 @@ LRESULT CAxisView::OnSetCursorMap(WPARAM wParam, LPARAM lParam)
 			const LPSTR pStr = (LPSTR)lParam;
 			CRect *pRect = NULL;
 
+#ifdef DF_USE_CPLUS17
 			const auto ft = m_mapCursorMap.find(pStr);
 			if (ft != m_mapCursorMap.end())
 				m_mapCursorMap.erase(ft);
+#else
+			if (m_mapCursorMap.Lookup(pStr, (void*&)pRect))
+			{
+				delete pRect;
+				m_mapCursorMap.RemoveKey(pStr);
+			}
+#endif
+			
 		}
 		break;
 	case SCM_DELETEALLCURSORMAP:
@@ -239,7 +275,21 @@ LRESULT CAxisView::OnSetCursorMap(WPARAM wParam, LPARAM lParam)
 
 void CAxisView::RemoveAllMouseMap()
 {
+#ifdef DF_USE_CPLUS17
 	m_mapCursorMap.clear();
+#else
+	POSITION pos = m_mapCursorMap.GetStartPosition();
+
+	while (pos)
+	{
+		CString sKey;
+		CRect* pRect;
+		m_mapCursorMap.GetNextAssoc(pos, sKey, (void*&)pRect);
+		if (pRect)
+			delete pRect;
+	}
+	m_mapCursorMap.RemoveAll();
+#endif
 }
 
 void CAxisView::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR* lpncsp) 

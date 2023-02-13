@@ -85,11 +85,11 @@ IMPLEMENT_DYNCREATE(CintGrid, CWnd)
 #define MarketProgram			9
 #define MarketInvestorForeign		10
 
-#define CODELEN_STOCK		6
-#define CODELEN_INDEX		3
-#define CODELEN_FUTOPT		8
-#define CODELEN_FOREIGN		6
-#define CODELEN_INVESTOR	6
+#define CODELEN_STOCK			6
+#define CODELEN_INDEX			3
+#define CODELEN_FUTOPT			8
+#define CODELEN_FOREIGN			6
+#define CODELEN_INVESTOR		6
 
 #define TM_WIN10		9001
 #define TM_MEMOREFRESH	9002
@@ -295,8 +295,8 @@ CintGrid::CintGrid(CWnd* pMainWnd, CWnd* pParent, LOGFONT* logfont /*nullptr*/)
 	m_pBmpInfo24		= nullptr; //2017.03.08 KDK 이상급등
 
 	m_pBmpExpect		= nullptr;
-	m_pTBmp				= nullptr;
-	m_pBBmp				= nullptr;
+	m_pTBmp			= nullptr;
+	m_pBBmp			= nullptr;
 	// END ADD
 
 	m_isLbtnClick = FALSE;				//클릭여부 091013 수정
@@ -344,7 +344,7 @@ CintGrid::~CintGrid()
 	_brushSISE.DeleteObject();
 	_brushNEWS.DeleteObject();
 	_penSig.DeleteObject();
-
+	m_font.DeleteObject();
 
 	if (m_excelH != nullptr)
 	{
@@ -359,7 +359,6 @@ CintGrid::~CintGrid()
 
 	DeleteAllItems();
 	DestroyWindow();
-	m_font.DeleteObject();
 
 	if (m_oleInit) ::OleUninitialize();
 	m_memoRGN.DeleteObject();
@@ -904,7 +903,7 @@ void CintGrid::RunExcel(bool visible)
 
 				if (cell->attr & GVAT_CONDITIONx)
 				{
-					text.Remove('+'); text.Remove('-');
+					text.Remove('+'); text.Replace("--", "-");
 				}
 			}
 
@@ -1325,7 +1324,7 @@ void CintGrid::OnTimer(UINT nIDEvent)
 		
 		COLORREF  bkcol{};
 		struct _timerID* timerID = (struct _timerID*)&nIDEvent;
-		const 	int	row = timerID->row;
+		const int	row = timerID->row;
 		const int	col = timerID->col;
 		
 		if (timerID->kind != TK_NORMAL)
@@ -1355,7 +1354,10 @@ void CintGrid::OnTimer(UINT nIDEvent)
 						return;
 
 					CString code = GetItemText(row, colCODE);
-					code.TrimLeft(); code.TrimRight();
+					code.Trim();
+					if (code.IsEmpty())
+						return;
+
 					CString name = GetItemText(row, colNAME);
 					const int	type = GetTypeInRect(cellRC, pt);
 
@@ -6475,10 +6477,8 @@ BOOL CintGrid::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 void CintGrid::OnMouseMove(UINT nFlags, CPoint point) 
 {
-
 	CRect rect; 
 	GetClientRect(rect);
-
 
 	if (m_nRows <= 0 && m_nCols <= 0)
 		return;
@@ -6584,7 +6584,6 @@ void CintGrid::OnMouseMove(UINT nFlags, CPoint point)
 							{
 								if (m_idCurrent.row == current.row)
 									SetCursor(AfxGetApp()->LoadStandardCursor(IDC_IBEAM));
-		//							SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
 								else
 									SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
 								timerID->kind = TK_CODE;
@@ -6652,7 +6651,8 @@ void CintGrid::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (!IsValid(m_idClick))
 	{
-		m_ptLast = point; return;
+		m_ptLast = point; 
+		return;
 	}
 
 	if (nFlags & MK_LBUTTON) 
@@ -7246,7 +7246,11 @@ void CintGrid::OnLButtonUp(UINT nFlags, CPoint point)
 		}
 		break;
 	}
-	MessageToParent(m_idDrag.row,m_idDrag.col, GVNM_TRIGGER);
+
+	const CIdCell upCell = GetCellFromPoint(point);
+
+	if (upCell.row > 0)
+		MessageToParent(m_idDrag.row,m_idDrag.col, GVNM_TRIGGER);
 	m_mousemode = mouseNOTHING;
 	
 	SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
@@ -7868,20 +7872,19 @@ bool CintGrid::OnEditCell(int nRow, int nCol, UINT nChar)
 
 		if (nCol < m_nFixedCols) rect.DeflateRect(2, 1, 1, 1);
 
-		auto edit = CreateInPlaceEdit(rect, dwStyle, IDC_INPLACE_EDIT, nRow, nCol, gvitem.text, (int)gvitem.param, nChar);
-	}
-	
-	
+		CreateInPlaceEdit(rect, dwStyle, IDC_INPLACE_EDIT, nRow, nCol, gvitem.text, (int)gvitem.param, nChar);
+		
+	}	
 	return true;
 }
 
-std::any CintGrid::CreateInPlaceEdit(CRect& rect, DWORD dwStyle, UINT nID,
+void CintGrid::CreateInPlaceEdit(CRect& rect, DWORD dwStyle, UINT nID,
 					int nRow, int nCol, LPCTSTR szText, int limit, int nChar)
 {
 	//LOGFONT* logfont = GetItemFont(nRow, nCol);
-	auto pEdit = std::make_shared<CInPlaceEdit>(this, rect, dwStyle, nID, nRow, nCol, szText, limit, nChar);
+	auto pEdit = std::make_unique<CInPlaceEdit>(this, rect, dwStyle, nID, nRow, nCol, szText, limit, nChar);
 	pEdit->SetLimitText(20);
-	return std::make_any<decltype(pEdit)>(pEdit);
+	pEdit.release();
 	// END MODIFY
 }
 

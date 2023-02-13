@@ -37,19 +37,33 @@ CCtrlWnd::CCtrlWnd(CWnd *pView, CWnd *pParent)
 	m_pView = pView;
 	m_pParent = pParent;
 
+	m_MapCont.RemoveAll();
 	m_ctrlSAVE = ctl_NO;
 
+	m_pScroll = NULL;
+	m_pSlider = NULL;
+
+	m_totalDay = 0;
+	m_dispPos = 0;
+	m_dispEnd = 0;
+	m_dispDay = 0;
 
 	m_clrBack = RGB(238,242,223);
 	m_clrText = RGB(0,0,0);
 	m_clrForm = RGB(238,238,255);
 
+	m_bCtrlEnable = false;
+	m_bLDown = false;
+	m_bCapture = false;
+	m_nSlider = 0;
+
 	m_pApp = (CC_BongApp *)AfxGetApp();
 	if (m_pApp->CreateImage())
 		m_pCtrlImage = m_pApp->GetCtrlImage();
 	else
-		m_pCtrlImage = nullptr;
+		m_pCtrlImage = NULL;
 
+	m_TimerID = 0;
 	m_AutoScroll = autoStop;
 }
 
@@ -80,7 +94,7 @@ END_MESSAGE_MAP()
 
 LRESULT CCtrlWnd::OnCtrl(WPARAM wParam, LPARAM lParam)
 {
-	int	pos{};
+	int	pos;
 
 	switch (LOWORD(wParam))
 	{
@@ -136,7 +150,7 @@ LRESULT CCtrlWnd::OnCtrl(WPARAM wParam, LPARAM lParam)
 				int dispEnd = m_dispDay + dispPos;
 				if (dispEnd > m_totalDay)
 				{
-					const int gap = dispEnd - m_totalDay;
+					int gap = dispEnd - m_totalDay;
 					dispPos -= gap;
 					dispEnd -= gap;
 				}
@@ -161,6 +175,15 @@ LRESULT CCtrlWnd::OnCtrl(WPARAM wParam, LPARAM lParam)
 
 void CCtrlWnd::OnDestroy() 
 {
+	if (m_pScroll)
+	{
+		delete m_pScroll;	m_pScroll = NULL;
+	}
+	if (m_pSlider)
+	{
+		delete m_pSlider;	m_pSlider = NULL;
+	}
+
 	if (m_AutoScroll)	KillTimer(m_TimerID);
 
 	DeleteAllBtn();
@@ -188,19 +211,17 @@ void CCtrlWnd::OnPaint()
 
 	CRect	rc;
 	GetClientRect(&rc);
-	const COLORREF bgColor = m_clrBack = GetSysColor(COLOR_BTNFACE);
+	COLORREF bgColor = m_clrBack = GetSysColor(COLOR_BTNFACE);
 	CBrush	*cBrush = m_pApp->GetBrush(m_pView, bgColor);
 	pDC->FillRect(&rc, cBrush);
 
+	_ctlINFO* pInfoCTL;
 	for (int ii = ctl_ZOOMOUT, jj = 0; ii <= ctl_EXCEL; ii++, jj += 3)
 	{
-		const auto ft = _mapCont.find(ii);
-		if (ft == _mapCont.end())
+		if (!m_MapCont.Lookup(ii, pInfoCTL))
 			continue;
-
-		DrawBtn(pDC, jj, ft->second.get());
+		DrawBtn(pDC, jj, pInfoCTL);
 	}
-
 }
 
 void CCtrlWnd::OnSize(UINT nType, int cx, int cy) 
@@ -219,20 +240,17 @@ void CCtrlWnd::OnLButtonDown(UINT nFlags, CPoint point)
 	if (!m_bCtrlEnable)
 		return;
 
-	_ctlINFO* pInfoCTL{};
-	const int selectID = SearchPointInControl(point);
+	_ctlINFO* pInfoCTL;
+	int selectID = SearchPointInControl(point);
 	if (selectID == ctl_NO)
 		return;
 
 	m_ctrlSAVE = selectID;
-
-	const auto ft = _mapCont.find(selectID);
-	if (ft != _mapCont.end())
+	if (m_MapCont.Lookup(int(selectID), pInfoCTL))
 	{
-		ft->second->pushed = true;
-		InvalidateRect(ft->second->rect);
+		pInfoCTL->pushed = true;
+		InvalidateRect(pInfoCTL->rect);
 	}
-
 	if (!m_bCapture)
 	{
 		::SetCapture(this->m_hWnd);
@@ -254,19 +272,18 @@ void CCtrlWnd::OnLButtonUp(UINT nFlags, CPoint point)
 	}
 	m_bLDown = false;
 
-	const int selectID = SearchPointInControl(point);
+	int selectID = SearchPointInControl(point);
 
+	_ctlINFO* pInfoCTL;
 	if (selectID == ctl_NO || m_ctrlSAVE != selectID)
 	{
-		const auto ft = _mapCont.find(m_ctrlSAVE);
-		if (ft == _mapCont.end())
+		if (!m_MapCont.Lookup(int(m_ctrlSAVE), pInfoCTL))
 			return;
-
-		ft->second->pushed = false;
-		InvalidateRect(ft->second->rect);
+		pInfoCTL->pushed = false;
+		InvalidateRect(pInfoCTL->rect);
 		m_ctrlSAVE = ctl_NO;
 		CWnd::OnLButtonUp(nFlags, point);
-		return;
+		return;	
 	}
 	
 	switch (selectID)
@@ -302,11 +319,10 @@ void CCtrlWnd::OnLButtonUp(UINT nFlags, CPoint point)
 		break;
 	}
 
-	const auto fft = _mapCont.find(m_ctrlSAVE);
-	if (fft != _mapCont.end())
+	if (m_MapCont.Lookup(int(selectID), pInfoCTL))
 	{
-		fft->second->pushed = false;
-		InvalidateRect(fft->second->rect);
+		pInfoCTL->pushed = false;
+		InvalidateRect(pInfoCTL->rect);
 	}
 	m_ctrlSAVE = ctl_NO;
 	
@@ -329,7 +345,7 @@ void CCtrlWnd::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 		&& m_pSlider->GetRangeMax() >= 20)
 	{
 		
-		const int pos = m_pSlider->GetPos();
+		int pos = m_pSlider->GetPos();
 		if (m_nSlider != pos)
 		{
 			m_nSlider = pos;
@@ -375,9 +391,14 @@ void CCtrlWnd::InitCtrl(CString sDay)
 
 void CCtrlWnd::AddControlClass(int key, CRect rc, CString text)
 {
-	const auto mt = _mapCont.emplace(std::make_pair(key, std::make_unique<_ctlINFO>()));
-	auto& pInfoCTL = mt.first->second;
+	_ctlINFO* pInfoCTL;
 
+	bool bNewCreate = false;
+	if (!m_MapCont.Lookup(key, pInfoCTL))
+	{
+		bNewCreate = true;
+		pInfoCTL = new _ctlINFO();
+	}
 	pInfoCTL->pushed = false;
 	pInfoCTL->rect = rc;
 	pInfoCTL->text = text;
@@ -409,25 +430,34 @@ void CCtrlWnd::AddControlClass(int key, CRect rc, CString text)
 		pInfoCTL->imgdown = IMG_EXCEL + 2;
 		break;
 	}
+
+	if (bNewCreate)
+		m_MapCont.SetAt(key, pInfoCTL);
 }
 
 void CCtrlWnd::DeleteAllBtn()
 {
-	_mapCont.clear();
+	_ctlINFO* pInfoCTL;
+	int	key;
+	for (POSITION pos = m_MapCont.GetStartPosition(); pos; )
+	{
+		m_MapCont.GetNextAssoc(pos, key, pInfoCTL);
+		delete pInfoCTL;
+	}
+	m_MapCont.RemoveAll();
 }
 
 int CCtrlWnd::SearchPointInControl(CPoint pt)
 {
-	auto ft = std::find_if(_mapCont.begin(), _mapCont.end(), [&pt](const auto& item) {
-		if (item.second->rect.PtInRect(pt))
-			return true;
-		return false;
-		});
-
-	if (ft != _mapCont.end())
+	_ctlINFO* pInfoCTL;
+	for (int ii = ctl_ZOOMOUT; ii <= ctl_EXCEL; ii++)
 	{
-		return ft->first;
+		if (!m_MapCont.Lookup(ii, pInfoCTL))
+			continue;
+		if (pInfoCTL->rect.PtInRect(pt))
+			return ii;
 	}
+
 	return ctl_NO;
 }
 
@@ -472,8 +502,8 @@ void CCtrlWnd::RedrawCtrl(bool bResize)
 
 	btnRC.top    = ClientRC.top + gapHEIGHT;
 	btnRC.bottom = ClientRC.bottom - gapHEIGHT;
-	const int	BtnWidthb = btnRC.Height() + 1;
-	const int	btnCnt = maxBTN;
+	int	BtnWidthb = btnRC.Height() + 1;
+	int	btnCnt = maxBTN;
 
 	CRect	RC;
 	CRect	typeRC;
@@ -492,7 +522,7 @@ void CCtrlWnd::RedrawCtrl(bool bResize)
 	}
 	else
 	{
-		const int width = (btnRC.left - ClientRC.left);
+		int width = (btnRC.left - ClientRC.left);
 
 		scrollRC.top    = ClientRC.top + gapHEIGHT;
 		scrollRC.bottom = ClientRC.bottom - gapHEIGHT;
@@ -557,9 +587,9 @@ void CCtrlWnd::RedrawCtrl(bool bResize)
 		idx++;
 	}
 
-	if (m_pScroll == nullptr)
+	if (m_pScroll == NULL)
 	{
-		m_pScroll = std::make_unique<CExScrollBar>();
+		m_pScroll = new CExScrollBar();
 		m_pScroll->Create(WS_CHILD|WS_VISIBLE|SBS_HORZ|SBS_BOTTOMALIGN, CRect(0, 0, 0, 0), this, 0);
 		m_pScroll->SetOwner(this);
 		m_pScroll->EnableWindow(FALSE);
@@ -568,9 +598,9 @@ void CCtrlWnd::RedrawCtrl(bool bResize)
 		m_pScroll->MoveWindow(scrollRC);
 
 
-	if (m_pSlider == nullptr)
+	if (m_pSlider == NULL)
 	{
-		m_pSlider = std::make_unique <CExSlider>();
+		m_pSlider = new CExSlider();
 		m_pSlider->Create(WS_CHILD|WS_VISIBLE|TBS_HORZ|TBS_BOTTOM|TBS_AUTOTICKS|TBS_TOOLTIPS,
 			CRect(0, 0, 0, 0), this, IDC_SLIDER);
 		m_pSlider->SetOwner(this);
@@ -589,7 +619,7 @@ void CCtrlWnd::UpdateScroll(bool bGetData)
 		GetScrInfo();
 		if (m_pSlider)
 		{
-			int range{};
+			int range;
 			m_pSlider->SetRange(20, m_totalDay);
 			if (m_totalDay-20 > 0)
 			{
@@ -622,7 +652,7 @@ void CCtrlWnd::GetScrInfo()
 	char buf[64];
 	ZeroMemory(buf, 64);
 
-	const int len = m_pParent->SendMessage(CM_GRP, MAKEWPARAM(GRP_Control, GetScrData), (long)buf);
+	int len = m_pParent->SendMessage(CM_GRP, MAKEWPARAM(GRP_Control, GetScrData), (long)buf);
 	CString tmpS = CString(buf, len);
 
 	if (tmpS.IsEmpty())
@@ -713,7 +743,7 @@ void CCtrlWnd::setAutoScroll(int autoID)
 	case autoPre:
 	case autoNext:
 		m_TimerID = timer_ID;
-		SetTimer(m_TimerID, timer_GAP, nullptr);
+		SetTimer(m_TimerID, timer_GAP, NULL);
 		m_pParent->SendMessage(CM_GRP, MAKEWPARAM(GRP_Control, autoScroll), TRUE);
 		break;
 	case autoStop:
@@ -730,7 +760,7 @@ void CCtrlWnd::AutoShiftAction()
 	int shiftUpDn = disp_GAP;
 	if (m_AutoScroll == autoPre)	shiftUpDn *= -1;
 
-	const BOOL	res = m_pParent->SendMessage(CM_GRP, MAKEWPARAM(GRP_Control, ChgShift), shiftUpDn);
+	BOOL	res = m_pParent->SendMessage(CM_GRP, MAKEWPARAM(GRP_Control, ChgShift), shiftUpDn);
 
 	if (res)
 		UpdateScroll();

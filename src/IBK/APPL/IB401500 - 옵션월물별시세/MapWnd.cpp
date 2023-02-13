@@ -421,7 +421,7 @@ void CMapWnd::CreateMap(CWnd* pParent)
 	m_pMonthCbo = std::make_unique<CComboBox>();
 	m_pMonthCbo->Create(WS_CHILD|WS_VISIBLE|WS_VSCROLL|CBS_DROPDOWNLIST, itemRC, this, ID_MONTHCOMBO);
 	m_pMonthCbo->SetFont(m_font);
-
+	SetWindowTheme(m_pMonthCbo->GetSafeHwnd(), L"", L"");
 	m_static = std::make_unique< CfxStatic[] >(CNT_STATIC);
 
 	int idx = 0;
@@ -479,6 +479,8 @@ void CMapWnd::CreateMap(CWnd* pParent)
 	m_pGridCbo = std::make_unique<CComboBox>();
 	m_pGridCbo->Create(WS_CHILD|WS_VISIBLE|WS_VSCROLL|CBS_DROPDOWNLIST, itemRC, this, ID_GRIDCOMBO);
 	m_pGridCbo->SetFont(m_font);
+	SetWindowTheme(m_pGridCbo->GetSafeHwnd(), L"", L"");
+
 	m_pGridCbo->AddString("호가");
 	m_pGridCbo->AddString("시고저");
 	m_pGridCbo->AddString("Greeks");

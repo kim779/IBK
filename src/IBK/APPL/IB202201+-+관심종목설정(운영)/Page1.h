@@ -531,7 +531,7 @@ protected:
 
 
 
-	std::vector<std::shared_ptr<_intersx>> m_inters, m_orginters;
+	std::vector<std::shared_ptr<_intersx>> m_inters, m_orginters, _vAddInter;
 	std::vector<CITEMS>		       _vList;
 	std::vector<CITEMS>		       _vListCopy;
 };

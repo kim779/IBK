@@ -51,6 +51,7 @@ protected:
 	BOOL		m_bDragMode;
 	CString		m_sTooltip;
 	int		m_nPrice1, m_nPrice2;
+	BOOL		m_bNewUnit;		// 2023 호가단위개선
 
 // Operations
 public:

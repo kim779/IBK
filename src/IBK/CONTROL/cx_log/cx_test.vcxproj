@@ -163,12 +163,13 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/cx_log.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/cx_log.dll</OutputFile>
       <ImportLibrary>.\Debug\cx_log.lib</ImportLibrary>
       <ModuleDefinitionFile>.\cx_test.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CTestDlg.cpp" />
     <ClCompile Include="cx_test.cpp" />
     <ClCompile Include="MapWnd.cpp" />
     <ClCompile Include="StdAfx.cpp">
@@ -195,6 +196,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CTestDlg.h" />
     <ClInclude Include="cx_test.h" />
     <ClInclude Include="MapWnd.h" />
     <ClInclude Include="Resource.h" />

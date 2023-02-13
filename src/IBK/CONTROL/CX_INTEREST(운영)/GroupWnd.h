@@ -17,6 +17,8 @@ public:
 
 // Attributes
 public:
+	std::vector<std::shared_ptr<_intersx>> m_Inters;
+
 	CString m_strWaveFile;
 	BOOL	m_bWaveApply{};
 	int		m_nSortCurIndex{};
@@ -26,8 +28,8 @@ public:
 	BOOL		m_bMKClrApply{};
 	BOOL		m_bPopupDlg{};
 	BOOL		m_bDispCode{};
-	COLORREF    m_clrbookMark{};			//북마크 색
-	COLORREF    m_clrbookMarkPen{};		//북마크펜 색
+	COLORREF    	m_clrbookMark{};		//북마크 색
+	COLORREF    	m_clrbookMarkPen{};		//북마크펜 색
 
 	CRect		m_globalRect;
 
@@ -35,9 +37,9 @@ public:
 
 	int		m_iDragIn{};		// 드래그인으로 들어오는 카운트 횟수 집계
 
-	_trkey* m_pTrkey{};
+	_trkey* 	m_pTrkey{};
 	CString		m_commInfo[2][3];	// Send/Receive시 TR키값 및 화면 인덱스 번호 저장
-	int			m_commIndex{};
+	int		m_commIndex{};
 	double	m_xRate{};
 	double	m_yRate{};
 // Operations
@@ -55,13 +57,13 @@ public:
 	
 public:
 	void	saveWhenChangeViewMode(int index);
-	int		GetDragInCount() { return m_iDragIn; }	
+	int	GetDragInCount() { return m_iDragIn; }	
 	void	SetDragInCount(int data);
 	void	AddDragInCount();
 
-	int GetGroupCount();
-	void GetMinMaxWidth(int &nMinWidth, int &nMaxWidth);
-	BOOL IsValidCode(CString strCode);
+	int	GetGroupCount();
+	void	GetMinMaxWidth(int &nMinWidth, int &nMaxWidth);
+	BOOL	IsValidCode(CString strCode);
 	int	GetRowCount();
 	int	GetFontSize() { return m_fontsize; }
 	BOOL	GetCurrBold() { return m_bCurr; }
@@ -80,8 +82,8 @@ public:
 	int	GetRtmAction() { return m_rtmAction; }
 	int	GetDblAction() { return m_dblAction; }
 	int	GetSelAction() { return m_selAction; }
-	int GetOverLapAction() { return m_overlap; }
-	int GetOverLapAlert() { return m_overlapAlert; }
+	int	GetOverLapAction() { return m_overlap; }
+	int	GetOverLapAlert() { return m_overlapAlert; }
 
 	int	GetLine() { return m_line; }
 	int	GetRowHeight() { return m_rowH; }
@@ -89,7 +91,7 @@ public:
 	void	AutoExpectOper(int param);
 	void	saveWhenGroupClosed(int index);
 	
-	int		sumEachGroupCount();
+	int	sumEachGroupCount();
 	void	InitSetGroup();			//초기에 그룹 선택하게 하는 함수
 	void	RefreshGrid();
 	int		WriteFileSumtoEachGroup(UINT curruntGroup);
@@ -102,7 +104,7 @@ public:
 	void	SetEqualizerField(int param);
 
 	
-	void ChangeFieldOper(int param);
+	void	ChangeFieldOper(int param);
 	void	arrangeGroup(int type);
 	void	SetKillFocus(int view);
 	void	DeleteOrg();
@@ -163,19 +165,19 @@ public:	//2012.02.13 KSJ 이벤트로 보내면 데이터가 깨져서 직접 메소드 호출함.
 	void	setIsRecommand(bool bFlag);
 	bool	GetIsRecommand();
 	void	SelectOper();
-	int		_httoi(const TCHAR *value);
+	int	_httoi(const TCHAR *value);
 	void	CloseGrid(int nIndex);
 // sub utils
-	int		getTotalSize();
+	int	getTotalSize();
 	void	InvalidateDivide();
 
-	int		loadGroupCount();
+	int	loadGroupCount();
 	void	addGridWnd();		//그리드 메모리 재구성
 
 	void	OperResizeMinus(int cx, int cy);
 	
 // members
-	bool		m_isRecommand{};	//현재 추천종목을 보여주고 있는건지
+	bool			m_isRecommand{};	//현재 추천종목을 보여주고 있는건지
 	int			m_cntGroup{};		//그룹 개수
 
 	int			m_nGroup{};
@@ -228,6 +230,7 @@ public:	//2012.02.13 KSJ 이벤트로 보내면 데이터가 깨져서 직접 메소드 호출함.
 	BOOL IsNewDrop();
 	void OnDestroySave();
 
+	void saveServer(int gno);
 };
 
 

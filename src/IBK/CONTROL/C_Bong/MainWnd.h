@@ -1,5 +1,9 @@
-#pragma once
+#if !defined(AFX_MAINWND_H__3A6B21CE_BE8B_4660_B4BC_62C4B98BFC73__INCLUDED_)
+#define AFX_MAINWND_H__3A6B21CE_BE8B_4660_B4BC_62C4B98BFC73__INCLUDED_
 
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
 // MainWnd.h : header file
 //
 
@@ -29,7 +33,7 @@ public:
 
 // Implementation
 public:
-	inline CCtrlWnd* GetCtrlWnd() { return m_pCtrlWnd.get(); };
+	inline CCtrlWnd* GetCtrlWnd() { return m_pCtrlWnd; };
 	virtual ~CMainWnd();
 
 	// Generated message map functions
@@ -51,15 +55,22 @@ protected:
 	DECLARE_DISPATCH_MAP()
 	DECLARE_INTERFACE_MAP()
 public:
-	CWnd* m_pParent{};
+	CWnd		*m_pParent;
 
 private:
-	std::unique_ptr<class CGrpWnd>	m_pGrpWnd;
-	std::unique_ptr<class CCtrlWnd>	m_pCtrlWnd;
+	class CGrpWnd	*m_pGrpWnd;
+	class CCtrlWnd	*m_pCtrlWnd;
 	
-	struct _param	m_param {};
+	struct _param	m_param;
 
-	bool		m_bCtrl{};
+	bool		m_bCtrl;
 
 	void	Resize();
 };
+
+/////////////////////////////////////////////////////////////////////////////
+
+//{{AFX_INSERT_LOCATION}}
+// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#endif // !defined(AFX_MAINWND_H__3A6B21CE_BE8B_4660_B4BC_62C4B98BFC73__INCLUDED_)

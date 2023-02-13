@@ -44,8 +44,7 @@ CMainWnd::CMainWnd(CWnd* pParent)
 
 CMainWnd::~CMainWnd()
 {
-
-
+	m_bkBrush.DeleteObject();
 }
 
 void CMainWnd::OnFinalRelease()
@@ -883,7 +882,7 @@ void CMainWnd::OnPaint()
 	dc.SetBkColor(m_clrBgColor);
 
 	DeleteObject(&pOldBrush);
-
+	brush.DeleteObject();
 // 	int nMonitorType = GetMonitorStatus();
 // 
 // 	if(nMonitorType != m_sInfo->mode)

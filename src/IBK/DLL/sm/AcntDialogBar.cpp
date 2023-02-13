@@ -132,7 +132,6 @@ CAcntDialogBar::CAcntDialogBar(CWnd* parent, bool (*callback)(int, WPARAM, LPARA
 	m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_I4, (void *)&rc,
 		(BYTE *)(VTS_I4 VTS_I4), getDEPT, 0);
 	m_dept = rc ? (char *)rc : _T("");
-	//m_dept = "811"; //test 20230110
 	
 }
 
@@ -1125,8 +1124,7 @@ void CAcntDialogBar::QueryGroupList(CString strGrp)
 	CString usid;
 
 	CString strCommonNm;
-	//sCommonNm = "01"; //test 20230110
-	strCommonNm = "9" + m_dept + "00";
+	//strCommonNm = "9" + m_dept + "00";
 	strCommonNm = "9" + m_dept + sCommonNm;
 
 	CopyMemory(&iagls.usid, (LPCSTR)strCommonNm, strCommonNm.GetLength());
@@ -1136,7 +1134,7 @@ void CAcntDialogBar::QueryGroupList(CString strGrp)
 	sendTR("PIHOAGLS", (char*)(const char*)strData, L_PIHOAGLS_MID, US_PASS, 253);
 
 }
- 
+
 void CAcntDialogBar::QueryAccntList(CString strAccount)
 {
 	CString strData(_T(""));
@@ -1144,7 +1142,7 @@ void CAcntDialogBar::QueryAccntList(CString strAccount)
 	FillMemory(&iacls, L_PIHOACLS_MID, ' ');
 
 	if(m_dept == "")
-		m_dept = "811";  //test 20230110
+		m_dept = "000";
 
 	CString	Path;
 	Path.Format("%s\\%s\\ACCNTDEPT.INI", Axis::home, "tab");
@@ -1156,9 +1154,6 @@ void CAcntDialogBar::QueryAccntList(CString strAccount)
 	
 	CString sCommonNm(readB,readL);
 	sCommonNm.TrimLeft();sCommonNm.TrimRight();
-
-//	sCommonNm = "01"; //test 20230110
-//	m_uspw = "1212qw!!";  //test 20230110
 
 	CString strCommonNm;
 	strCommonNm = "9" + m_dept + sCommonNm;

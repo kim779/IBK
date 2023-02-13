@@ -218,11 +218,11 @@ void CGlbDlg::connect()
 		CDialog::OnCancel();
 	}
 }
-
+/*
 BOOL CGlbDlg::sendTR()
 {
 	BOOL	rc;
-	char*	sndB;
+	char* sndB;
 	int	size, sndL;
 
 	Sleep(m_write);
@@ -245,41 +245,127 @@ BOOL CGlbDlg::sendTR()
 	sndB[10] = 0x30;
 	sndB[11] = 0x30;
 
-	struct _fmH* fmH = (struct _fmH *)&sndB[L_fmH];
+	struct _fmH* fmH = (struct _fmH*)&sndB[L_fmH];
 	fmH->fmF[0] = fmF_FS;
 	fmH->fmF[1] = fmF_FS;
-	fmH->fmC  = fmC_NRM;  //fmC_NRM  fmC_SSMr
-	fmH->ssM  = ssM_WS;
+	fmH->fmC = fmC_NRM;  //fmC_NRM  fmC_SSMr
+	fmH->ssM = ssM_WS;
 	fmH->stat = stat_WS;
-	
-	//struct _fmH* fmH = (struct _fmH*)&sndB[L_fmH];
-	//fmH->fmF[0] = fmF_FS;
-	//fmH->fmF[1] = fmF_FS;
-	//fmH->fmC = fmC_SSM;
-	//fmH->ssM = ssM_RM;
-	//fmH->stat = 0x00;
-	
-	//sprintf(fmH->datL, "%05d", L_axisH + size);
-	CString sdata;
-	sdata.Format("%05d", L_axisH + size);
-	memcpy((char*)&fmH->datL, (LPSTR)(LPCTSTR)sdata, sdata.GetLength());
+	sprintf(fmH->datL, "%05d", L_axisH + size);
 
-	struct _axisH* axisH = (struct _axisH *)&sndB[L_fmH + L_fmH];
+	struct _axisH* axisH = (struct _axisH*)&sndB[L_fmH + L_fmH];
 	axisH->msgK = msgK_AXIS;
 	axisH->winK = winK_NORM;
 	CopyMemory(axisH->trxC, "pibowglb", sizeof(axisH->trxC));
+	//	CopyMemory(axisH->trxC, "pibfwglb", sizeof(axisH->trxC));	// 20180220  조상님 요청으로 변경
 	sprintf(axisH->datL, "%05d", size);
 
 	char* pdata = new char[size + 1];
 	memset(pdata, 0x00, size + 1);
 	memcpy(pdata, m_data, size);
-	int ll = strlen(pdata);
 	memcpy((char*)&sndB[L_fmH + L_fmH + L_axisH], pdata, strlen(pdata));
-	//CopyMemory(&sndB[L_fmH+L_fmH+L_axisH], m_data, size);
+
+	//CopyMemory(&sndB[L_fmH + L_fmH + L_axisH], m_data, size);
 	rc = m_sock->Write(sndB, sndL);
 	delete[] sndB;
+	delete[] pdata;
 	return rc;
 }
+*/
+
+BOOL CGlbDlg::sendTR()
+{
+	BOOL	rc;
+   // char* sndB;
+	int	size, sndL;
+	
+	std::unique_ptr <char[]> sndB;
+
+	Sleep(m_write);
+	size = m_data.GetLength();
+	sndL = L_fmH + L_fmH + L_axisH + m_data.GetLength();
+	//sndB = new char[sndL ];
+	sndB = std::make_unique<char[]> (sndL);
+
+	//ZeroMemory(sndB.get(), sndL );
+	
+	sndB[0] = fmF_FS;
+	sndB[1] = fmF_FS;
+	sndB[2] = 0x05;
+	sndB[3] = 0x02;
+	sndB[4] = 0x00;
+	sndB[5] = 0x20;
+	sndB[6] = 0x20;
+	sndB[7] = 0x30;
+	sndB[8] = 0x30;
+	sndB[9] = 0x30;
+	sndB[10] = 0x30;
+	sndB[11] = 0x30;
+
+	struct _fmH* fmH = (struct _fmH*)&sndB[L_fmH];
+	fmH->fmF[0] = fmF_FS;
+	fmH->fmF[1] = fmF_FS;
+	fmH->fmC = fmC_NRM;  //fmC_NRM  fmC_SSMr
+	fmH->ssM = ssM_WS;
+	fmH->stat = stat_WS;
+	//sprintf(fmH->datL, "%05d", L_axisH + size);
+	CString sdata;
+	sdata.Format("%05d", L_axisH + size);
+	CopyMemory((char*)fmH->datL, (LPSTR)(LPCTSTR)sdata, sdata.GetLength());
+
+	struct _axisH* axisH = (struct _axisH*)&sndB[L_fmH + L_fmH];
+	axisH->msgK = msgK_AXIS;
+	axisH->winK = winK_NORM;
+	//CopyMemory(axisH->trxC, "pibowglb", sizeof(axisH->trxC));
+	CopyMemory(axisH->trxC, "pibowglb", sizeof(axisH->trxC));
+	//sprintf(axisH->datL, "%05d", size);
+
+	sdata.Format("%05d",  size);
+	memcpy((char*)axisH->datL, (LPSTR)(LPCTSTR)sdata, sdata.GetLength());
+
+	//CopyMemory(&sndB[L_fmH + L_fmH + L_axisH], m_data, size);
+	//memcpy((char*)&sndB[L_fmH + L_fmH + L_axisH], (LPSTR)(LPCTSTR)m_data, size);
+	std::unique_ptr <char[]> pdata = std::make_unique<char[]>(size + 1);
+	memset(pdata.get(), 0x00, size + 1);
+	memcpy(pdata.get(), m_data, size);
+	CopyMemory((char*)&sndB[L_fmH + L_fmH + L_axisH], pdata.get(), strlen(pdata.get()));
+	rc = m_sock->Write(sndB.get(), sndL);
+	//delete[] sndB;
+	return rc;
+}
+
+
+//BOOL CGlbDlg::sendTR()
+//{
+//	BOOL	rc;
+//	char*	sndB;
+//	int	size, sndL;
+//
+//	Sleep(m_write);
+//	size = m_data.GetLength();
+//	sndL = L_fmH + L_axisH + m_data.GetLength();
+//	sndB = new char[sndL];
+//
+//	ZeroMemory(sndB, sndL);
+//	struct _fmH* fmH = (struct _fmH *)sndB;
+//	fmH->fmF[0] = fmF_FS;
+//	fmH->fmF[1] = fmF_FS;
+//	fmH->fmC  = fmC_NRM;  //fmC_NRM  fmC_SSM
+//	fmH->ssM  = ssM_WS;
+//	fmH->stat = stat_WS;
+//	sprintf(fmH->datL, "%05d", L_axisH + size);
+//
+//	struct _axisH* axisH = (struct _axisH *)&sndB[L_fmH];
+//	axisH->msgK = msgK_AXIS;
+//	axisH->winK = winK_NORM;
+//	CopyMemory(axisH->trxC, "pibowglb", sizeof(axisH->trxC));
+//	sprintf(axisH->datL, "%05d", size);
+//
+//	CopyMemory(&sndB[L_fmH+L_axisH], m_data, size);
+//	rc = m_sock->Write(sndB, sndL);
+//	delete[] sndB;
+//	return rc;
+//}
 
 void CGlbDlg::dispatch(char* pBytes, int nBytes)
 {

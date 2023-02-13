@@ -51,7 +51,13 @@ BOOL CLockDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+#ifdef DF_USE_CPLUS17
 	m_changer = std::make_unique<CControlChanger>(this);
+#else
+	m_changer = new CControlChanger(this);
+#endif
+
+
 	if (!m_user.IsEmpty())
 	{
 		GetDlgItem(IDC_USER)->SetWindowText(m_user);
@@ -202,6 +208,10 @@ HBRUSH CLockDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void CLockDlg::OnDestroy() 
 {
 	CDialog::OnDestroy();
+	
+#ifndef DF_USE_CPLUS17
+	delete m_changer;	
+#endif
 }
 
 void CLockDlg::SetWizard( CWnd* wizard )

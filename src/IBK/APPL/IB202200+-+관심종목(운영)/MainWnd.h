@@ -208,6 +208,7 @@ public:
 	
 	std::map<CString, int>    _mRealtime;
 	std::map<CString, std::unique_ptr<struct _Ralert>> _mapRealData;
+	
 
 	void Request_GroupList();
 	void Request_GroupCode(int iseq);

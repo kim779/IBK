@@ -700,8 +700,7 @@ __declspec(dllexport) bool WINAPI axGetName(int kind, char* code, char* name, in
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	CString szName;
 	CString szCode(code); 
-	szCode.TrimRight();
-
+	szCode.Trim();
 	const CAxisCodeApp* pApp = (CAxisCodeApp*) AfxGetApp();
 	
 	if (kind == typeforTAX)  //거래세 계산을 위해 추가
@@ -833,7 +832,7 @@ __declspec(dllexport) bool WINAPI axGetName(int kind, char* code, char* name, in
 	case whichTYPE: // 선택..
 		{
 			auto& map = pApp->_mapCODEx;
-			if (const auto ft = map.find(code); ft != map.end())
+			if (const auto ft = map.find(szCode); ft != map.end())
 			{
 				const struct hjcodex* hjc = ft->second;
 				szName = CString(hjc->hnam, HNameLen).Trim();
@@ -870,7 +869,6 @@ __declspec(dllexport) bool WINAPI axGetName(int kind, char* code, char* name, in
 				//SCREEN.GetName(199, 종목코드, 0)
 				if (hjc->ssgb == jmKONEX && kind == typeforTAX)
 					*type = KONEXType;
-			
 				strcpy(name, szName);
 				return TRUE;			
 			}
@@ -928,7 +926,9 @@ __declspec(dllexport) bool WINAPI axGetName(int kind, char* code, char* name, in
 						return TRUE;
 					} 
 				} 
+
 				*type = -1;
+AxStd::_Msg("GetCodeTypexxxxx  [%s][%s][%d]", code, name, type);
 			}
 		}
 		break; 
@@ -936,7 +936,7 @@ __declspec(dllexport) bool WINAPI axGetName(int kind, char* code, char* name, in
 	case codeNAME:	// 종목명 반환...
 		{
 			auto& map = pApp->_mapCODEx;
-			if (const auto ft = map.find(code); ft != map.end())
+			if (const auto ft = map.find(szCode); ft != map.end())
 			{
 				const struct hjcodex* hjc = ft->second;
 				szName = CString(hjc->hnam, HNameLen).Trim();
@@ -973,7 +973,7 @@ __declspec(dllexport) bool WINAPI axGetName(int kind, char* code, char* name, in
 				//SCREEN.GetName(199, 종목코드, 0)
 				if (hjc->ssgb == jmKONEX && kind == typeforTAX)
 					*type = KONEXType;
-			
+
 				strcpy(name, szName);
 				return TRUE;			
 			}

@@ -15,6 +15,7 @@ public:
 
 // Attributes
 public:
+	CString _sDomino;
 	CWnd* m_parent{};
 	std::unique_ptr<CSheet>		m_sheet;
 	CButton		m_btnSave;		// save button
@@ -42,6 +43,7 @@ public:
 	bool		m_isUploadEnd{};		// 업로드 계속 할 것인지 여부
 
 	bool		m_bBtnSave{};			//2016.08.18 KSJ 저장 버튼을 눌렀는지
+	bool		_binitGroup{};
 // Operations
 public:
 //	CString send(CString sqen, CString type);

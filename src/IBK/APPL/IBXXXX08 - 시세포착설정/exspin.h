@@ -78,10 +78,11 @@ public:
 	void	SetDecimalPlaces(int digit = 0, bool redraw = true);
 	void	SetDirection(BOOL nFlag = TRUE);
 	void	SetLimitText(int len);
+	void    SetRoot(CString sRoot);
 private:
 	void	createControls();
 private:
-	CWnd* m_parent{};
+	CWnd*   m_parent{};
 	DWORD	m_spType{};
 	DWORD	m_attr{};
 
@@ -173,4 +174,6 @@ private:
 	int	m_direction{};
 	int	m_digit{};
 	double	m_delta{};
+public: 
+	CString _sRoot;
 };

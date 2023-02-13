@@ -140,7 +140,7 @@ private:
 	std::unique_ptr < CfxStatic>	m_pGuide{};
 	std::unique_ptr < CfxTab>		m_pTab{};
 
-	BOOL m_bExpand{}, m_bInit{};
+	BOOL m_bExpand=TRUE, m_bInit{};
 	CFont* m_pNormalFont{};
 	CFont* m_pBoldFont{};
 	CString m_strRoot{};

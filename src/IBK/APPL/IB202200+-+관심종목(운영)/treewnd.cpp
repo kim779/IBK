@@ -2425,22 +2425,30 @@ void  _intersx::copy(void* item)
 	xnum = CString(tt->xnum, 10).Trim();
 }
 
-void CTreeWnd::receiveOub(CString& data, int key)
+void CTreeWnd::receiveOub(CString& data, int keys)
 {
 	CWnd* pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_GROUP));
 	pWnd->SendMessage(WM_MANAGE, MK_CLEARSECONDSEND, 0);
 	const int max = pWnd->SendMessage(WM_MANAGE, MK_GETMAX);
 
-	const int index = key - TRKEY_INTER - 1;
-	auto& sdata = _arrInter.at(index);
-	struct _treeID	treeID = CONVERT_TREEID(sdata.GetKind());
-	
+//XMSG("종목그룹상세");
 	_vInters.clear();
 	const CString skey       = data.Left(2);
 	const CString sGroupName = data.Mid(2, 20);
 	const CString sCount     = data.Mid(22, 4);
 	const int     nRow = min(atoi(sCount), 100);
 	data = data.Mid(26);
+
+//AxStd::_Msg("그룹키   [%s]", skey);
+//AxStd::_Msg("그룹명   [%s]", sGroupName);
+//AxStd::_Msg("종목개수 [%s]", sCount);
+
+	const int index = atoi(skey) - 1;	
+	if (index < 0)
+		return;
+			
+	auto& sdata = _arrInter.at(index);
+	struct _treeID	treeID = CONVERT_TREEID(sdata.GetKind());
 
 	constexpr UINT newbooksize = sizeof(_bookmarkinfo);
 
@@ -2478,6 +2486,8 @@ void CTreeWnd::receiveOub(CString& data, int key)
 			bookmark = "0";
 		code = CString(item.code, codelen).Trim();
 		name = GetCodeName(CString(item.code, codelen).Trim());
+
+//AxStd::_Msg("종목코드[%s]", code);
 		if (code.IsEmpty())
 			code = "          ";
 
@@ -4519,10 +4529,18 @@ void CTreeWnd::GetAccnTotal(CMapStringToString& mapACCN, CStringArray& arACCN, H
 
 void CTreeWnd::makeInterGroup(std::vector<std::pair<CString, CString>>& vGroup)
 {	
+	HTREEITEM item = GetChildItem(_treeInter);
+	while (item != NULL)
+	{
+		HTREEITEM next = GetNextItem(item, TVGN_NEXT);
+		DeleteItem(item);	
+		item = next;
+	}
+
 	UINT gubn = MAKE_TREEID(xINTEREST);
 	struct _treeID* treeID = CAST_TREEID(gubn);
 	for_each(vGroup.begin(), vGroup.end(), [&](auto item) {
-		const int kind = MAKE_TREEID(treeID->kind, 0, 2, atoi(item.second), TD_ITEM);
+		const int kind = MAKE_TREEID(treeID->kind, 0, 2, atoi(item.second), TD_ITEM);	
 		SetItemData(InsertItem(item.first, 0, 1, _treeInter), kind);
 	});
 }
