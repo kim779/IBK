@@ -467,7 +467,7 @@ void CTreeWnd::loadingSFcode()	//2012.10.04 KSJ 주식선물
 		
 		strCode = CString(sfcode.codx, 8);
 
-		if(strCode.GetAt(0) == '1')
+		if(strCode.GetAt(0) == '1' || strCode.GetAt(0) == 'A')  //파생상품 코드개편
 			m_sfcode.Add(sfcode);
 	}
 	
@@ -2323,7 +2323,7 @@ CString CTreeWnd::GetCodeName(CString code)
 			return CString(upcode.hnam, UNameLen);
 		}
 	}
-	else if (code[0] == '1' || code[0] == '4')	// future code
+	else if (code[0] == '1' || code[0] == '4' || code[0] == 'A' || code[0] == 'D')	// future code //파생상품 코드개편
 	{
 		_sfjcode   fjcode;
 		if (m_fjcode.GetSize() == 0) loadingFJcode();
@@ -2337,7 +2337,7 @@ CString CTreeWnd::GetCodeName(CString code)
 		}
 
 	}
-	else if (code[0] == '2' || code[0] == '3')
+	else if (code[0] == '2' || code[0] == '3' || code[0] == 'B' || code[0] == 'C') //파생상품 코드개편
 	{
 		if (code[1] == '0')			// future option code
 		{

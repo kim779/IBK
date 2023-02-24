@@ -74,6 +74,8 @@ CString CRemainFuture::TotalData()
 	CString data = m_code + "\t" + m_name + "\t" + m_gubn + "\t" + m_remian + "\t" + 
 			m_possible + "\t" + t_rprice + "\t" + t_curr + "\t" + m_rdiff + "\t" + 
 			m_pprice + "\t" + m_pgsonik + "\t" + m_suik + "\t" + m_maip + "\t" + m_diff + "\t" + m_srate + "\t";
+
+	//OutputDebugString("\r\n" + data);
 	return data;
 }
 
@@ -92,10 +94,15 @@ void CRemainFuture::ParsingRemainData(char *pData)
 	m_rdiff	= getString(frec.diff, sizeof(frec.diff));
 	m_pprice = getString(frec.pamt, sizeof(frec.pamt));
 	m_pgsonik = getString(frec.psam, sizeof(frec.psam));
+
 	m_suik	= getString(frec.prat, sizeof(frec.prat));
 	if (m_suik.GetLength() > 0 && atof(m_suik) > 0.0 && m_suik.GetAt(0) != '+')
 		m_suik = "+" + m_suik;
 	m_maip	= getString(frec.tamt, sizeof(frec.tamt));
+
+	CString slog;
+	slog.Format("\r\nm_code =[%s] m_pprice=[%s] m_maip=[%s]\r\n", m_code, m_pprice, m_maip);
+	OutputDebugString(slog);
 
 // 	CString strTemp;
 // 	strTemp.Format("ParsingRemainData m_code[%s] m_name[%s] m_gubn[%s] m_remian[%s] getNoCont[%d] m_possible[%s]", m_code, m_name, m_gubn, m_remian, getNoCont(m_gubn=="-매도"?"+매수":"-매도") ,m_possible);
@@ -298,9 +305,9 @@ void CRemainFuture::CalPgsonik()
 	else
 		m_pgsonik.Format("%.0f", dSonik);
 
-// 	CString strTemp;
-// 	strTemp.Format("[KSJ]CalPgsonik m_remian[%s]m_curr[%s]m_dBase[%.f]m_pprice[%s]m_maip[%s]m_pgsonik[%s]", m_remian, m_curr, m_dBase, m_pprice, m_maip, m_pgsonik);
-// 	OutputDebugString(strTemp);
+ 	CString strTemp;
+ 	strTemp.Format("\r\n[KSJ]CalPgsonik m_code[%s] m_remian[%s]m_curr[%s]m_dBase[%.f]m_pprice[%s]m_maip[%s]m_pgsonik[%s]",m_code, m_remian, m_curr, m_dBase, m_pprice, m_maip, m_pgsonik);
+ 	OutputDebugString(strTemp);
 
 	// 수익률
 	dSonik *= 100;
@@ -510,6 +517,7 @@ int CRemainFuture::getJKind(CString m_code)
 	switch (ch1)
 	{
 	case '1':	// future
+	case 'A':   //파생상품 코드개편
 		{
 			if (ch2 == '0')
 			{
@@ -533,6 +541,7 @@ int CRemainFuture::getJKind(CString m_code)
 			else
 				return JK_SFUTURE;			
 		}
+	case 'D':   //파생상품 코드개편
 	case '4':	// future spread
 		if(ch3 == '5') //2015.07.15 KSJ	미니 코스피200 선물 추가
 			return JK_MINI_SPREAD;
@@ -540,6 +549,7 @@ int CRemainFuture::getJKind(CString m_code)
 			return JK_SPREAD;
 		else
 			return JK_SFSPREAD;
+	case 'B':   //파생상품 코드개편
 	case '2':	// call option
 		if(ch3 == '5') //2015.07.15 KSJ	미니 코스피200 선물 추가
 			return JK_MINI_CALLOPT;
@@ -548,6 +558,7 @@ int CRemainFuture::getJKind(CString m_code)
 		else
 			return JK_JCALLOPT;
 		break;
+	case 'C':   //파생상품 코드개편
 	case '3':	// put option
 		if(ch3 == '5') //2015.07.15 KSJ	미니 코스피200 선물 추가
 			return JK_MINI_PUTOPT;

@@ -132,7 +132,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/CX_SHA256.dll</OutputFile>
+      <OutputFile>D:\IBKS_TEST\dev/CX_SHA256.dll</OutputFile>
       <ImportLibrary>.\Debug\CX_SHA256.lib</ImportLibrary>
       <ModuleDefinitionFile>.\CX_SHA256.def</ModuleDefinitionFile>
     </Link>

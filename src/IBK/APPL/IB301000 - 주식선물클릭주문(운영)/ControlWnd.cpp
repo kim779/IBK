@@ -1130,7 +1130,7 @@ void CControlWnd::SetFutureData()
 		CString strCodx(m_fjcode[n].codx, sizeof(m_fjcode[n].codx));
 		strCodx.TrimRight();
 
-		if(strCodx.GetAt(0) == '4')
+		if(strCodx.GetAt(0) == '4' || strCodx.GetAt(0) == 'D')  //파생상품 코드개편
 			continue;
 
 		m_pOptGrid->InsertRow("");
@@ -1453,7 +1453,7 @@ void CControlWnd::DisplayJango( Jango *pj )
 // 		m_pOptGrid->RedrawCell(i, 1);
 // 	}
 	
-	if (pj->code[0]=='1')
+	if (pj->code[0]=='1' || pj->code[0] == 'A')   ////파생상품 코드개편
 	{
 // 		int cnt = (int)m_fjcode.size();
 // 		for(int n=0; n<cnt; ++n)

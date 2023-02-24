@@ -2073,12 +2073,12 @@ void CMapWnd::ChangeCurrMode(enum GRID_CURRMODE mode)
 				gdat->curcalc = mdat->msga[1];
 			break;
 		case cmExpire:
-			if (gdat->ccod[0] == '2')
+			if (gdat->ccod[0] == '2' || gdat->ccod[0] == 'B')  //파생상품 코드개편
 			{
 				gdat->curcalc = fabs(m_bData->k200cur) - m_pApp->getOptionStrike(gdat->ccod);
 				if (gdat->curcalc < 0) gdat->curcalc = 0;	
 			}
-			else if (gdat->ccod[0] == '3')
+			else if (gdat->ccod[0] == '3' || gdat->ccod[0] == 'C')  //파생상품 코드개편
 			{
 				gdat->curcalc = m_pApp->getOptionStrike(gdat->ccod) - fabs(m_bData->k200cur);
 				if (gdat->curcalc < 0) gdat->curcalc = 0;	
@@ -2712,7 +2712,7 @@ void CMapWnd::parseAlert(char *pDat)
 	}
 	else
 	{
-		if (code[0] != '2' && code[0] != '3') return;
+		if (code[0] != '2' && code[0] != '3' && code[0] != 'B' && code[0] != 'C') return;   //파생상품 코드개편
 		codeType = ctOption;
 		
 		idx = findMData(code);
@@ -2880,7 +2880,7 @@ void CMapWnd::parseAlert(struct _alertR* alertR)
 // 	OutputDebugString(strTemp);
 
 	//2017.01.16 KSJ 최근월물만 실시간 되는것 수정
-	if (code[0] == '1' || code[0] == '4')
+	if (code[0] == '1' || code[0] == '4' || code[0] == 'A' || code[0] == 'D') //파생상품 코드개편
 //	if (m_bData->frts.CompareNoCase(code) == 0)
 	{
 		codeType = ctFuture;
@@ -2896,7 +2896,7 @@ void CMapWnd::parseAlert(struct _alertR* alertR)
 	}
 	else
 	{
-		if (code.GetAt(0) != '2' && code.GetAt(0) != '3') return;
+		if (code.GetAt(0) != '2' && code.GetAt(0) != '3' && code.GetAt(0) != 'B' && code.GetAt(0) != 'C') return; //파생상품 코드개편
 		codeType = ctOption;
 		
 		idx = findMData(code);
@@ -3134,7 +3134,7 @@ void CMapWnd::generateMingam(int idx)
 
 
 	// 민감도 계산(iv, delta, gamma, theta, vegga, rho)
-	if (mdat->ccod[0] == '1' || mdat->ccod[0] == '4')
+	if (mdat->ccod[0] == '1' || mdat->ccod[0] == '4' || mdat->ccod[0] == 'A' || mdat->ccod[0] == 'D') //파생상품 코드개편
 	{
 		// 선물 민감 계산
 		mdat->iv = "0";
@@ -3199,14 +3199,14 @@ void CMapWnd::generateSum()
 		idx = findMData(gdat->ccod);
 		if (idx == -1) continue;
 		mdat = m_mData.GetAt(idx);
-		if (gdat->ccod[0] == '2' || gdat->ccod[0] == '3')
+		if (gdat->ccod[0] == '2' || gdat->ccod[0] == '3' || gdat->ccod[0] == 'B' || gdat->ccod[0] == 'C') //파생상품 코드개편
 		{
 			if (gdat->gb == -1)
 				m_allSum.jango += gdat->jango;
 			else
 				m_allSum.gb += gdat->jango;
 
-			if ((gdat->ccod[0] == '2' && gdat->gb == 1) || (gdat->ccod[0] == '3' && gdat->gb == -1))
+			if (((gdat->ccod[0] == '2' || gdat->ccod[0] == 'B') && gdat->gb == 1) || ((gdat->ccod[0] == '3' || gdat->ccod[0] == 'C') && gdat->gb == -1)) //파생상품 코드개편
 				m_allSum.prc += mdat->ccur * gdat->jango * gdat->gdan;
 			else
 				m_allSum.prc += mdat->ccur * gdat->jango * gdat->gdan * -1;
@@ -3257,12 +3257,12 @@ void CMapWnd::setGridVal(class CfxGrid *grid, struct _mdat* mdat, bool init)
 		}
 		break;
 	case cmExpire:
-		if (gdat->ccod[0] == '2')
+		if (gdat->ccod[0] == '2' || gdat->ccod[0] == 'B')  //파생상품 코드개편
 		{
 			gdat->curcalc = fabs(m_bData->k200cur) - m_pApp->getOptionStrike(gdat->ccod);
 			if (gdat->curcalc < 0) gdat->curcalc = 0;	
 		}
-		else if (gdat->ccod[0] == '3')
+		else if (gdat->ccod[0] == '3' || gdat->ccod[0] == 'C')  //파생상품 코드개편
 		{
 			gdat->curcalc = m_pApp->getOptionStrike(gdat->ccod) - fabs(m_bData->k200cur);
 			if (gdat->curcalc < 0) gdat->curcalc = 0;	
@@ -3766,7 +3766,7 @@ CString CMapWnd::CodePlusGab(CString code, CString gab)
 	if (code.GetLength() != 8)
 		return rValue;
 
-	if (code[0] == '1')
+	if (code[0] == '1' || code[0] == 'A') //파생상품 코드개편
 	{
 		rValue = code;
 	}
@@ -3944,7 +3944,7 @@ void CMapWnd::GetHedgeCode(char month)
 
 		if (codelist->code.GetAt(4) == month)
 		{
-			if (codelist->code.GetAt(0) == '2')
+			if (codelist->code.GetAt(0) == '2' || codelist->code.GetAt(0) == 'B')  //파생상품 코드개편
 				CallList.Add(codelist->code);
 			else
 				PutList.Add(codelist->code);

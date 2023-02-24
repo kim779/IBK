@@ -190,8 +190,16 @@ void CMainWnd::SetJango(LPCTSTR sdata)
 
 		sKey = getKey(false, sCode, dateS, sygbS, jggbS, 10);
 		m_CodeMap.SetAt(sKey, jango);
-	}
 
+		if (cols[0].ToCStr().Find("005930") >= 0)
+		{
+			CString str;
+			str.Format("[balance]   !!!!!!!  [%s]", sdata);
+			OutputDebugString(str);
+		}
+
+	}
+	OutputDebugString("[balance][cx_caljango][SetJango]----------------------------------------------\r\n");
 	Calculate();
 }
 
@@ -291,6 +299,7 @@ void CMainWnd::SetUpdate(LPCTSTR flag,LPCTSTR data)
 			m_CodeMap.RemoveKey(sKey);
 		}
 	}
+	OutputDebugString("[balance][cx_caljango][SetUpdate]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
 	Calculate();
 }
 
@@ -308,6 +317,7 @@ void CMainWnd::parsingAlertx(LPARAM lParam)
 
 void CMainWnd::Calculate()
 {
+	CString slog;
 	CString keyS;
 	CString keyCodeS;
 	std::shared_ptr<Jango>	jango = nullptr;
@@ -320,6 +330,12 @@ void CMainWnd::Calculate()
 		m_CodeMap.GetNextAssoc(codePos, keyS, jango);
 		keyCodeS = keyS.Mid(2, LEN_ACODE);
 		keyCodeS.TrimRight();
+
+		if (keyCodeS.Find("005930") >= 0)
+		{
+			slog.Format("[balance][cx_calajango] [%s]  [%f] \r\n", keyCodeS, jango->mamt);
+			OutputDebugString(slog);
+		}
 
 		nMaip  += jango->mamt;   //유통대주
 		npsuik += jango->tamt;  //평가손익
@@ -342,6 +358,9 @@ void CMainWnd::Calculate()
 	}
 
 	m_dataList.Format("%.f\t%.f\t%.f\t%.2f",m_nMaip,m_nPprc,m_nSuik,m_dRate);
+
+	slog.Format("[balance][cx_notify] m_dataList =[%s]\r\n", m_dataList);
+	//OutputDebugString(slog);
 
 	m_pParent->SendMessage(WM_USER, MAKEWPARAM(eventDLL, MAKEWORD(m_Param.key, evOnDblClk/*DblClick*/)),
 				(LPARAM)m_Param.name.GetString());

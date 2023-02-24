@@ -1089,7 +1089,7 @@ void CControlWnd::DisplayJango( Jango *pj )
 	
 	//TRACE("\nControl Jango -> %d %d\n", jqty, wcnt);
 
-	if (pj->code[0]=='1')
+	if (pj->code[0]=='1' || pj->code[0] == 'A')  //파생상품 코드개편
 	{
 		int cnt = (int)m_fjcode.size();
 		for(int n=0; n<cnt; ++n)
@@ -1112,8 +1112,8 @@ void CControlWnd::DisplayJango( Jango *pj )
 				CCellID id;
 				id.row = pos->second.second;
 				
-				if      (pj->code[0]=='2') id.col = 0;
-				else if (pj->code[0]=='3') id.col = 2;
+				if      (pj->code[0]=='2' || pj->code[0] == 'B') id.col = 0;  //파생상품 코드개편
+				else if (pj->code[0]=='3' || pj->code[0] == 'C') id.col = 2;
 				else return;
 				
 				if (m_pOptGrid->GetItemText(id.row, id.col)!=text)

@@ -15,6 +15,7 @@ class CGroupWnd : public CBaseWnd
 public:
 	CGroupWnd(CWnd* pMainWnd);
 	CString m_slog;
+	CString m_sMap;
 // Attributes
 public:
 	std::vector<std::shared_ptr<_intersx>> m_Inters;

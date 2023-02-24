@@ -254,7 +254,7 @@ LRESULT CMapWnd::OnRequestOfCtrl(WPARAM wParam, LPARAM lParam)
 
 	//end buffet
 
- 	OutputDebugString("[JANGO] sFee[" + sFee + "] sMass[" + sMass + "] sSave[" + sSave + "] sKey[" + m_ShMemory->remainSHMEMNAME + "]");
+ //	OutputDebugString("[JANGO] sFee[" + sFee + "] sMass[" + sMass + "] sSave[" + sSave + "] sKey[" + m_ShMemory->remainSHMEMNAME + "]");
 
 	sendRemainTR(sAccn, sPswd, bFuture, bCredit, dFee, dMass, dSave, dCalcType, iMcgb, (HWND)wParam);
 
@@ -365,6 +365,7 @@ LRESULT CMapWnd::OnReceiveRemainData(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+#define DF_SHARED
 //=================================================================================================
 BOOL CMapWnd::CreateMap(CWnd *pParent)
 {
@@ -387,14 +388,20 @@ BOOL CMapWnd::CreateMap(CWnd *pParent)
 	path.Replace("\\", "_");
 
 //	DWORD processID = GetCurrentProcessId();
-
 // 	CString sSHMENAME;
 // 	sSHMENAME.Format("%s%s%d",path,"_remainCtrl_Future_",processID);
+	//m_ShMemory->remainSHMEMNAME = sSHMENAME;
 
+#ifdef DF_SHARED
+	DWORD processID = GetCurrentProcessId();
+	CString sSHMENAME;
+	sSHMENAME.Format("%s%s%d", path, "_remainCtrl_Future", processID);
+	m_ShMemory = std::make_unique<CShMemory>();
+	m_ShMemory->remainSHMEMNAME = sSHMENAME;
+#else
 	m_ShMemory = std::make_unique<CShMemory>();
 	m_ShMemory->remainSHMEMNAME = path + "_remainCtrl_Future";
-
-	//m_ShMemory->remainSHMEMNAME = sSHMENAME;
+#endif
 
 	m_ShMemory->InitSharedMemory(this->m_hWnd);
 	m_ShMemory->AddHandle(this->m_hWnd);
@@ -965,6 +972,8 @@ void  CMapWnd::parsingRTSx(struct _alertR* alertR) {
 	if (!data[23])
 		return;
 
+	sCurr = (char*)data[23];
+
 	if (data[24]) {
 		sDiff = (char*)data[24];
 	}
@@ -1393,7 +1402,7 @@ CString CMapWnd::parsingNotice(CString str)
 		else if (type == 3)
 		{
 			CString sData, sSym = "4";
-			if (sJCode.GetAt(0) == '1')
+			if (sJCode.GetAt(0) == '1' || sJCode.GetAt(0) == 'A')  //파생상품 코드개편
 			{
 				if (sJCode.GetAt(1) == '0')
 					sSym = "3";

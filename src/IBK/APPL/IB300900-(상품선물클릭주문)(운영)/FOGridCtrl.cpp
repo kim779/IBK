@@ -293,7 +293,7 @@ void CFOGridCtrl::SetData(SiseData *psd)
 			m_CurCell.row = row;
 		}
 
-		if (m_pSiseData->code.GetAt(0)=='4')
+		if (m_pSiseData->code.GetAt(0)=='4' || m_pSiseData->code.GetAt(0) == 'D') //파생상품 코드개편
 		{
 			if (*st>0)
 				strCurr = "+" + Int2Str(*st, 2);
@@ -596,7 +596,7 @@ void CFOGridCtrl::SetRealData( RealData *rp )
 		map<int,int>::iterator pos;
 		for(n=0; n<MAX_FHOGA; ++n)
 		{
-			if (m_pSiseData->code.GetAt(0)!='4')
+			if (m_pSiseData->code.GetAt(0)!='4' && m_pSiseData->code.GetAt(0) != 'D')  //파생상품 코드개편
 			{
 				hoga = (int)(fabs(Str2Double(rp->find(51+n)->second)*100.0) + DOUBLE_PREFIX);
 			}
@@ -628,7 +628,7 @@ void CFOGridCtrl::SetRealData( RealData *rp )
 				}
 			}
 
-			if (m_pSiseData->code.GetAt(0)!='4')
+			if (m_pSiseData->code.GetAt(0)!='4' && m_pSiseData->code.GetAt(0) != 'D')  //파생상품 코드개편
 			{
 				hoga = (int)(fabs(Str2Double(rp->find(71+n)->second)*100.0) + DOUBLE_PREFIX);
 			}
@@ -702,7 +702,7 @@ void CFOGridCtrl::SetRealData( DWORD* data )
 
 		int curr;
 
-		if(m_pSiseData->code.GetAt(0)!='4')
+		if(m_pSiseData->code.GetAt(0)!='4' && m_pSiseData->code.GetAt(0) != 'D')  //파생상품 코드개편
 		{
 			curr = (int)(fabs(atof(strVal)*100.0) + DOUBLE_PREFIX);
 		}
@@ -834,7 +834,7 @@ void CFOGridCtrl::SetRealData( DWORD* data )
 		{
 			CString strHoga;
 
-			if (m_pSiseData->code.GetAt(0)!='4')
+			if (m_pSiseData->code.GetAt(0)!='4' && m_pSiseData->code.GetAt(0) != 'D')  //파생상품 코드개편
 			{
 				strHoga = (char*)data[51+n];
 				hoga = (int)(fabs(atof(strHoga)*100.0) + DOUBLE_PREFIX);
@@ -868,7 +868,7 @@ void CFOGridCtrl::SetRealData( DWORD* data )
 				}
 			}
 
-			if (m_pSiseData->code.GetAt(0)!='4')
+			if (m_pSiseData->code.GetAt(0)!='4' && m_pSiseData->code.GetAt(0) != 'D')  //파생상품 코드개편
 			{
 				strHoga = (char*)data[71+n];
 				hoga = (int)(fabs(atof(strHoga)*100.0) + DOUBLE_PREFIX);

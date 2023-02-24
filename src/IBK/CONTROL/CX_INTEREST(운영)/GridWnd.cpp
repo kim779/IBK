@@ -165,6 +165,7 @@ CGridWnd::CGridWnd(CWnd* pMainWnd, int nIndex) : CBaseWnd(pMainWnd)
 
 	m_strBeginTime = "081000";
 	m_strEndTime = "085959";
+
 }
 
 CGridWnd::~CGridWnd()
@@ -200,6 +201,7 @@ HBITMAP CGridWnd::getBitmap(CString path)
 
 void CGridWnd::OperInit()
 {
+	m_sMap = ((CMainWnd*)m_pMainWnd)->m_strMap;  //test 20230224
 	m_pView     = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_VIEW));
 	m_pGroupWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_GROUP));
 	m_pToolWnd  = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
@@ -1272,6 +1274,9 @@ void CGridWnd::ParseUpjongData(class CGridData* sdata)
 
 void CGridWnd::ParseData(class CGridData* sdata)
 {
+	m_slog.Format("[cx_interest][CGridWnd][remove],<%s>  ParseData \r\n", m_sMap);
+	OutputDebugString(m_slog);
+
 	RemoveAll();
 
 	SetKind(sdata->GetKind());
@@ -3027,6 +3032,15 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 			{
 				return 0;
 			}
+
+			if (((CMainWnd*)m_pMainWnd)->m_bChangeGroup == TRUE)
+			{
+m_slog.Format("[cx_notify][CGridWnd][onnotify][remove]!!!!!!!!!!!!,<%s> m_iSendTr=[%d]", m_sMap, ((CMainWnd*)m_pMainWnd)->m_iSendTr);
+writelog(m_slog);
+				return 0;
+			}
+m_slog.Format("[cx_notify][CGridWnd][onnotify][remove]-------------------,<%s> m_iSendTr=[%d]", m_sMap, ((CMainWnd*)m_pMainWnd)->m_iSendTr);
+writelog(m_slog);
 
 			m_grid->m_bOutPos = false;
 
@@ -5613,7 +5627,7 @@ void CGridWnd::parsingOubs(char* datB, int datL, int mode)
 {
 	if (m_iIndex == 1)
 		TRACE("test");
-	m_slog.Format("-------------------CGridWnd::parsingOubs[%d]", m_iIndex);
+	m_slog.Format("[remove]-------------------CGridWnd::parsingOubs<%s>[%d] datL=[%d]",m_sMap, m_iIndex, datL);
 	writelog(m_slog);
 
 	CString strTime = ((CMainWnd*)m_pMainWnd)->GetMarketTime();
@@ -8474,9 +8488,14 @@ void CGridWnd::Reset(bool bAll)
 	KillTimer(1000);
 	RemoveAll();
 	const int	nActive = (int)m_pGroupWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETGROUP, MO_ACTIVE));
+
+	m_slog.Format("[cx_interest][CGridWnd][remove],<%s> Reset nActive=[%d]  m_nIndex=[%d] bAll=[%d] \r\n", m_sMap, nActive, m_nIndex, bAll);
+	OutputDebugString(m_slog);
+
+
 	if (nActive == m_nIndex)
 		m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_SELGROUP, MO_SET));
-	m_grid->Clear();
+	m_grid->Clear();  
 
 	if (bAll)
 	{
@@ -8679,6 +8698,9 @@ void CGridWnd::saveInterest(BOOL bVisible, bool btmp, int gno, bool bBookMark)
 {
 	if (gno < 0)
 		gno = ((CMainWnd*)m_pMainWnd)->_groupKey;
+
+m_slog.Format("[cx_notify][CGridWnd][saveInterest][remove]   gno=[%d]", gno);
+writelog(m_slog);
 
 	if (gno <= 0)
 		return;

@@ -541,7 +541,7 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 					string.Format("%s\t%s", THIRDCOD, code);					
 					break;
 				case 0:		//2012.10.11 KSJ 주식, 금리, 통화선물 추가
-					if(code.GetAt(0) == '1' || code.GetAt(0) == '4') //주식, 금리, 통화선물
+					if(code.GetAt(0) == '1' || code.GetAt(0) == '4' || code.GetAt(0) == 'A' || code.GetAt(0) == 'D') //주식, 금리, 통화선물  //파생상품 코드개편
 					{
 						int nGubn = atoi(code.Mid(1,2));
 						CString strGubn = code.Mid(1,2);	//2014.10.21 KSJ 주식선물 신규종목 연동
@@ -633,7 +633,7 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 					string.Format("%s\t%s", THIRDCOD, code);					
 					break;
 				case 0:		//2012.10.11 KSJ 주식, 금리, 통화선물 추가
-					if(code.GetAt(0) == '1' || code.GetAt(0) == '4') //주식, 금리, 통화선물
+					if(code.GetAt(0) == '1' || code.GetAt(0) == '4' || code.GetAt(0) == 'A' || code.GetAt(0) == 'D') //주식, 금리, 통화선물 //파생상품 코드개편
 					{
 						int nGubn = atoi(code.Mid(1,2));
 						CString strGubn = code.Mid(1,2);	//2014.10.21 KSJ 주식선물 신규종목 연동
@@ -730,7 +730,7 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 						string.Format("%s /S/t0/d%s\t%s", ecurrMAP, ELWCOD, code);
 						SetView(string); break;
 					case 0:		//2012.10.11 KSJ 주식, 금리, 통화선물 추가
-							if(code.GetAt(0) == '1' || code.GetAt(0) == '4') //주식, 금리, 통화선물
+							if(code.GetAt(0) == '1' || code.GetAt(0) == '4' || code.GetAt(0) == 'A' || code.GetAt(0) == 'D') //주식, 금리, 통화선물//파생상품 코드개편
 							{
 								int nGubn = atoi(code.Mid(1,2));
 								CString strGubn = code.Mid(1,2);	//2014.10.21 KSJ 주식선물 신규종목 연동
@@ -786,7 +786,7 @@ BOOL CGridWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 							string.Format("%s /S/t0/d%s\t%s", mapname, UCOD, code);
 							SetView(string); break;
 						case 0:		//2012.10.11 KSJ 주식, 금리, 통화선물 추가
-							if(code.GetAt(0) == '1' || code.GetAt(0) == '4') //주식, 금리, 통화선물
+							if(code.GetAt(0) == '1' || code.GetAt(0) == '4' || code.GetAt(0) == 'A' || code.GetAt(0) == 'D') //주식, 금리, 통화선물 //파생상품 코드개편
 							{
 								int nGubn = atoi(code.Mid(1,2));
 								const CString strGubn = code.Mid(1,2);	//2014.10.21 KSJ 주식선물 신규종목 연동
@@ -1380,7 +1380,7 @@ void CGridWnd::RbuttonAction(int row)
 		case indexCODE:		domino.Format("%s\t%s", UCOD, code);	break;
 		case elwCODE:		domino.Format("%s\t%s", HCOD, code);	break;
 		case 0:		//2012.10.11 KSJ 주식, 금리, 통화선물 추가
-			if(code.GetAt(0) == '1' || code.GetAt(0) == '4') //주식, 금리, 통화선물
+			if(code.GetAt(0) == '1' || code.GetAt(0) == '4' || code.GetAt(0) == 'A' || code.GetAt(0) == 'D') //주식, 금리, 통화선물 //파생상품 코드개편
 			{
 				int nGubn = atoi(code.Mid(1,2));
 				CString strGubn = code.Mid(1,2);	//2014.10.21 KSJ 주식선물 신규종목 연동
@@ -2740,7 +2740,7 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 			else if (ii == colCURR)
 			{
 				//2013.08.23 KSJ 스프레드종목이면 보합+, 하락+, 상승- 등 색과 기호를 표시해줘야한다.
-				if (strCode.GetLength() == 8 && strCode.GetAt(0) == '4')
+				if (strCode.GetLength() == 8 && (strCode.GetAt(0) == '4' || strCode.GetAt(0) == 'D'))  //파생상품 코드개편
 				{
 					if (entry.GetAt(0) == ' ')	//처음이 빈칸이면 보합에 -, + 표시가 있는 것이다.
 						entry.Replace(" ", "　");	//그때는 '　' ㄱ 한자 1번 을 넣어준다. 스페이스 아님..
@@ -2897,7 +2897,7 @@ void CGridWnd::parsingAlertx(LPARAM lParam)
 			else if (ii == colCURR)
 			{
 				//2013.08.23 KSJ 스프레드종목이면 보합+, 하락+, 상승- 등 색과 기호를 표시해줘야한다.
-				if (strCode.GetLength() == 8 && strCode.GetAt(0) == '4')
+				if (strCode.GetLength() == 8 && (strCode.GetAt(0) == '4' || strCode.GetAt(0) == 'D')) //파생상품 코드개편
 				{
 					if (entry.GetAt(0) == ' ')	//처음이 빈칸이면 보합에 -, + 표시가 있는 것이다.
 						entry.Replace(" ", "　");	//그때는 '　' ㄱ 한자 1번 을 넣어준다. 스페이스 아님..
@@ -3884,7 +3884,7 @@ void CGridWnd::parsingGrid(char *datB, int datL)
 
 					if(jj == colCURR)
 					{
-						if(strCode.GetLength() == 8 && strCode.GetAt(0) == '4')
+						if(strCode.GetLength() == 8 && (strCode.GetAt(0) == '4' || strCode.GetAt(0) == 'D')) //파생상품 코드개편
 						{
 							if(entry.GetAt(0) == ' ')	//처음이 빈칸이면 보합에 -, + 표시가 있는 것이다.
 								entry.Replace(" ", "　");	//그때는 '　' ㄱ 한자 1번 을 넣어준다. 스페이스 아님..
@@ -5163,6 +5163,7 @@ int CGridWnd::getJKind(CString m_code)
 	switch (ch1)
 	{
 	case '1':	// future
+	case 'A':  //파생상품 코드개편
 	{
 		if (ch2 == '0')
 		{
@@ -5181,17 +5182,20 @@ int CGridWnd::getJKind(CString m_code)
 			return JK_SFUTURE;
 	}
 	case '4':	// future spread
+	case 'D':   //파생상품 코드개편
 		if (ch2 == '0')
 			return JK_SPREAD;
 		else
 			return JK_SFSPREAD;
 	case '2':	// call option
+	case 'B':   //파생상품 코드개편
 		if (m_code.GetAt(1) == '0')
 			return JK_CALLOPT;
 		else
 			return JK_JCALLOPT;
 		break;
 	case '3':	// put option
+	case 'C':   //파생상품 코드개편
 		if (m_code.GetAt(1) == '0')
 			return JK_PUTOPT;
 		else

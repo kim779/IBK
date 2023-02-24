@@ -569,7 +569,7 @@ void CConfigDlg::SendHogaQuery(CString sCode)
 // 							"3101","","3106", //43~45 잔량합
 // 							"2023", "2024", "2033"
 // 						}; //
-	if(sCode.GetAt(0) == '1' || sCode.GetAt(0) == '4')
+	if(sCode.GetAt(0) == '1' || sCode.GetAt(0) == '4' || sCode.GetAt(0) == 'A' || sCode.GetAt(0) == 'D')  //파생상품 코드개편
 	{
 		char* symbols[] = {	"30021",  
 						"30354",  "30355", //상한/하한
@@ -611,7 +611,7 @@ void CConfigDlg::SendHogaQuery(CString sCode)
 		((CMainWnd*)m_pMain)->m_pQueryModalWnd = this;
 		((CMainWnd*)m_pMain)->SendTransaction(POOPQUERY, strSend, US_OOP, key);
 	}
-	else if(sCode.GetAt(0) == '2' || sCode.GetAt(0) == '3')
+	else if(sCode.GetAt(0) == '2' || sCode.GetAt(0) == '3' || sCode.GetAt(0) == 'B' || sCode.GetAt(0) == 'C') //파생상품 코드개편
 	{
 		char* symbols[] = {	"40021",  
 					"40354",  "40355", //상한/하한

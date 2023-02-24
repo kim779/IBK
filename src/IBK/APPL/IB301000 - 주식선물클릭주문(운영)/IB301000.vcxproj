@@ -357,6 +357,7 @@
       <ObjectFileName>.\IB301000___Win32_IB301000_Debug\</ObjectFileName>
       <ProgramDataBaseFileName>.\IB301000___Win32_IB301000_Debug\</ProgramDataBaseFileName>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>../../h</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>

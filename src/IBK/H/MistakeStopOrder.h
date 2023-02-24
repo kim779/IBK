@@ -482,9 +482,9 @@ BOOL CheckMistakeFOrder(CWnd* pWnd, MistakeOrder misOrd)
 	sMkty = misOrd.strCode.Mid(1, 2);
 	cHogb = misOrd.strHogb.GetAt(1);
 
-	if(cSigb == '1' || cSigb == '4')
+	if(cSigb == '1' || cSigb == '4' || cSigb == 'A' || cSigb == 'D')  //파생상품 코드개편
 	{
-		if(cSigb == '4') bSpread = true;
+		if(cSigb == '4' || cSigb == 'D') bSpread = true;   //파생상품 코드개편
 
 		if(!sMkty.Compare("01"))	//코스피200선물
 		{
@@ -668,7 +668,7 @@ BOOL CheckMistakeFOrder(CWnd* pWnd, MistakeOrder misOrd)
 			}
 		}
 	}
-	else if(cSigb == '2' || cSigb == '3')	// 코스피200 콜/풋 옵션
+	else if(cSigb == '2' || cSigb == '3' || cSigb == 'B' || cSigb == 'D')	// 코스피200 콜/풋 옵션  //파생상품 코드개편
 	{
 		if(cHogb == '3' || cHogb == '5' || cHogb == '6')	//시장가, 최유리, 조건부
 		{

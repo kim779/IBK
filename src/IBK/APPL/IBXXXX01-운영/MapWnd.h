@@ -114,7 +114,7 @@ public:
 	int GetNewAccHandleKey();
 	int GetNewLawHandleKey();
 	CWnd  *m_pParent;
-
+	CString m_slog;
 private:
 	std::unique_ptr<char []>m_hcB;
 

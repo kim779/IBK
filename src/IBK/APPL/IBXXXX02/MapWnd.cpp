@@ -338,7 +338,7 @@ LRESULT CMapWnd::OnReceiveRemainData(WPARAM wParam, LPARAM lParam)
 	return 0;
 
 }
-
+#define DF_SHARED
 //=================================================================================================
 BOOL CMapWnd::CreateMap(CWnd *pParent)
 {
@@ -359,10 +359,25 @@ BOOL CMapWnd::CreateMap(CWnd *pParent)
 	variant(titleCC, "Untitled");
 	path.Replace("\\", "_");
 
+	//m_ShMemory = new CShMemory;
+	//m_ShMemory->remainSHMEMNAME = path + "_remainCtrl_API";
+	//m_ShMemory->InitSharedMemory(this->m_hWnd);
+	//m_ShMemory->AddHandle(this->m_hWnd);
+
+#ifdef DF_SHARED
+	DWORD processID = GetCurrentProcessId();
+	CString sSHMENAME;
+	sSHMENAME.Format("%s%s%d", path, "_remainCtrl_API", processID);
+	m_ShMemory = new CShMemory;
+	m_ShMemory->remainSHMEMNAME = sSHMENAME;
+#else
 	m_ShMemory = new CShMemory;
 	m_ShMemory->remainSHMEMNAME = path + "_remainCtrl_API";
+#endif
 	m_ShMemory->InitSharedMemory(this->m_hWnd);
 	m_ShMemory->AddHandle(this->m_hWnd);
+
+
 #ifdef	_FILE_DEBUG
 	dFile	<< ">>>>>>>>>>>>>>>>>실시간 잔고 시작 end >>>>>>>>>>>>>>>>" << endl << endl;
 #endif

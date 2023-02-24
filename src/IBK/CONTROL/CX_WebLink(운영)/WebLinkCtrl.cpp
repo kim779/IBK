@@ -982,7 +982,7 @@ LRESULT WebLinkCtrl::OnUser(WPARAM wParam, LPARAM lParam)
 
 				m_finalurl = url;
 
-				//	openhtml();
+			//	openhtml();
 				if (GetOSversion() == 11)
 				{
 					openhtml();
@@ -1445,7 +1445,8 @@ void WebLinkCtrl::openhtml()
 	else //if (m_strUrl.Mid(0, 5)=="DHTTP")
 	{
 		m_finalurl.Replace("dhttp", "http");
-		ShellExecute(NULL, _T("open"), m_finalurl, NULL,NULL, SW_SHOW);	
+		ShellExecute(NULL, _T("open"), m_finalurl, NULL,NULL, SW_SHOW);	  //test
+	//	ShellExecute(NULL, _T("open"), "msedge.exe", m_finalurl, NULL, SW_SHOW);
 		return;
 	}
 //	else

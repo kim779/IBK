@@ -694,6 +694,7 @@ __declspec(dllexport) void WINAPI axGetMiniJisu(char* link)
 #include <sys/timeb.h>
 
 
+
 __declspec(dllexport) bool WINAPI axGetName(int kind, char* code, char* name, int* type)
 {
 	// No Dialog...
@@ -876,10 +877,56 @@ __declspec(dllexport) bool WINAPI axGetName(int kind, char* code, char* name, in
 			{
 				if (szCode.GetLength() > 5)
 				{
+					CStringArray arrCode;
+					arrCode.RemoveAll();
+					arrCode.Add("165");  //3년국채
+					arrCode.Add("465");  //3년국채 스프레드
+					arrCode.Add("166");  //5년국채
+					arrCode.Add("466");  //5년국채 스프레드
+					arrCode.Add("167");  //10년국채
+					arrCode.Add("467");  //10년국채 스프레드
+					arrCode.Add("468");  //3~10년국채
+
+					arrCode.Add("175");  //미국달러
+					arrCode.Add("475");  //미국달러 스프레드
+					arrCode.Add("176");  //엔
+					arrCode.Add("476");  //엔 스프레드
+					arrCode.Add("177");  //유로
+					arrCode.Add("477");  //유로 스프레드
+					arrCode.Add("178");  //위안
+					arrCode.Add("478");  //위안 스프레드
+
 					const TCHAR	ch1 = szCode.GetAt(0);
 					const TCHAR	ch2 = szCode.GetAt(1);
 				
-					if ((ch1 == '1' || ch1 == '4') && ch2 != '0')
+					CString stmp;
+					bool bfind = false;  //상품선물 코드인지 확인한다
+					for (int ii = 0; ii < arrCode.GetSize(); ii++)
+					{
+						stmp = arrCode.GetAt(ii);
+						if (stmp.Find(szCode.Left(3)) >= 0)
+						{
+							bfind = true;
+							break;
+						}
+					}
+
+					//if ((ch1 == '1' || ch1 == '4') && ch2 != '0')   //test 20230214
+					if (bfind) //상품선물코드라면
+					{
+						CCommodityDlg dlg(0);
+						dlg.LoadCCodeFromFile();
+
+						if (dlg.FindCode(szCode))
+						{
+							szName = dlg.GetName();
+							strcpy(name, szName);
+
+							*type = productFutureType;
+							return TRUE;
+						}
+					}
+					else if((ch1 == '1' || ch1 == '4') && ch2 != '0')
 					{
 						CCustomFuturesDlg cfdlg(0);
 						cfdlg.loadSfCode();

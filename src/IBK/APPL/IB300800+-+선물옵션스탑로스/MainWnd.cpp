@@ -1969,6 +1969,7 @@ int CMainWnd::getJKind(CString m_code)
 	switch (ch1)
 	{
 	case '1':	// future
+	case 'A':	 //파생상품 코드개편
 		{
 			if (ch2 == '0')
 			{
@@ -1991,17 +1992,20 @@ int CMainWnd::getJKind(CString m_code)
 				return JK_SFUTURE;			
 		}
 	case '4':	// future spread
+	case 'D':	 //파생상품 코드개편
 		if (ch2 == '0')
 			return JK_SPREAD;
 		else
 			return JK_SFSPREAD;
 	case '2':	// call option
+	case 'B':	 //파생상품 코드개편
 		if (m_code.GetAt(1) == '0')
 			return JK_CALLOPT;
 		else
 			return JK_JCALLOPT;
 		break;
 	case '3':	// put option
+	case 'C':	 //파생상품 코드개편
 		if (m_code.GetAt(1) == '0')
 			return JK_PUTOPT;
 		else
@@ -2042,9 +2046,9 @@ void CMainWnd::SendCodeTrigger(int irow)
 	char ch = sCode.GetAt(0);
 
 	CString strCodeSym;
-
-	if      (ch=='1' || ch=='4') { strCodeSym = "30301"; }
-	else if (ch=='2' || ch=='3') { strCodeSym = "40301"; }
+	//파생상품 코드개편
+	if      (ch=='1' || ch=='4' || ch=='A' || ch=='D') { strCodeSym = "30301"; }
+	else if (ch=='2' || ch=='3' || ch=='B' || ch=='C') { strCodeSym = "40301"; }
 
 	CString sdata;
 	sdata.Format("%s\t%s", strCodeSym, sCode);
@@ -2323,9 +2327,9 @@ void CMainWnd::ExecPOOPQuery(CString strCode, int irow)
 	strTmp.Format("%s%c", CString(m_GridHdr[colRCOD].symbol), ctoken);
 	
 	//sendsymbols += strTmp;
-
-	if      (ch=='1' || ch=='4') { strCodeSym = "30301" ; strHead = "31"; strTmp.Format("%s%c", "30021", ctoken);sendsymbols += strTmp;}
-	else if (ch=='2' || ch=='3') { strCodeSym = "40301"; strHead = "41"; strTmp.Format("%s%c", "40021", ctoken);sendsymbols += strTmp;}
+   //파생상품 코드개편
+	if      (ch=='1' || ch=='4' || ch=='A' || ch=='D') { strCodeSym = "30301" ; strHead = "31"; strTmp.Format("%s%c", "30021", ctoken);sendsymbols += strTmp;}
+	else if (ch=='2' || ch=='3' || ch=='B' || ch=='C') { strCodeSym = "40301"; strHead = "41"; strTmp.Format("%s%c", "40021", ctoken);sendsymbols += strTmp;}
 
 	for (int ii = colVolUNIT; ii < colVolUNIT+isymbolscnt; ii++)
 	{

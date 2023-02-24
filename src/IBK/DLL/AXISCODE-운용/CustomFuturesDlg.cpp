@@ -503,7 +503,7 @@ BOOL CCustomFuturesDlg::loadPjCode()			//현물 코드 종목...
 	CMapStringToString sfcodemap;
 	CQArray	<CString, CString>	qKindArr;
   	
-	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\pjcode.dat";
+	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\pjcode.dat";  //주식옵션?
 
 	if (!file.Open(path, CFile::modeRead|CFile::typeBinary))
 	{
@@ -594,7 +594,7 @@ BOOL CCustomFuturesDlg::loadFjCode()
 	struct  fjcode  FJCode {};
 	FCODE fcode;
 	CString path;
-  	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\fjcode.dat";
+  	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\fjcode.dat";  //선물코드?
 	
 	if (!file.Open(path, CFile::modeRead|CFile::typeBinary))
 	{
@@ -1506,7 +1506,7 @@ void CCustomFuturesDlg::SetFutureCodes(BOOL bKostar, CString codx)
 
 BOOL CCustomFuturesDlg::loadSfCode()
 {
-	return TRUE;	// 현재 주식 선물 없음
+	//return TRUE;	// 현재 주식 선물 없음  //test
 	if (m_arraySfCode.GetSize() > 0)
 		return FALSE;
 	
@@ -1523,7 +1523,7 @@ BOOL CCustomFuturesDlg::loadSfCode()
 	CQArray	<CString, CString>	qKindArr;
 	
   	
-	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\sfcode.dat";
+	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\sfcode.dat";  //주식선물?
 
 	if (!file.Open(path, CFile::modeRead|CFile::typeBinary))
 	{	

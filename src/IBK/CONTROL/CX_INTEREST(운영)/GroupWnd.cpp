@@ -152,6 +152,10 @@ LONG CGroupWnd::OnManage(WPARAM wParam, LPARAM lParam)
 			m_GridWnd[m_nCurSel]->SendMessage(WM_MANAGE, MK_TURNCODE);
 
 			SelectOper();
+
+m_slog.Format("[cx_interest][CGroupWnd][OnManage][remove]<%s>", m_sMap);
+OutputDebugString(m_slog);
+
 			ReSetupGrid();
 
 			if(((CMainWnd*)m_pMainWnd)->m_bRemain)
@@ -252,6 +256,7 @@ LONG CGroupWnd::OnManage(WPARAM wParam, LPARAM lParam)
 			{
 				m_GridWnd[ii]->SendMessage(WM_MANAGE, MK_ENDDRAG);
 			}			
+			((CMainWnd*)m_pMainWnd)->SetDragTimer();
 		}
 		break;
 	case MK_GETMAX:
@@ -483,6 +488,7 @@ void CGroupWnd::RecvOper(int kind, CRecvData* rdata)
 			m_GridWnd[0]->SendMessage(WM_MANAGE, MAKEWPARAM(MK_RECVDATA2, 0), (LPARAM)rdata);
 			m_GridWnd[1]->m_SendKey = TRKEY_GRIDNEW;
 			m_GridWnd[1]->SendMessage(WM_MANAGE, MAKEWPARAM(MK_RECVDATA2, m_GridWnd[0]->GetRowcount() * 100), (LPARAM)rdata);
+			((CMainWnd*)m_pMainWnd)->m_bChangeGroup = FALSE;  //test 20230223
 		}
 	}
 	else
@@ -754,7 +760,7 @@ void CGroupWnd::savecfg()
 void CGroupWnd::OperInit()
 {
 	((CMainWnd*)m_pMainWnd)->GetParamRect();
-	
+	m_sMap = ((CMainWnd*)m_pMainWnd)->m_strMap;
 	loadcfg();
 	CreateGrid();
 
@@ -927,6 +933,9 @@ void CGroupWnd::InitGrid()
 
 void CGroupWnd::RefreshGrid()
 {
+	m_slog.Format("[cx_interest][CGroupWnd][RefreshGrid][remove]<%s>", m_sMap);
+	OutputDebugString(m_slog);
+
 	CWnd*	pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
 	UINT	kind = 0;
 	CMapWordToPtr	mapNews;
@@ -978,6 +987,8 @@ void CGroupWnd::RefreshGrid()
 
 void CGroupWnd::ReSetupGrid()
 {
+m_slog.Format("[cx_interest][CGroupWnd][ReSetupGrid][remove]<%s>", m_sMap);
+OutputDebugString(m_slog);
 	CWnd*	pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
 	class CGridData	sdata;
 	UINT	kind = 0;
@@ -1928,6 +1939,9 @@ void CGroupWnd::SendGrid(int nIndex, UINT kind)
 
 void CGroupWnd::SendGrid(int nIndex, CGridData* sdata)
 {
+	m_slog.Format("[cx_interest][CGroupWnd][SendGrid][remove]<%s>", m_sMap);
+	OutputDebugString(m_slog);
+
 	UINT	kind = sdata->GetKind();
 
 	if(((CMainWnd*)m_pMainWnd)->m_bRemain)
@@ -1964,6 +1978,9 @@ void CGroupWnd::SendGrid(int nIndex, CGridData* sdata)
 
 int CGroupWnd::OverOper(int nIndex, CGridData* sdata)
 {
+m_slog.Format("[cx_interest][CGroupWnd][OverOper][remove]<%s>", m_sMap);
+OutputDebugString(m_slog);
+
 	CWnd*	pWnd = (CWnd*)m_pMainWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_GETWND, MO_TOOL));
 
 	int	nOver = (int)pWnd->SendMessage(WM_MANAGE, MK_INPUTOVER);	
@@ -2435,7 +2452,7 @@ void CGroupWnd::saveServer(int gno)
 	CSendData sData;
 	sData.SetData(trUPDOWN, key, buffer.data(), buffer.size(), "");
 //AxStd::_Msg("%s", buffer.data());
-m_slog.Format("************************* [cx_interest] CGroupWnd::saveServer [%s]", buffer.data());
+m_slog.Format("************************* [cx_interest][remove][%s] CGroupWnd::saveServer <%s>", m_sMap, buffer.data());
 OutputDebugString(m_slog);
 	m_pMainWnd->SendMessage(WM_MANAGE, MK_SENDTR, (LPARAM)&sData);
 	m_pMainWnd->SendMessage(WM_MANAGE, MK_PROCDLL);

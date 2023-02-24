@@ -492,6 +492,7 @@ struct	_userWH	{
 #define infraType		26			// 인프라
 #define etnType			27			// KSJ 2014.10.28 ETN ETN은 "Q"로 시작하므로 ETF와 따로 구분해야한다.
 #define KONEXType		28          //20191107 코넥스 타입
+#define productFutureType  29    //상품선물 타입
 //
 //	AxisCode.dll
 //	bool axGetInfo(int kind, CString code, char* info, int* value)

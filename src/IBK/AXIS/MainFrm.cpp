@@ -1378,7 +1378,10 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 				case 'x':
 				case 'X':
 					{
-
+					CString sdat;
+					sdat.Format("%s%s", "zPwd\t", "2345");
+					m_wizard->InvokeHelper(DI_WIZARD, DISPATCH_METHOD, VT_EMPTY, (void*)NULL,
+						(BYTE*)(VTS_I4 VTS_I4), MAKELONG(setFDC, m_activeKey), (LPARAM)(const char*)sdat);
 					  
 					}
 					break;
@@ -3711,6 +3714,8 @@ LONG CMainFrame::OnUSER(WPARAM wParam, LPARAM lParam)
 		case MMSG_RESTORECONDLG:
 			ShowConclusion();
 			break;
+		case 0x08:
+			return (LRESULT)(LPCTSTR)Axis::userID;
 	}
 	return 0;
 }
@@ -5960,6 +5965,8 @@ BOOL CMainFrame::getConnectInfo(CString& ips, int& port)
 		port = ((CAxisApp*)m_axis)->m_forcePort;
 
 		m_forceIP = ips;
+		CheckServer(m_forceIP);
+		//m_strServer.Format("[%s]", m_forceIP);
 
 		if (Axis::isCustomer && port == portEmployee)
 			port = portCustomer;
@@ -7589,6 +7596,7 @@ void CMainFrame::change_Skin()
 
 void CMainFrame::IMAXSkinSet()
 {
+	return;  //test
 	int nkey{}, nSkinKind{};
 	CString tmp, sSkinName;
 	CSChild* schild{};
@@ -17456,6 +17464,8 @@ void CMainFrame::drawTitle(CDC* pDC)
 		CString callCenter = (m_rndkey%2) ? CALLCENTER1 : CALLCENTER2;
 		callCenter += CALLCENTER3;
 
+		callCenter = m_strServer + "  " + callCenter;
+
 		const CSize sz = memDC.GetTextExtent(m_bOnlySise ? "       "+callCenter : callCenter);
 		iRc.OffsetRect(-sz.cx - 20, 0);
 		iRc.right = iRc.left + sz.cx;
@@ -20528,6 +20538,7 @@ CString CMainFrame::get_glb_addr(char* macaddr, char* ip)
 			}
 
 			m_axis->WriteProfileString(INFORMATION, "Server", ips);
+			CheckServer(ips);
 		}
 		FreeLibrary(hModule);
 	}
@@ -20632,6 +20643,7 @@ CString CMainFrame::get_glb_addr_Index(char* macaddr, char* ip)
 			}
 
 			m_axis->WriteProfileString(INFORMATION, "Server", ips);
+			CheckServer(ips);
 		}
 		FreeLibrary(hModule);
 	}
@@ -25261,6 +25273,9 @@ void CMainFrame::ParsePihoitgyList(char* dat, int len)
 		gubn = CString(mod->grid[ii].gubn, sizeof(mod->grid[ii].gubn));	gubn.TrimRight();
 		mnam = CString(mod->grid[ii].mnam, sizeof(mod->grid[ii].mnam));	mnam.TrimRight();
 
+m_slog.Format("[axis][pihoitgy] ParsePihoitgyList     gubn[%s]  mnam=[%s] \r\n", gubn, mnam);
+OutputDebugString(m_slog);
+
 		CString filename,gridItem;
 
 // 		s.Format("PIHOITGY [%s] [%s] [%d]\n",gubn,mnam,mnam.Find("@"));
@@ -25299,6 +25314,7 @@ void CMainFrame::ParsePihoitgyList(char* dat, int len)
 		}
 		else
 		{
+			mnam = mnam.Mid(1);
 			filename.Format("%s\\%s\\IB\\%s\\%s", Axis::home, gubn, mnam.Mid(0,3), mnam);
 		}
 
@@ -25310,6 +25326,9 @@ void CMainFrame::ParsePihoitgyList(char* dat, int len)
 			char* str = GetFileSHA256(filename,hModule);
 
 			gridItem.Format("%-3s%-47s%-44s",gubn,mnam,str);
+
+m_slog.Format("[axis][pihoitgy] ParsePihoitgyList     gubn[%s]  mnam=[%s] \r\n", gubn, mnam);
+OutputDebugString(m_slog);
 			
 			m_arrayItgy.Add(gridItem);
 		}
@@ -27617,6 +27636,32 @@ void CMainFrame::Delete_AsisICon()
 		ShellExecute(NULL, _T("open"), fname, NULL, NULL, SW_SHOWNORMAL);
 		::DeleteFile(fname);
 	}
+}
+
+void CMainFrame::CheckServer(CString strip)
+{
+	if (strip.Find("211.255.204.70") >= 0) m_strServer = "[BP10]";
+	else if (strip.Find("211.255.204.71") >= 0) m_strServer = "[BP11]"; 
+	else if (strip.Find("211.255.204.72") >= 0) m_strServer = "[BP12]";
+	else if (strip.Find("211.255.204.73") >= 0) m_strServer = "[BP13]";
+	else if (strip.Find("211.255.204.74") >= 0) m_strServer = "[BP14]";
+	else if (strip.Find("211.255.204.75") >= 0) m_strServer = "[BP15]";
+	else if (strip.Find("211.255.204.76") >= 0) m_strServer = "[BP16]";
+	else if (strip.Find("211.255.204.77") >= 0) m_strServer = "[BP17]";
+	else if (strip.Find("211.255.204.78") >= 0) m_strServer = "[BP18]";
+	else if (strip.Find("211.255.204.79") >= 0) m_strServer = "[BP19]";
+	else if (strip.Find("211.255.204.33") >= 0) m_strServer = "[BP20]";
+	else if (strip.Find("211.255.204.34") >= 0) m_strServer = "[BP21]";
+	else if (strip.Find("211.255.204.35") >= 0) m_strServer = "[BP22]";
+	else if (strip.Find("211.255.204.36") >= 0) m_strServer = "[BP23]";
+	else if (strip.Find("211.255.204.37") >= 0) m_strServer = "[BP24]";
+	else if (strip.Find("211.255.204.38") >= 0) m_strServer = "[BP25]";
+	else if (strip.Find("211.255.204.39") >= 0) m_strServer = "[BP26]";
+	else if (strip.Find("211.255.204.57") >= 0) m_strServer = "[BP27]";
+	else if (strip.Find("211.255.204.58") >= 0) m_strServer = "[BP28]";
+	else if (strip.Find("211.255.204.59") >= 0) m_strServer = "[BP29]";
+	else m_strServer = strip;
+
 }
 
 //CString ip;

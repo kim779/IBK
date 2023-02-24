@@ -144,6 +144,9 @@ void CRemain::ParsingRemainData(char *pData)
 	m_rprice = CString(srec.camt, sizeof(srec.camt));
 	m_pgsonik = CString(srec.tamt, sizeof(srec.tamt));
 	m_code.TrimRight();
+
+	if (m_code.Find("005930") >= 0)
+		TRACE("123");
 #ifdef	CREDIT
 	m_date = CString(srec.sydt, sizeof(srec.sydt));
 	m_creditS = CString(srec.sycd, sizeof(srec.sycd));
@@ -982,12 +985,15 @@ bool CRemain::CalPgsonik(CString currS, CString rateS, int noticeMode)
 
 		double dmaip{};
 
+		if (m_code.Find("005930"))
+			TRACE("123");
+
 		if (m_bchg)	
 		{
 			if(m_creditS == "05")  //유통대주
 				dmaip = (atof(m_pmaip)* atof(m_remain));			
 			else
-				dmaip = (atof(m_pmaip)* atof(m_remain)) - atof(m_symt);			
+				dmaip = (atof(m_pmaip)* atof(m_remain)) - atof(m_symt);			  //test 2023
 		}
 		else
 			dmaip = atof(m_omaip);// + atof(m_symt);
@@ -1035,7 +1041,7 @@ bool CRemain::CalPgsonik(CString currS, CString rateS, int noticeMode)
 			else
 				m_rprice.Format("%.f", rprice-atof(m_symt)); //평가금액	
 
-			m_maip.Format("%.f",dmaip);
+		//	m_maip.Format("%.f",dmaip);  //test 20230215
 
 			dSonik = atof(m_rprice) - atof(m_maip);
 

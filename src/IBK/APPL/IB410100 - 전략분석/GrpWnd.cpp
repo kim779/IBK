@@ -809,8 +809,10 @@ double CGrpWnd::MingamBuho(CString jcode, int mmgb, int mingam)
 	switch (jcode[0])
 	{
 	case '1':
+	case 'A':  //파생상품 코드개편
 		break;
 	case '2':
+	case 'B':  //파생상품 코드개편
 		if (mmgb == -1)
 		{
 			if (mingam == CETA)
@@ -828,6 +830,7 @@ double CGrpWnd::MingamBuho(CString jcode, int mmgb, int mingam)
 		break;
 
 	case '3':
+	case 'C':  //파생상품 코드개편
 		if (mmgb == -1)
 		{
 			if (mingam == GAMMA || mingam == VEGA)
@@ -1469,6 +1472,7 @@ int CGrpWnd::GetCodeType(CString Code, int mmgb)
 	switch (Code[0])
 	{
 	case '1':	// 선물
+	case 'A':	//파생상품 코드개편
 		if (mmgb == -1)
 			rValue = 1;
 		else if (mmgb == 1)
@@ -1476,6 +1480,7 @@ int CGrpWnd::GetCodeType(CString Code, int mmgb)
 		break;
 
 	case '2':	// 콜
+	case 'B':  //파생상품 코드개편
 		if (mmgb == -1)
 			rValue = 3;
 		else if (mmgb == 1)
@@ -1483,6 +1488,7 @@ int CGrpWnd::GetCodeType(CString Code, int mmgb)
 		break;
 
 	case '3':	// 풋
+	case 'C':  //파생상품 코드개편
 		if (mmgb == -1)
 			rValue = 5;
 		else if (mmgb == 1)
@@ -1500,7 +1506,7 @@ double CGrpWnd::GetHsGa(CString Code)
 
 	double rValue=0;
 
-	if (Code[0] == '1')	// 선물
+	if (Code[0] == '1' || Code[0] == 'A')	// 선물  //파생상품 코드개편
 	{
 		rValue = m_k200;
 	}
@@ -2619,7 +2625,11 @@ int CGrpWnd::GetLinePoint(int xpt)
 	// 선물 제외
 	if (cValue != -1)
 	{
-		if (GetMoveCode(cValue).GetAt(0) == '1') //kangmc  rValue -1
+		CString stmp;
+		stmp.Format("[4101] GetMoveCode = [%s]", GetMoveCode(cValue));
+		OutputDebugString(stmp);
+
+		if (GetMoveCode(cValue).GetAt(0) == '1' || GetMoveCode(cValue).GetAt(0) == 'A') //kangmc  rValue -1   //파생상품 코드개편
 		{ 
 			rValue = -1;
 		}

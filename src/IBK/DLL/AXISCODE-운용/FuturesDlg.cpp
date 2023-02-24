@@ -1178,7 +1178,7 @@ BOOL CFuturesDlg::loadPjCode()			//현물 코드 종목...
 	CMapStringToPtr pcodemap;
 	CQArray	<CString, CString>	qKindArr;
   	
-	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\pjcode.dat";  //주식옵션
+	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\pjcode.dat";  //주식옵션 
 
 	if (!file.Open(path, CFile::modeRead|CFile::typeBinary))
 	{
@@ -1286,7 +1286,7 @@ BOOL CFuturesDlg::loadSfCode()
 
 	CString path, sztmp = _T("");
   	
-	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\sfcode.dat";
+	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\sfcode.dat"; //주식선물
 
 	if (!file.Open(path, CFile::modeRead|CFile::typeBinary))
 	{	
@@ -1760,7 +1760,7 @@ BOOL CFuturesDlg::loadMoCode()
 	
 	CString path;
 	
-	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\mocode.dat";
+	path = ((CAxisCodeApp*)AfxGetApp())->m_root + "\\tab\\mocode.dat";  //선옵 스타
 	
 	if (!file.Open(path, CFile::modeRead|CFile::typeBinary))
 	{	
@@ -3039,7 +3039,7 @@ void CFuturesDlg::SetFutureCodes()
 		{
 // 			if (btnCnt > 7) // 지수 선물일 경우 에만 
 // 				break;
-			if (!code.IsEmpty() && code[0] == '4') // 스프레드 일 때 
+			if (!code.IsEmpty() && (code[0] == '4' || code[0] == 'D')) // 스프레드 일 때   //파생상품 코드개편
 			{
 				((CButton*)GetDlgItem(IDC_BUTTON_SPMONTH3 + ib))->SetWindowText(code);
 				ib++;

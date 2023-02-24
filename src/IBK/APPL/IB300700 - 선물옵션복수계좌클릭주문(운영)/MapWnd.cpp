@@ -761,7 +761,7 @@ void CMapWnd::res_pibo3002( LPCSTR data, int size )
 
 	m_SiseData.fhoga.clear();
 	m_SiseData.hhga = (int)(fabs(Str2Double(mod->hhga, sizeof(mod->hhga))*100) + DOUBLE_PREFIX);
-	if (m_SiseData.code.GetAt(0)=='4')
+	if (m_SiseData.code.GetAt(0)=='4' || m_SiseData.code.GetAt(0) == 'D')  //파생상품 코드개편
 	{
 		// 하한가는 반대부호로 오게 되어 있다(색상) 고로 스프레드의 경우 다시 역방향으로 처리해주는 센스가 필요하다.
 		double hhga = Str2Double(mod->hhga, sizeof(mod->hhga))*100 + DOUBLE_PREFIX;
@@ -776,7 +776,7 @@ void CMapWnd::res_pibo3002( LPCSTR data, int size )
 // 	m_SiseData.jega = fabs(Str2Double(mod->jega, sizeof(mod->jega))*100) + DOUBLE_PREFIX;
 // 	m_SiseData.curr = fabs(Str2Double(mod->curr, sizeof(mod->curr))*100) + DOUBLE_PREFIX;
 
-	if(m_SiseData.code.GetAt(0)!='4')
+	if(m_SiseData.code.GetAt(0)!='4' && m_SiseData.code.GetAt(0) != 'D')  //파생상품 코드개편
     {
         m_SiseData.shga = (int)(fabs(Str2Double(mod->shga, sizeof(mod->shga))*100) + DOUBLE_PREFIX);
         m_SiseData.gjga = (int)(fabs(Str2Double(mod->gjga, sizeof(mod->gjga))*100) + DOUBLE_PREFIX);
@@ -1060,7 +1060,7 @@ void CMapWnd::proc_alert( struct _alertR* alertR )
 
 			m_SiseData.pcurr = m_SiseData.curr;
 			
-			if(m_SiseData.code.GetAt(0)!='4')
+			if(m_SiseData.code.GetAt(0)!='4' && m_SiseData.code.GetAt(0) != 'D')  //파생상품 코드개편
             {
                 m_SiseData.curr = (int)(fabs(atof((char*)data[23]) * 100.0) + DOUBLE_PREFIX);
             }
@@ -1092,6 +1092,7 @@ CODE_TYPE CMapWnd::GetCodeType( LPCSTR code )
 	switch(*code)
 	{
 	case '1': 
+	case 'A':  //파생상품 코드개편
 		{
 			if(strCode.Mid(1,2) == "05")
 				return CT_MFUTURE;
@@ -1100,6 +1101,8 @@ CODE_TYPE CMapWnd::GetCodeType( LPCSTR code )
 		}
 	case '2':
 	case '3': 
+	case 'B':  //파생상품 코드개편
+	case 'C':  //파생상품 코드개편
 		{
 			if(strCode.Mid(1,2) == "05")
 				return CT_MOPTION;
@@ -1107,6 +1110,7 @@ CODE_TYPE CMapWnd::GetCodeType( LPCSTR code )
 				return CT_OPTION;
 		}
 	case '4': 
+	case 'D':  //파생상품 코드개편
 		{
 			if(strCode.Mid(1,2) == "05")
 				return CT_MSPREAD;
@@ -1326,7 +1330,7 @@ void CMapWnd::proc_notice( LPCSTR data, int size )
 					m_pControl2->SendMessage(WM_APP_REFRESH, WP_MICHEG_UPDATE, (LPARAM)&pos->second);
 			}
 		}
-		if (code[0]=='4')
+		if (code[0]=='4' || code[0] == 'D')  //파생상품 코드개편
 		{
 			if (m_pControl)
 			{
@@ -1677,8 +1681,8 @@ void CMapWnd::ChangeCode( LPCSTR code , BOOL bTrigger /*=TRUE*/)
 	{
 		ch = _code.GetAt(0);
 		param.Format("ed_focod\t%s", _code); Variant(codeCC, param); Variant(triggerCC, param);
-		if      (ch=='1' || ch=='4') { param.Format("30301\t%s", _code); Variant(codeCC, param); Variant(triggerCC, param); }
-		else if (ch=='2' || ch=='3') { param.Format("40301\t%s", _code); Variant(codeCC, param); Variant(triggerCC, param); }
+		if      (ch=='1' || ch=='4' || ch == 'A' || ch == 'D') { param.Format("30301\t%s", _code); Variant(codeCC, param); Variant(triggerCC, param); }  //파생상품 코드개편
+		else if (ch=='2' || ch=='3' || ch == 'B' || ch == 'C') { param.Format("40301\t%s", _code); Variant(codeCC, param); Variant(triggerCC, param); } //파생상품 코드개편
 	}
 
 	WriteLog("ChangeCode - %s", _code);

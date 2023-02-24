@@ -1586,7 +1586,7 @@ bool CMapForm::loadFCode()
 		fcode.codeS = _GetString(fjcode.cod2, FCodeLen);
 		if (fcode.codeS.GetLength() == 8)
 		{
-			if (fcode.codeS.GetAt(0) != '1')
+			if (fcode.codeS.GetAt(0) != '1' && fcode.codeS.GetAt(0) != 'A') //파생상품 코드개편
 				continue;
 			if (fcode.codeS.GetAt(2) != '1')
 				continue;
@@ -1920,6 +1920,7 @@ CString CMapForm::getCodeName(CString codeS, int& gubn)
 		switch (codeS.GetAt(0))
 		{
 		case '1':		// 선물
+		case 'A':       //파생상품 코드개편
 			{
 				_fcode   fcode; 
 				for (ii = 0; ii < m_arFCode.GetSize(); ii++)
@@ -1934,6 +1935,7 @@ CString CMapForm::getCodeName(CString codeS, int& gubn)
 			}
 			break;
 		case '2':		// 콜옵션
+		case 'B':
 			{
 				struct  ojcode  OJCode;
 				for (ii = 0; ii < m_arOCode.GetSize(); ii++)
@@ -1952,6 +1954,7 @@ CString CMapForm::getCodeName(CString codeS, int& gubn)
 			}
 			break;
 		case '3':		// 풋옵션
+		case 'C':
 			{
 				struct  ojcode  OJCode;
 				for (ii = 0; ii < m_arOCode.GetSize(); ii++)

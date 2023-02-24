@@ -1478,6 +1478,10 @@ public:
 	bool CreateWizard();
 	//as is 바탕화면 아이콘 지우기
 	void Delete_AsisICon();
+
+	//접속서버 확인
+	void CheckServer(CString strip);
+	CString m_strServer{};
 protected:
 // #ifdef USE_AHNLAB_SECUREBROWSER
 // 	IAosSB *m_pAosSB;

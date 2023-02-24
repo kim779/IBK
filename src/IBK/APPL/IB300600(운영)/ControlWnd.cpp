@@ -1669,7 +1669,7 @@ void CControlWnd::OnFutBtnClick( UINT nID )
 		{
 			CString code(m_fjcode[ii].cod2, sizeof(m_fjcode[ii].cod2));
 			
-			if(code.GetAt(0) == '4')
+			if(code.GetAt(0) == '4' || code.GetAt(0) == 'D') //파생상품 코드개편
 				break;
 			
 			CString name(m_fjcode[ii].hnam, sizeof(m_fjcode[ii].hnam));
@@ -1901,7 +1901,7 @@ void CControlWnd::DisplayJango( Jango *pj )
 	
 	//TRACE("\nControl Jango -> %d %d\n", jqty, wcnt);
 
-	if (pj->code[0]=='1')
+	if (pj->code[0]=='1' || pj->code[0] == 'A')  //파생상품 코드개편
 	{
 		int cnt = (int)m_fjcode.size();
 		for(int n=0; n<cnt; ++n)
@@ -1932,9 +1932,9 @@ void CControlWnd::DisplayJango( Jango *pj )
 				CCellID id;
 				id.row = pos->second.second;
 				
-				if (pj->code[0]=='2') 
+				if (pj->code[0]=='2' || pj->code[0] == 'B')   //파생상품 코드개편
 					id.col = 0;
-				else if (pj->code[0]=='3') 
+				else if (pj->code[0]=='3' || pj->code[0] == 'C')
 					id.col = 2;
 				else 
 					return;

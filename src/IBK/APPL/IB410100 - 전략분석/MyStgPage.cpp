@@ -767,7 +767,7 @@ long CMyStgPage::OnMsgGetHV(WPARAM wParam, LPARAM lParam)
 	((CMapWnd*)m_pParent)->m_opsenscal->Calc(1);	// IV 만 계산
 	val = ((CMapWnd*)m_pParent)->m_opsenscal->GetIv();
 
-	if (pData->code[0] == '2')
+	if (pData->code[0] == '2' || pData->code[0] == 'B') //파생상품 코드개편
 	{
 		val.Format("%.2f", atof(val));
 	}
@@ -1017,7 +1017,7 @@ void CMyStgPage::generateMingam(int idx)
 	if (mdat->ccod.IsEmpty()) return;
 
 	// 민감도 계산(iv, delta, gamma, theta, vegga, rho)
-	if (mdat->ccod[0] == '1' || mdat->ccod[0] == '4')
+	if (mdat->ccod[0] == '1' || mdat->ccod[0] == '4' || mdat->ccod[0] == 'A' || mdat->ccod[0] == 'D') //파생상품 코드개편
 	{
 		// 선물 민감 계산
 		mdat->iv = "0";

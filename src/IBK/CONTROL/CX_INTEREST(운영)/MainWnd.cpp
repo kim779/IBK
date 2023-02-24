@@ -22,7 +22,7 @@ static char THIS_FILE[] = __FILE__;
 
 
 #define TRKEY_INTER	100
-
+#define TM_DRAG  9898
 struct MarketTime
 {
 	char row1[30];	//장전시간외
@@ -122,6 +122,7 @@ BEGIN_DISPATCH_MAP(CMainWnd, CWnd)
 	DISP_FUNCTION(CMainWnd, "SearchGroupList", SearchGroupList, VT_EMPTY, VTS_NONE)
 	DISP_FUNCTION(CMainWnd, "SearchGroupCode", SearchGroupCode, VT_EMPTY, VTS_I2)
 	//}}AFX_DISPATCH_MAP
+	DISP_FUNCTION_ID(CMainWnd, "SetMapName", dispidSetMapName, SetMapName, VT_EMPTY, VTS_BSTR)
 END_DISPATCH_MAP()
 
 // Note: we add support for IID_IMainWnd to support typesafe binding
@@ -643,6 +644,8 @@ LONG CMainWnd::OnManage(WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case MK_SELGROUP:
+		m_slog.Format("[cx_interest][CMainWnd][OnManage][remove] MK_SELGROUP  [%d]\r\n", (int)lParam);
+		OutputDebugString(m_slog);
 		if (HIWORD(wParam) == MO_SET)
 			SelectGroup((int)lParam);
 		break;
@@ -768,7 +771,9 @@ LONG CMainWnd::OperDLLOUB(WPARAM wParam, LPARAM lParam)
 	if (ex->key == TRKEY_INTER)
 	{
 		const CString skey = strRem.Left(2);
-
+		m_iSendTr--;   //test 20230223
+		m_slog.Format("[cx_interest][CMainWnd][OperDLLOUB][remove]<%s> m_iSendTr=[%d] len=[%d] skey=[%s]", m_strMap, m_iSendTr, len, skey);
+		OutputDebugString(m_slog);
 		if (atoi(skey) < 0)
 			return ret;
 
@@ -778,6 +783,12 @@ LONG CMainWnd::OperDLLOUB(WPARAM wParam, LPARAM lParam)
 
 		m_pGroupWnd->m_iInterCnt = atoi(CString(data, len).Mid(22, 4));
 		m_pTreeWnd->receiveOub(CString(data, len), _groupKey);
+
+		
+	
+		//if(m_bChangeGroup == 0)
+		//	m_bChangeGroup = false;  //test 20230223
+
 		return ret;
 	}
 
@@ -940,6 +951,13 @@ void CMainWnd::sendTR(CString name, CString data, BYTE type, int key, CString ke
 { 
 	if(m_bMainClose)
 		return;
+
+	if (name.Find("pooppoop") >= 0)
+	{
+		m_iSendTr++;
+		m_slog.Format("[cx_interest][CMainWnd][OperDLLOUB][remove] sendTR  <%s> m_iSendTr=[%d]", m_strMap, m_iSendTr);
+		OutputDebugString(m_slog);
+	}
 
 	std::string trData; 	
 
@@ -1232,6 +1250,8 @@ LRESULT CMainWnd::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 void CMainWnd::SelectGroup(int kind)
 {
+	m_slog.Format("[cx_interest][CMainWnd][SelectGroup][remove]  kind=[%d]\r\n", kind);
+	OutputDebugString(m_slog);
 	if (m_pTreeWnd)
 		m_pTreeWnd->SendMessage(WM_MANAGE, MAKEWPARAM(MK_SELGROUP, MO_SET), (LPARAM)kind);
 
@@ -1488,7 +1508,17 @@ void CMainWnd::OnTimer(UINT nIDEvent)
 	else if(nIDEvent == 1222)
 	{
 		KillTimer(1222);
-		m_bChangeGroup = FALSE;
+		m_bChangeGroup = FALSE;   //test 20230223
+	}
+	else if (nIDEvent == TM_DRAG)
+	{
+		KillTimer(nIDEvent);
+
+		m_slog.Format("[cx_interest][CMainWnd][remove][ontimer]   m_iGroup =[%d]------------------------ ", m_iGroup);
+		OutputDebugString(m_slog);
+
+		ChangeGroup(m_iGroup);
+		
 	}
 
 	CWnd::OnTimer(nIDEvent);
@@ -1703,8 +1733,13 @@ void CMainWnd::ChangeGroup(short nIndex)
 
 	m_bChangeGroup = TRUE;
 	SetTimer(1222,1000,nullptr);
+	//SetTimer(1222, 500, nullptr);
 	m_pGroupWnd->SendMessage(WM_MANAGE, MK_NOSELECT);
-	
+
+m_iGroup = nIndex;
+m_slog.Format("[cx_interest][CMainWnd][remove][ChangeGroup]  nIndex=[%d]------------------------ ", nIndex);
+OutputDebugString(m_slog);
+
 	if(nIndex == 0)
 	{
 		m_pGroupWnd->SendMessage(WM_MANAGE,MAKEWPARAM(MK_REMAIN,(LPARAM)nIndex));
@@ -1763,6 +1798,9 @@ void CMainWnd::OnPortfolio(LPCTSTR result)
 {
 	CString str(result);
 
+	m_slog.Format("--------[cx_interest][CMainWnd][OnPortfolio][remove]<%s> str=[%s] m_bChangeGroup=[%d]\r\n", m_strMap, str, m_bChangeGroup);
+	OutputDebugString(m_slog);
+	KillTimer(TM_DRAG);
 	if (m_bChangeGroup == TRUE)
 		return;
 
@@ -2063,6 +2101,8 @@ void CMainWnd::SearchGroupCode(short index)
 void CMainWnd::Request_GroupCode(int iseq)
 {
 	const int index = iseq;
+	if (index == -1)
+		return;
 	int sendL = 0;
 	CString stmp;
 	std::string sendB;
@@ -2080,5 +2120,26 @@ void CMainWnd::Request_GroupCode(int iseq)
 	stmp.Format("%02d", index);
 	memcpy((char*)&sendB[sz_uinfo], stmp, 2);
 
+	//m_bChangeGroup = TRUE;  //test 20230223
+	
+	//m_slog.Format("[cx_interest][CMainWnd][OperDLLOUB][remove] Request_GroupCode [%s] m_iSendTr=[%d]", m_strMap, m_iSendTr);
+	//OutputDebugString(m_slog);
 	sendTR(trUPDOWN, sendB.data(), US_KEY, m_param.key, m_param.name, TRKEY_INTER);
+}
+
+
+
+
+void CMainWnd::SetMapName(BSTR strMap)
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	m_strMap.Format("%s", strMap);
+	m_strMap.TrimRight();
+}
+
+void CMainWnd::SetDragTimer()
+{
+	m_slog.Format("[cx_interest][CMainWnd][remove][SetDragTimer][%s]]------------------------ ", m_strMap);
+	OutputDebugString(m_slog);
+	SetTimer(TM_DRAG, 1500, nullptr);
 }

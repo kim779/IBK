@@ -726,7 +726,7 @@ void CMapWnd::res_pibo3002( LPCSTR data, int size )
 
 	m_SiseData.fhoga.clear();
 	m_SiseData.hhga = (int)(fabs(Str2Double(mod->hhga, sizeof(mod->hhga))*100) + DOUBLE_PREFIX);
-	if (m_SiseData.code.GetAt(0)=='4')
+	if (m_SiseData.code.GetAt(0)=='4' || m_SiseData.code.GetAt(0) == 'D') //파생상품 코드개편
 	{
 // 		OutputDebugString("[KSJ] IN");
 		// 하한가는 반대부호로 오게 되어 있다(색상) 고로 스프레드의 경우 다시 역방향으로 처리해주는 센스가 필요하다.
@@ -735,7 +735,7 @@ void CMapWnd::res_pibo3002( LPCSTR data, int size )
 		m_SiseData.hhga = (int)(hhga);
 	}
 
-	if(m_SiseData.code.GetAt(0)!='4')
+	if(m_SiseData.code.GetAt(0)!='4' && m_SiseData.code.GetAt(0) != 'D')  //파생상품 코드개편
 	{
 		m_SiseData.shga = (int)(fabs(Str2Double(mod->shga, sizeof(mod->shga))*100) + DOUBLE_PREFIX);
 		m_SiseData.gjga = (int)(fabs(Str2Double(mod->gjga, sizeof(mod->gjga))*100) + DOUBLE_PREFIX);
@@ -1219,7 +1219,7 @@ void CMapWnd::proc_notice( LPCSTR data, int size )
 					m_pControl2->SendMessage(WM_APP_REFRESH, WP_MICHEG_UPDATE, (LPARAM)&pos->second);
 			}
 		}
-		if (code[0]=='4')
+		if (code[0]=='4' || code[0] == 'D')  //파생상품 코드개편
 		{
 			if (m_pControl)
 			{

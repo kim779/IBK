@@ -1553,6 +1553,7 @@ void CintGrid::OnTimer(UINT nIDEvent)
 						switch (rtscode.GetAt(0))
 						{
 						case '1':	//2012.10.09 KSJ 주식선물은 소숫점이 안붙어야 한다.
+						case 'A':  //파생상품 코드개편
 							{				
 								CString strScoop = rtscode.Mid(1, 2);
 								
@@ -3886,7 +3887,7 @@ BOOL CintGrid::DrawCell(CDC* pDC, int nRow, int nCol, CRect rect, BOOL bEraseBk)
 				{
 					if(string.GetLength() )
 					{
-						if(!(strCode.GetLength() == 8 && strCode.GetAt(0) == '4'))
+						if(!(strCode.GetLength() == 8 && (strCode.GetAt(0) == '4' || strCode.GetAt(0) == 'D'))) //파생상품 코드개편
 						{
 							if(string.Left(1) == "+") 
 								string = string.Right(string.GetLength() - 1);

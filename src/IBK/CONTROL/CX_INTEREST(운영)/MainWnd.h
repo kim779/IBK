@@ -31,7 +31,7 @@ class CMainWnd : public CWnd
 // Construction
 public:
 	CMainWnd(CWnd* pWnd, _param* pInfo);
-
+	CString m_slog;
 // Attributes
 public:
 	CParam		m_param{};
@@ -47,7 +47,9 @@ public:
 	BOOL		m_bRemain{};
 	CString		m_sMapHandle;
 
-
+	BOOL		m_bChangeGroup{};
+	int			m_iSendTr{};
+	void			SetDragTimer();
 // Operations
 public:
 	BOOL GetRTSVisible() { return m_bRTS; };
@@ -199,7 +201,7 @@ private:
 	int			m_nID{};
 	int			m_nSendCount{};
 
-	BOOL		m_bChangeGroup{};
+	
 	BOOL		m_bMainClose{};
 
 	CString		m_strMarketTime;	//시장구분 (동시호가) KSJ 2012.11.26 
@@ -283,4 +285,18 @@ public:
 	CString _groupName;
 	int     _groupKey = 0;
 	void Request_GroupCode(int iseq);
+	//CString getMapName() { return m_strMap; }
+	CString m_strMap{};
+	int		m_iGroup{};
+protected:
+
+//	CString m_strMap;
+
+
+	void SetMapName(BSTR strMap);
+
+	enum
+	{
+		dispidSetMapName = 33L
+	};
 };

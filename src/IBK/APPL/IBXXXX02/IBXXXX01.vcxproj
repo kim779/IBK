@@ -137,7 +137,7 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/IBXXXX02.dll</OutputFile>
+      <OutputFile>../../../release/IBXXXX02.dll</OutputFile>
       <ImportLibrary>.\Release\IBXXXX02.lib</ImportLibrary>
       <AdditionalOptions> /MAPINFO:EXPORTS </AdditionalOptions>
       <ModuleDefinitionFile>.\IBXXXX01.def</ModuleDefinitionFile>

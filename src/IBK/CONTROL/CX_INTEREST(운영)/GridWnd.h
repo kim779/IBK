@@ -46,6 +46,7 @@ class CGridWnd : public CBaseWnd
 public:
 	CGridWnd(CWnd* pMainWnd, int nIndex);
 	CString m_slog;
+	CString m_sMap;
 	int m_iIndex;
 	void show_m_inter();
 // Attributes

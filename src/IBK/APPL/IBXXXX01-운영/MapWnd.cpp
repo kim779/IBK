@@ -434,7 +434,7 @@ LRESULT CMapWnd::OnReceiveRemainData(WPARAM wParam, LPARAM lParam)
 	}
 	return 0;
 }
-
+#define DF_SHARED
 //=================================================================================================
 BOOL CMapWnd::CreateMap(CWnd *pParent)
 {
@@ -456,13 +456,22 @@ BOOL CMapWnd::CreateMap(CWnd *pParent)
 	variant(titleCC, "Untitled");
 	path.Replace("\\", "_");
 
-	const DWORD processID = GetCurrentProcessId();
+//	const DWORD processID = GetCurrentProcessId();
 // 	CString sSHMENAME;
 // 	sSHMENAME.Format("%s%s%d",path,"_remainCtrl_",processID);
+//m_ShMemory->remainSHMEMNAME = sSHMENAME;
 
+#ifdef DF_SHARED
+	DWORD processID = GetCurrentProcessId();
+	CString sSHMENAME;
+	sSHMENAME.Format("%s%s%d", path, "_remainCtrl_", processID);
+	m_ShMemory = std::make_unique<CShMemory>();
+	m_ShMemory->remainSHMEMNAME = sSHMENAME;
+#else
 	m_ShMemory = std::make_unique<CShMemory>();
 	m_ShMemory->remainSHMEMNAME = path + "_remainCtrl_";
-	//m_ShMemory->remainSHMEMNAME = sSHMENAME;
+#endif
+
 	m_ShMemory->InitSharedMemory(this->m_hWnd);
 	m_ShMemory->AddHandle(this->m_hWnd);
 
@@ -519,6 +528,7 @@ BOOL CMapWnd::OnEraseBkgnd(CDC* pDC)
 //=================================================================================================
 void CMapWnd::sendRemainTR(CString sAccn, CString sPswd, bool bFuture, bool bCredit, int dFee, double dMass,double dSave, int dCalcType, int iMcgb,HWND sHwnd)	//2015.04.22 KSJ 매체구분 추가
 {
+	OutputDebugString("[twopc] sendRemainTR  1 ");
 	sPswd.TrimRight();
 	sAccn.TrimRight();	sAccn.TrimLeft();//2014.10.10 KSJ 계좌번호 트림하는 거 주석처리되어 있어서 주식선물잔고가 이상하게 나왔던거 같아서 다시 주석 해제함.
 
@@ -535,6 +545,9 @@ void CMapWnd::sendRemainTR(CString sAccn, CString sPswd, bool bFuture, bool bCre
 	CString sData;
 	int skey=-1;
 	CString AccHandleKey, sHandle; sHandle.Format("%d", (UINT)sHwnd);
+
+	OutputDebugString("[twopc] sendRemainTR  2 ");
+
 	if (m_AccnKey.Lookup(sHandle,AccHandleKey))
 	{
 		
@@ -546,6 +559,8 @@ void CMapWnd::sendRemainTR(CString sAccn, CString sPswd, bool bFuture, bool bCre
 		
 		if (!m_AccnMap.Lookup(AccHandleKey, (void*&)pAccn))	// 20070824
 		{
+
+			OutputDebugString("[twopc] sendRemainTR  3 ");
 //			pAccn = new CAccn;
 			auto& tAccn = _vList.emplace_back(std::make_unique<CAccn>());
 			pAccn = tAccn.get();
@@ -575,6 +590,8 @@ void CMapWnd::sendRemainTR(CString sAccn, CString sPswd, bool bFuture, bool bCre
 		}
 		else
 		{
+
+			OutputDebugString("[twopc] sendRemainTR  3.5 ");
 			removeRemain(pAccn);
 			pAccn->m_accn = sAccn;
 			pAccn->m_pswd = sPswd;
@@ -588,6 +605,8 @@ void CMapWnd::sendRemainTR(CString sAccn, CString sPswd, bool bFuture, bool bCre
 	}
 	else
 	{
+
+		OutputDebugString("[twopc] sendRemainTR  4 ");
 //		pAccn = std::make_shared<CAccn>();
 //		pAccn = new CAccn;// std::make_shared<CAccn>();
 		auto& tAccn = _vList.emplace_back(std::make_unique<CAccn>());
@@ -621,10 +640,11 @@ void CMapWnd::sendRemainTR(CString sAccn, CString sPswd, bool bFuture, bool bCre
 // 	m_sCurrPswd = sPswd;
 
 	sData  = ledgerTR("2700", bFuture ? sv_FJGO : sv_SJGO, bFuture ? "2" : "1");
-
+m_slog.Format("[ledger] sData =[%s]\r\n", sData);
+OutputDebugString(m_slog);
 // 	OutputDebugString("[KSJ] ledger[" + sData + "]");
 
-
+	OutputDebugString("[twopc] sendRemainTR  5 ");
 	CString passX;
 	passX.Format("%s\t%s", sPswd, sAccn.Left(8));
 	passX = (char *)m_pParent->SendMessage(WM_USER, MAKEWPARAM(encPASSx, modeACN), (LPARAM)(LPCTSTR)passX);
@@ -633,7 +653,8 @@ void CMapWnd::sendRemainTR(CString sAccn, CString sPswd, bool bFuture, bool bCre
 	
 	text = "";
 	tmps.Format("%d",(UINT)sHwnd);
-		
+	
+	OutputDebugString("[twopc] sendRemainTR  6 ");
 	if (bFuture)
 	{
 		struct f_mid mid;
@@ -656,6 +677,7 @@ void CMapWnd::sendRemainTR(CString sAccn, CString sPswd, bool bFuture, bool bCre
 	}
 	else
 	{
+		OutputDebugString("[twopc] sendRemainTR  7 ");
 		struct s_mid mid;
 		
 		FillMemory(&mid, L_smid, ' ');
@@ -846,6 +868,8 @@ void CMapWnd::sendToControl(CString sAccn, CAccn *pAccn)
 			keyS = m_arKey.GetAt(ii);
 			if (pAccn->m_CodeMap.Lookup(keyS, (void*&)pRemain))
 			{
+				if (keyS.Find("005930") >= 0)
+					TRACE("test");
 				sData += pRemain->TotalData() + "\n";
 //TRACE("key[%s]total[%.400s]\n",keyS, pRemain->TotalData());
 #ifdef	_FILE_DEBUG
@@ -1659,6 +1683,12 @@ CString CMapWnd::ledgerTR(CString sTran, CString sSvcn, CString sGubn)
 	FillMemory(&ledger, L_ledgerH, ' ');
 
 	strUser = variant(userCC, "");
+
+	CWnd* pwnd = AfxGetMainWnd();
+	CString stemp;
+	CString strHwnd;
+	strHwnd.Format("%d", this->m_hWnd);
+	//strUser = CString((LPCTSTR)pwnd->SendMessage(WM_USER, 0x08));
 
 	m_pParent->SendMessage(WM_USER, ledgerDLL, (LPARAM)&ledger);
 	CopyMemory(&ledger.svcd, sSvcn, sizeof(ledger.svcd));

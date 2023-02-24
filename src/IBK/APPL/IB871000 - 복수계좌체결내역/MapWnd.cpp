@@ -839,6 +839,7 @@ void CMapWnd::Account2Tree( LPCSTR acno )
 
 			strVal.Format("%s(%s)", Int2CommaStr((int)(d_pamt/1000)), Int2CommaStr((int)(s_pamt/1000)));
 			m_tree.SetItemText(node, strVal, 6);
+
 		}
 
 		for(int ii=0; ii<akey.GetSize(); ++ii)
@@ -872,7 +873,12 @@ void CMapWnd::Account2Tree( LPCSTR acno )
 			m_tree.SetItemText(cnode, Int2CommaStr(jqty[akey[ii]]), 2);
 			m_tree.SetItemText(cnode, Int2CommaStr(cqty[akey[ii]]), 3);
 			m_tree.SetItemText(cnode, Int2CommaStr(xqty[akey[ii]]), 4);
-			m_tree.SetItemText(cnode, Int2CommaStr((int)(pamt[akey[ii]]/(double)cqty[akey[ii]])), 5);
+
+			if((int)(pamt[akey[ii]]) == 0)
+				m_tree.SetItemText(cnode, "0", 5);
+			else
+				m_tree.SetItemText(cnode, Int2CommaStr((int)(pamt[akey[ii]]/(double)cqty[akey[ii]])), 5);
+
 			m_tree.SetItemText(cnode, Int2CommaStr((int)(pamt[akey[ii]]/1000)), 6);
 			
 			for(int col=1; col<GRID_COL_SIZE; ++col)

@@ -140,6 +140,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild />
+      <AdditionalIncludeDirectories>../../h</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -161,9 +162,9 @@
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OutputFile>../../../dev/IBXXXX00.dll</OutputFile>
+      <OutputFile>../../../release/IBXXXX00.dll</OutputFile>
       <ImportLibrary>.\Release\IBXXXX00.lib</ImportLibrary>
-      <AdditionalOptions> /MAPINFO:EXPORTS  /MAPINFO:LINES </AdditionalOptions>
+      <AdditionalOptions> /MAPINFO:EXPORTS</AdditionalOptions>
       <ModuleDefinitionFile>.\IBXXXX02.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>

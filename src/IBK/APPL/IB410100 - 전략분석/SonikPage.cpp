@@ -551,7 +551,7 @@ long CSonikPage::OnMsgGetHV(WPARAM wParam, LPARAM lParam)
 	{
 		if (m_rdoConfigVol.GetCheck())
 		{
-			if (pData->code[0] == '2')
+			if (pData->code[0] == '2' || pData->code[0] == 'B')  //파생상품 코드개편
 				GetDlgItem(IDC_EDT_CFGCALLVOL)->GetWindowText(val);
 			else
 				GetDlgItem(IDC_EDT_CFGPUTVOL)->GetWindowText(val);
@@ -578,7 +578,7 @@ long CSonikPage::OnMsgGetHV(WPARAM wParam, LPARAM lParam)
 			m_spnItemPutChg.m_pEdit->GetWindowText(str);	dPutMove = atof(str);
 		}
 
-		if (pData->code[0] == '2')
+		if (pData->code[0] == '2' || pData->code[0] == 'B')  //파생상품 코드개편
 		{
 			val.Format("%.2f", atof(val) + dCallMove);
 		}
@@ -624,7 +624,7 @@ long CSonikPage::OnMsgGetHV(WPARAM wParam, LPARAM lParam)
 			break;
 		*/
 		case 2: // 사용자정의
-			if (pData->code[0] == '2')
+			if (pData->code[0] == '2' || pData->code[0] == 'B')  //파생상품 코드개편
 				m_sVal = ((CMapWnd*)m_pParent)->m_cfg->ReadCfg("UserCallIV");
 			else
 				m_sVal = ((CMapWnd*)m_pParent)->m_cfg->ReadCfg("UserPutIV");

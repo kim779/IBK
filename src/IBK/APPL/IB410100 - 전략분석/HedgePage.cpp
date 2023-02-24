@@ -295,7 +295,7 @@ if(gData->jnam.IsEmpty())
 //	     code, strike, m_bData->basicprc, m_bData->bdjs, mdat->iiil[0], mdat->iiil[1], m_bData->cdgl);
 //OutputDebugString(sTest);
 
-		if(code.GetAt(0) == '1' || code.GetAt(0) == '4')	//2012.10.12 KSJ 선물일때
+		if(code.GetAt(0) == '1' || code.GetAt(0) == '4' || code.GetAt(0) == 'A' || code.GetAt(0) == 'D')	//2012.10.12 KSJ 선물일때 //파생상품 코드개편
 			gData->delt = 1.0;
 		else
 			gData->delt = atof(((CMapWnd*)m_pParent)->m_opsenscal->GetDelta());
@@ -330,7 +330,7 @@ OutputDebugString(stmp);
 		val.Format("%.2f", ((CMapWnd*)m_pParent)->m_bData->cdgl);	((CMapWnd*)m_pParent)->m_opsenscal->SetCd(val);
 		((CMapWnd*)m_pParent)->m_opsenscal->Calc(0);
 
-		if(code.GetAt(0) == '1' || code.GetAt(0) == '4')	//2012.10.12 KSJ 선물일때
+		if(code.GetAt(0) == '1' || code.GetAt(0) == '4' || code.GetAt(0) == 'A' || code.GetAt(0) == 'D')	//2012.10.12 KSJ 선물일때//파생상품 코드개편
 			gData->delt = 1.0;
 		else
 			gData->delt = atof(((CMapWnd*)m_pParent)->m_opsenscal->GetDelta());
@@ -520,7 +520,7 @@ OutputDebugString(slog);
 slog.Format("IB410100 [%s][%s][%d][%f]\n", gData->jcod, gData->jnam, gData->jqty, gData->curr);
 OutputDebugString(slog);
 
-		if (gData->jcod.GetAt(0) == '1')
+		if (gData->jcod.GetAt(0) == '1' || gData->jcod.GetAt(0) == 'A') //파생상품 코드개편
 		{
 			m_pGrid->SetItemText(m_pGrid->GetRowCount()-1, HG_PGSI, m_pApp->StringModify(gData->curr*fabs(gData->jqty)*DBASE*GUARANTEE_RATE, 0));
 			m_pGrid->SetItemText(m_pGrid->GetRowCount()-1, HG_DELT, m_pApp->StringModify(gData->delt*gData->jqty, 4));
@@ -579,7 +579,7 @@ void CHedgePage::CalcHedgeP()
 				continue;
 		}
 
-		if (gData->jcod.GetAt(0) == '1')
+		if (gData->jcod.GetAt(0) == '1' || gData->jcod.GetAt(0) == 'A')  //파생상품 코드개편
 		{
 			iCnt = Round(fabs(pivot) / (gData->curr * DBASE * GUARANTEE_RATE));
 			if (iCnt == 0)
@@ -632,8 +632,8 @@ OutputDebugString(slog);
 			if (iCnt == 0)
 				continue;
 
-			if (gData->jcod[0] == '2')
-			{
+			if (gData->jcod[0] == '2' || gData->jcod[0] == 'B')  //파생상품 코드개편
+			{ 
 				if (pivot > 0)
 					iCnt = iCnt*(-1);
 			} 

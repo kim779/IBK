@@ -97,6 +97,7 @@ BEGIN_INTERFACE_MAP(CControlWnd, CWnd)
 	INTERFACE_PART(CControlWnd, IID_IControlWnd, Dispatch)
 END_INTERFACE_MAP()
 
+#define DF_SHARED
 //=================================================================================================
 int CControlWnd::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
@@ -110,10 +111,27 @@ int CControlWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_ShMemory = std::make_unique<CShMemory>();
 
+	DWORD processID = GetCurrentProcessId();
+	CString sSHMENAME;
+	
+#ifdef DF_SHARED
+	if (!m_bFuture)
+	{
+		sSHMENAME.Format("%s%s%d", path, "_remainCtrl_", processID);
+		m_ShMemory->m_remainSHMEMNAME = sSHMENAME;
+	}
+	else
+	{
+		sSHMENAME.Format("%s%s%d", path, "_remainCtrl_Future", processID);
+		m_ShMemory->m_remainSHMEMNAME = sSHMENAME;
+	}
+
+#else
 	if (!m_bFuture)
 		m_ShMemory->m_remainSHMEMNAME = path + "_remainCtrl_";
 	else
 		m_ShMemory->m_remainSHMEMNAME = path + "_remainCtrl_Future";
+#endif
 
 	m_ShMemory->InitSharedMemory(this->m_hWnd);
 	m_ShMemory->AddHandle(this->m_hWnd);
@@ -275,9 +293,14 @@ void CControlWnd::Send(LPCTSTR sAccn, LPCTSTR sPswd,LPCTSTR dfee,LPCTSTR dmass)
 
 void CControlWnd::SendEx( LPCTSTR sAccn, LPCTSTR sPswd, LPCTSTR dfee, LPCTSTR dmass, LPCTSTR dCalcType/*=_T("0")*/ )
 {
+	CString stmp;
+	stmp.Format("[twopc]   CControlWnd::SendEx ");
+	OutputDebugString(stmp);
+
 	CString	Data;
 	HWND MasterHwnd = m_ShMemory->GetHandle(0);
-
+	stmp.Format("[twopc]   CControlWnd::SendEx   MasterHwnd =[%x]", MasterHwnd);
+	OutputDebugString(stmp);
 	m_bLaw = false;
 	m_CodeMap.RemoveAll();
 	
@@ -387,8 +410,10 @@ void CControlWnd::SetParam(_param *pParam)
 
 void CControlWnd::SendToMap(CString sData, bool bAll, CString sAccn/* = ""*/)
 {
+	if (sData.Find("165T3000") >= 0)
+		TRACE("!23");
 	CString stmp;
-	stmp.Format("[IBXXXX00][cx_notify] sData=[%s]", sData);
+	stmp.Format("\r\n[IBXXXX00][cx_notify] sData=[%s]", sData);
 	OutputDebugString(stmp);
 #ifdef	SC_TEST
 	m_cs.Lock();
@@ -549,7 +574,7 @@ void CControlWnd::SendToMap(CString sData, bool bAll, CString sAccn/* = ""*/)
 		if (m_bAllAccn)
 			m_dataList = sAccn + m_dataList;
 	}
-stmp.Format("[IBXXXX00][cx_notify] before sendmessage");
+stmp.Format("\r\n[IBXXXX00][cx_notify] m_dataList =[%s] ", m_dataList);
 OutputDebugString(stmp);
 	m_pParent->SendMessage(WM_USER, MAKEWPARAM(eventDLL, MAKEWORD(m_Param.key, evOnDblClk/*DblClick*/)),
 					(LPARAM)m_Param.name.GetString());

@@ -580,16 +580,20 @@ int CAxMapForm::GetJKind(CString sCode)
 	switch (sCode.GetAt(0))
 	{
 	case '1':	// future
+	case 'A':   //파생상품 코드개편
 		return JK_FUTURE;
 	case '4':	// future spread
+	case 'D':
 		return JK_SPREAD;
 	case '2':	// call option
+	case 'B':
 		if (sCode.GetAt(1) == '0')
 			return JK_CALLOPT;
 		else
 			return JK_JCALLOPT;
 		break;
 	case '3':	// put option
+	case 'C':
 		if (sCode.GetAt(1) == '0')
 			return JK_PUTOPT;
 		else
